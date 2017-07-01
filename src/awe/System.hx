@@ -26,7 +26,7 @@ class System {
 		Check if this system should be processed.
 		@return If this should be processed or not.
 	**/
-	public function shouldProcess(): Bool
+	public inline function checkProcessing(): Bool
 		return enabled;
 
 	/**
@@ -38,10 +38,32 @@ class System {
 	}
 
 	/**
-		Updates this system.
-		@param delta The change in time in seconds.
+		Process this system by running `begin`, `processSystem`, then `end`.
 	**/
-	public function update(): Void {}
+	@:final public function process(): Void {
+		if(checkProcessing()) {
+			begin();
+			processSystem();
+			end();
+		}
+	}
+	/**
+		Process this system.
+	**/
+	public function processSystem(): Void {}
+
+	/**
+		Called before processing starts.
+	**/
+	public function begin(): Void {}
+	/**
+		Called after processing has finished.
+	**/
+	public function end(): Void {}
+	/**
+		Free resources used by this system.
+	**/
+	public function dispose(): Void {}
 }
 
 @:autoBuild(awe.EntitySystem.build())
@@ -56,18 +78,18 @@ class EntitySystem extends System {
 		this.matchers = new ArrayList();
 	}
 	@:access(awe)
-	public function updateMatchers():Void {
+	public function processMatchers():Void {
 		matchers.clear();
 		for(entity in world.entities)
 			if(filter.matches(entity.getComposition(world)))
 				matchers.add(entity);
 	}
-	public function updateEntity(entity: Entity): Void {}
-	public override function update():Void {
+	public function processEntity(entity: Entity): Void {}
+	public override function processSystem(): Void {
 		if(matchers.size ==  0)
-			updateMatchers();
+			processMatchers();
 		for(entity in matchers)
-			updateEntity(entity);
+			processEntity(entity);
 	}
 	public static macro function build():Array<Field> {
 		var fields = Context.getBuildFields();

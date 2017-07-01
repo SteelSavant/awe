@@ -74,7 +74,7 @@ class BounceSystem extends EntitySystem {
 	public override function new() {
 		super(Filter.build(Bounce & Position & Size & Velocity));
 	}
-	public override function updateEntity(entity: Entity): Void {
+	public override function processEntity(entity: Entity): Void {
 		var pos: Position = positions.get(entity);
 		var size: Size = sizes.get(entity);
 		var vel: Velocity = velocities.get(entity);
@@ -95,7 +95,7 @@ class MovementSystem extends EntitySystem {
 	public override function new() {
 		super(Filter.build(Position & Velocity));
 	}
-	public override function updateEntity(entity: Entity): Void {
+	public override function processEntity(entity: Entity): Void {
 		var pos: Position = positions.get(entity);
 		var vel: Velocity = velocities.get(entity);
 		pos.x += vel.x * world.delta;
@@ -110,7 +110,7 @@ class CollisionSystem extends EntitySystem {
 	public override function new() {
 		super(Filter.build(Collide & Position & Size & Velocity));
 	}
-	public override function updateEntity(entity: Entity): Void {
+	public override function processEntity(entity: Entity): Void {
 		var pos: Position = positions.get(entity);
 		var size: Size = sizes.get(entity);
 		var vel: Velocity = velocities.get(entity);
@@ -144,12 +144,12 @@ class DrawSystem extends EntitySystem {
 		canvas = cast js.Browser.document.getElementById("pong");
 		context = canvas.getContext2d();
 	}
-	public override function update() {
+	public override function processSystem() {
 		context.fillStyle = 'black';
 		context.fillRect(0, 0, canvas.width, canvas.height);
-		super.update();
+		super.processSystem();
 	}
-	public override function updateEntity(entity: Entity): Void {
+	public override function processEntity(entity: Entity): Void {
 		var pos: Position = positions.get(entity);
 		var size: Size = sizes.get(entity);
 		var draw: Draw = draws.get(entity);
@@ -186,7 +186,7 @@ class InputSystem extends EntitySystem {
 		};
 	}
 
-	public override function updateEntity(entity: Entity): Void {
+	public override function processEntity(entity: Entity): Void {
 		var speed = speeds.get(entity);
 		var velocity = velocities.get(entity);
 		velocity.y = speed.speed * world.delta * (switch input {

@@ -17,7 +17,7 @@ import awe.ComponentList;
 /**
 	The central object on which components, systems, etc. are added.
 **/
-class World {
+@:final class World {
 	/** The component lists for each type of `Component`. **/
 	@:allow(awe)
 	var components(default, null): Map<ComponentType, IComponentList<Dynamic>>;
@@ -109,8 +109,7 @@ class World {
 	**/
 	public inline function process()
 		for(system in systems)
-			if(system.shouldProcess())
-				system.update();
+			system.process();
 
 	/**
 		Automatically run all the `System`s at a given interval.
@@ -132,6 +131,13 @@ class World {
 			process();
 			last = curr;
 		}
+	}
+	/**
+		Free resources used by this world.
+	**/
+	public function dispose(): Void {
+		for(system in systems)
+			system.dispose();
 	}
 }
 typedef WorldConfiguration = {
