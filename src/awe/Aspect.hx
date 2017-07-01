@@ -14,37 +14,37 @@ using awe.util.BitVectorTools;
 import de.polygonal.ds.BitVector;
 
 /**
-	A filter for matching entities' components against. This is used to check
+	A aspect for matching entities' components against. This is used to check
 	if a system is interested in processing an entity.
 
-	This can be constructed by using the `Filter.build(_)` macro.
-	Using this, you can build a filter from a binary operation representing
+	This can be constructed by using the `Aspect.build(_)` macro.
+	Using this, you can build a aspect from a binary operation representing
 	the combination of types this will expect.
 
 	### Binary Syntax
 
 	#### All of...
 	```haxe
-	Filter.build(Position & Velocity);
+	Aspect.build(Position & Velocity);
 	```
 	#### One of...
 	```haxe
-	Filter.build(Position | Velocity);
+	Aspect.build(Position | Velocity);
 	```
 	#### None of...
 	```haxe
-	Filter.build(!Position);
+	Aspect.build(!Position);
 	```
 
 	### Alternate syntax
 	```haxe
-	Filter.build({
+	Aspect.build({
 		all: [Position, Velocity, Gravity, Physical],
 		none: Frozen
 	})
 	```
 **/
-class Filter {
+class Aspect {
 	var allSet(default, null): BitVector;
 	var oneSet(default, null): BitVector;
 	var noneSet(default, null): BitVector;
@@ -53,10 +53,10 @@ class Filter {
 		this.oneSet = oneSet;
 		this.noneSet = noneSet;
 	}
-	public static macro function build(expr: Expr): ExprOf<Filter> {
+	public static macro function build(expr: Expr): ExprOf<Aspect> {
 		var debug = Context.defined("debug");
 		if(debug)
-			Sys.println("Building filter from " + expr.toString());
+			Sys.println("Building aspect from " + expr.toString());
 		var all = new BitVector(64);
 		var one = new BitVector(64);
 		var none = new BitVector(64);
@@ -91,25 +91,25 @@ class Filter {
 					var ty = expr.resolveTypeLiteral();
 					var cty = ComponentType.get(ty);
 					if(debug)
-						Sys.println("Adding " + ty.toString() + " (id = " + cty.getPure() + ") to filter");
+						Sys.println("Adding " + ty.toString() + " (id = " + cty.getPure() + ") to aspect");
 					set.set(ComponentType.get(ty).getPure());
 				default:
-					Context.error("Invalid expression for filter", Context.currentPos());
+					Context.error("Invalid expression for aspect", Context.currentPos());
 			}
 		};
 		innerBuild(expr);
-		return macro new Filter(${all.wrapBits()}, ${one.wrapBits()}, ${none.wrapBits()});
+		return macro new Aspect(${all.wrapBits()}, ${one.wrapBits()}, ${none.wrapBits()});
 	}
 	/**
-		Make a string representation of this filter.
+		Make a string representation of this aspect.
 		@return The string representation.
 	**/
 	public function toString()
 		return "all: " + allSet + "; one: " + oneSet + "; none: " + noneSet;
 	/**
-		Returns true if the `components` set fulfills this filter.
+		Returns true if the `components` set fulfills this aspect.
 		@param components The `BitVector` of components to check against.
-		@return If the `components` set fulfills this filter.
+		@return If the `components` set fulfills this aspect.
 	**/
 	public function matches(components: BitVector): Bool {
 		return (components.contains(allSet) || oneSet.intersects(components)) && !noneSet.intersects(components);

@@ -4,7 +4,7 @@ import awe.ComponentList;
 import awe.World;
 import awe.Entity;
 import awe.System;
-import awe.Filter;
+import awe.Aspect;
 import js.html.CanvasRenderingContext2D;
 import js.html.CanvasElement;
 
@@ -72,7 +72,7 @@ class BounceSystem extends EntitySystem {
 	@auto public var velocities: awe.IComponentList<Velocity>;
 	@auto public var draw: DrawSystem;
 	public override function new() {
-		super(Filter.build(Bounce & Position & Size & Velocity));
+		super(Aspect.build(Bounce & Position & Size & Velocity));
 	}
 	public override function processEntity(entity: Entity): Void {
 		var pos: Position = positions.get(entity);
@@ -93,7 +93,7 @@ class MovementSystem extends EntitySystem {
 	@auto public var positions: awe.IComponentList<Position>;
 	@auto public var velocities: awe.IComponentList<Velocity>;
 	public override function new() {
-		super(Filter.build(Position & Velocity));
+		super(Aspect.build(Position & Velocity));
 	}
 	public override function processEntity(entity: Entity): Void {
 		var pos: Position = positions.get(entity);
@@ -108,7 +108,7 @@ class CollisionSystem extends EntitySystem {
 	@auto public var sizes: awe.IComponentList<Size>;
 	@auto public var velocities: awe.IComponentList<Velocity>;
 	public override function new() {
-		super(Filter.build(Collide & Position & Size & Velocity));
+		super(Aspect.build(Collide & Position & Size & Velocity));
 	}
 	public override function processEntity(entity: Entity): Void {
 		var pos: Position = positions.get(entity);
@@ -140,7 +140,7 @@ class DrawSystem extends EntitySystem {
 	@auto public var positions: awe.IComponentList<Position>;
 	@auto public var sizes: awe.IComponentList<Size>;
 	public override function new() {
-		super(Filter.build(Position & Draw & Size));
+		super(Aspect.build(Position & Draw & Size));
 		canvas = cast js.Browser.document.getElementById("pong");
 		context = canvas.getContext2d();
 	}
@@ -167,7 +167,7 @@ class InputSystem extends EntitySystem {
 	var input: InputData;
 
 	public override function new() {
-		super(Filter.build(Input & Velocity & Speed));
+		super(Aspect.build(Input & Velocity & Speed));
 		input = InputData.None;
 	}
 

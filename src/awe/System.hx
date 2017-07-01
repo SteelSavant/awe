@@ -1,6 +1,6 @@
 package awe;
 
-import awe.Filter;
+import awe.Aspect;
 import de.polygonal.ds.ArrayList;
 #if macro
 import haxe.macro.Context;
@@ -68,20 +68,20 @@ class System {
 
 @:autoBuild(awe.EntitySystem.build())
 class EntitySystem extends System {
-	/** The filter to check an entity against before adding to this system. **/
-	public var filter(default, null): Filter;
-	/** The entities that match the `filter`. **/
+	/** The aspect to check an entity against before adding to this system. **/
+	public var aspect(default, null): Aspect;
+	/** The entities that match the `aspect`. **/
 	public var matchers(default, null): ArrayList<Entity>;
-	public function new(filter: Filter) {
+	public function new(aspect: Aspect) {
 		super();
-		this.filter = filter;
+		this.aspect = aspect;
 		this.matchers = new ArrayList();
 	}
 	@:access(awe)
 	public function processMatchers():Void {
 		matchers.clear();
 		for(entity in world.entities)
-			if(filter.matches(entity.getComposition(world)))
+			if(aspect.matches(entity.getComposition(world)))
 				matchers.add(entity);
 	}
 	public function processEntity(entity: Entity): Void {}

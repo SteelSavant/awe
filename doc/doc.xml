@@ -295,7 +295,7 @@
 
 		If `f` is null, the result is unspecified.</haxe_doc>
 		</map>
-		<filter public="1" set="method" line="279">
+		<aspect public="1" set="method" line="279">
 			<f a="f">
 				<f a="">
 					<c path="Array.T"/>
@@ -309,7 +309,7 @@
 		The individual elements are not duplicated and retain their identity.
 
 		If `f` is null, the result is unspecified.</haxe_doc>
-		</filter>
+		</aspect>
 		<__get set="method" line="290"><f a="pos">
 	<x path="Int"/>
 	<c path="Array.T"/>
@@ -1944,13 +1944,13 @@
 			<haxe_doc>Returns the string representation of this data.</haxe_doc>
 		</toString>
 	</class>
-	<class path="awe.Filter" params="" file="src/awe/Filter.hx">
+	<class path="awe.Aspect" params="" file="src/awe/Aspect.hx">
 		<allSet set="null"><x path="de.polygonal.ds.ArrayList"/></allSet>
 		<oneSet set="null"><x path="de.polygonal.ds.ArrayList"/></oneSet>
 		<noneSet set="null"><x path="de.polygonal.ds.ArrayList"/></noneSet>
 		<toString public="1" set="method" line="105">
 			<f a=""><c path="String"/></f>
-			<haxe_doc>Make a string representation of this filter.
+			<haxe_doc>Make a string representation of this aspect.
 		@return The string representation.</haxe_doc>
 		</toString>
 		<matches public="1" get="inline" set="null" line="112">
@@ -1958,9 +1958,9 @@
 				<x path="de.polygonal.ds.ArrayList"/>
 				<x path="Bool"/>
 			</f>
-			<haxe_doc>Returns true if the `components` set fulfills this filter.
+			<haxe_doc>Returns true if the `components` set fulfills this aspect.
 		@param components The `BitVector` of components to check against.
-		@return If the `components` set fulfills this filter.</haxe_doc>
+		@return If the `components` set fulfills this aspect.</haxe_doc>
 		</matches>
 		<matching public="1" set="method" line="116"><f a="world">
 	<c path="awe.World"/>
@@ -1972,31 +1972,31 @@
 	<x path="de.polygonal.ds.ArrayList"/>
 	<x path="Void"/>
 </f></new>
-		<haxe_doc><![CDATA[A filter for matching entities' components against. This is used to check
+		<haxe_doc><![CDATA[A aspect for matching entities' components against. This is used to check
 	if a system is interested in processing an entity.
 
-	This can be constructed by using the `Filter.build(_)` macro.
-	Using this, you can build a filter from a binary operation representing
+	This can be constructed by using the `Aspect.build(_)` macro.
+	Using this, you can build a aspect from a binary operation representing
 	the combination of types this will expect.
 
 	### Binary Syntax
 
 	#### All of...
 	```haxe
-	Filter.build(Position & Velocity);
+	Aspect.build(Position & Velocity);
 	```
 	#### One of...
 	```haxe
-	Filter.build(Position | Velocity);
+	Aspect.build(Position | Velocity);
 	```
 	#### None of...
 	```haxe
-	Filter.build(!Position);
+	Aspect.build(!Position);
 	```
 
 	### Alternate syntax
 	```haxe
-	Filter.build({
+	Aspect.build({
 		all: [Position, Velocity, Gravity, Physical],
 		none: Frozen
 	})
@@ -2072,13 +2072,13 @@
 	</class>
 	<class path="awe.EntitySystem" params="" file="src/awe/System.hx" module="awe.System">
 		<extends path="awe.System"/>
-		<filter public="1" set="null">
-			<c path="awe.Filter"/>
-			<haxe_doc>The filter to check an entity against before adding to this system.</haxe_doc>
-		</filter>
+		<aspect public="1" set="null">
+			<c path="awe.Aspect"/>
+			<haxe_doc>The aspect to check an entity against before adding to this system.</haxe_doc>
+		</aspect>
 		<matchers public="1" set="null">
 			<x path="awe.util.ArrayList"><x path="awe.Entity"/></x>
-			<haxe_doc>The entities that match the `filter`.</haxe_doc>
+			<haxe_doc>The entities that match the `aspect`.</haxe_doc>
 		</matchers>
 		<updateMatchers public="1" set="method" line="49"><f a=""><x path="Void"/></f></updateMatchers>
 		<updateEntity public="1" set="method" line="55"><f a="delta:entity">
@@ -2090,8 +2090,8 @@
 	<x path="Float"/>
 	<x path="Void"/>
 </f></update>
-		<new public="1" set="method" line="44"><f a="filter">
-	<c path="awe.Filter"/>
+		<new public="1" set="method" line="44"><f a="aspect">
+	<c path="awe.Aspect"/>
 	<x path="Void"/>
 </f></new>
 	</class>
