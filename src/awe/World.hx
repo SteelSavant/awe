@@ -36,6 +36,9 @@ class World {
 	/** How many entities have been created so far. **/
 	public var entityCount(default, null): Int;
 
+	/** The number of seconds since the last frame. **/
+	public var delta: Float = 0;
+
 	/** 
 		Construct a new world.
 		Note: `World.create` should be preferred.
@@ -103,12 +106,11 @@ class World {
 	}
 	/**
 		Update all the `System`s contained in this.
-		@param delta The change in time (in seconds).
 	**/
-	public inline function update(delta: Float)
+	public inline function process()
 		for(system in systems)
 			if(system.shouldProcess())
-				system.update(delta);
+				system.update();
 
 	/**
 		Automatically run all the `System`s at a given interval.
@@ -117,7 +119,8 @@ class World {
 	**/
 	public function delayLoop(interval: Float): Timer {
 		var timer = new Timer(Std.int(interval * 1000));
-		timer.run = update.bind(interval);
+		timer.run = process;
+		delta = interval;
 		return timer;
 	}
 	public function loop() {
@@ -125,7 +128,8 @@ class World {
 		var curr = last;
 		while(true) {
 			curr = Timer.stamp();
-			update(curr - last);
+			delta = curr - last;
+			process();
 			last = curr;
 		}
 	}

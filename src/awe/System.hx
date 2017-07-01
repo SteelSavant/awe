@@ -41,7 +41,7 @@ class System {
 		Updates this system.
 		@param delta The change in time in seconds.
 	**/
-	public function update(delta: Float): Void {}
+	public function update(): Void {}
 }
 
 @:autoBuild(awe.EntitySystem.build())
@@ -62,12 +62,12 @@ class EntitySystem extends System {
 			if(filter.matches(entity.getComposition(world)))
 				matchers.add(entity);
 	}
-	public function updateEntity(delta:Float, entity: Entity): Void {}
-	public override function update(delta: Float):Void {
+	public function updateEntity(entity: Entity): Void {}
+	public override function update():Void {
 		if(matchers.size ==  0)
 			updateMatchers();
 		for(entity in matchers)
-			updateEntity(delta, entity);
+			updateEntity(entity);
 	}
 	public static macro function build():Array<Field> {
 		var fields = Context.getBuildFields();

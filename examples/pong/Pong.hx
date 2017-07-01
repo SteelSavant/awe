@@ -74,10 +74,11 @@ class BounceSystem extends EntitySystem {
 	public override function new() {
 		super(Filter.build(Bounce & Position & Size & Velocity));
 	}
-	public override function updateEntity(delta: Float, entity: Entity): Void {
+	public override function updateEntity(entity: Entity): Void {
 		var pos: Position = positions.get(entity);
 		var size: Size = sizes.get(entity);
 		var vel: Velocity = velocities.get(entity);
+		var delta = world.delta;
 		if(pos.x + vel.x * delta < 0)
 			vel.x = Math.abs(vel.x);
 		if(pos.x + vel.x * delta + size.w > draw.canvas.width)
@@ -94,11 +95,11 @@ class MovementSystem extends EntitySystem {
 	public override function new() {
 		super(Filter.build(Position & Velocity));
 	}
-	public override function updateEntity(delta: Float, entity: Entity): Void {
+	public override function updateEntity(entity: Entity): Void {
 		var pos: Position = positions.get(entity);
 		var vel: Velocity = velocities.get(entity);
-		pos.x += vel.x * delta;
-		pos.y += vel.y * delta;
+		pos.x += vel.x * world.delta;
+		pos.y += vel.y * world.delta;
 	}
 }
 
@@ -109,10 +110,11 @@ class CollisionSystem extends EntitySystem {
 	public override function new() {
 		super(Filter.build(Collide & Position & Size & Velocity));
 	}
-	public override function updateEntity(delta: Float, entity: Entity): Void {
+	public override function updateEntity(entity: Entity): Void {
 		var pos: Position = positions.get(entity);
 		var size: Size = sizes.get(entity);
 		var vel: Velocity = velocities.get(entity);
+		var delta = world.delta;
 		var nextX = pos.x + vel.x * delta;
 		var nextY = pos.y + vel.y * delta;
 		for(other in this.matchers) {
@@ -142,12 +144,12 @@ class DrawSystem extends EntitySystem {
 		canvas = cast js.Browser.document.getElementById("pong");
 		context = canvas.getContext2d();
 	}
-	public override function update(delta: Float) {
+	public override function update() {
 		context.fillStyle = 'black';
 		context.fillRect(0, 0, canvas.width, canvas.height);
-		super.update(delta);
+		super.update();
 	}
-	public override function updateEntity(delta: Float, entity: Entity): Void {
+	public override function updateEntity(entity: Entity): Void {
 		var pos: Position = positions.get(entity);
 		var size: Size = sizes.get(entity);
 		var draw: Draw = draws.get(entity);
@@ -184,10 +186,10 @@ class InputSystem extends EntitySystem {
 		};
 	}
 
-	public override function updateEntity(delta: Float, entity: Entity): Void {
+	public override function updateEntity(entity: Entity): Void {
 		var speed = speeds.get(entity);
 		var velocity = velocities.get(entity);
-		velocity.y = speed.speed * delta * (switch input {
+		velocity.y = speed.speed * world.delta * (switch input {
 			case Up: -1;
 			case Down: 1;
 			case None: 0;
