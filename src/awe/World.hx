@@ -33,7 +33,10 @@ import awe.ComponentList;
 	/** The composition of each entity. **/
 	@:allow(awe)
 	var compositions(default, null): Map<Entity, BitVector>;
+	@:allow(awe)
+	var subscriptions(default, null):ArrayList<EntitySubscription> = new ArrayList<EntitySubscription>();
 	/** How many entities have been created so far. **/
+	@:allow(awe)
 	public var entityCount(default, null): Int;
 
 	/** The number of seconds since the last frame. **/
@@ -52,8 +55,11 @@ import awe.ComponentList;
 		entities = new ArrayList();
 		compositions = new Map();
 		entityCount = 0;
-		for(system in systems)
+		for(system in systems) {
 			system.initialize(this);
+			if(Std.is(system, System.EntitySystem))
+				subscriptions.add(cast(system, System.EntitySystem).subscription);
+		}
 		for(manager in managers)
 			manager.initialize(this);
 	}

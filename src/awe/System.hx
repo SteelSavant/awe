@@ -67,30 +67,21 @@ class System {
 }
 
 @:autoBuild(awe.EntitySystem.build())
-class EntitySystem extends System {
+class EntitySystem extends System implements EntitySubscription.SubscriptionListener {
 	/** The aspect to check an entity against before adding to this system. **/
 	public var aspect(default, null): Aspect;
-	/** The entities that match the `aspect`. **/
-	public var matchers(default, null): ArrayList<Entity>;
+	public var subscription(default, null): EntitySubscription;
 	public function new(aspect: Aspect) {
 		super();
 		this.aspect = aspect;
-		this.matchers = new ArrayList();
-	}
-	@:access(awe)
-	public function processMatchers():Void {
-		matchers.clear();
-		for(entity in world.entities)
-			if(aspect.matches(entity.getComposition(world)))
-				matchers.add(entity);
+		subscription = new EntitySubscription(aspect);
 	}
 	public function processEntity(entity: Entity): Void {}
-	public override function processSystem(): Void {
-		if(matchers.size ==  0)
-			processMatchers();
-		for(entity in matchers)
+	public override function processSystem(): Void
+		for(entity in subscription.entities)
 			processEntity(entity);
-	}
+    public function inserted(entities: Array<Entity>): Void {}
+    public function removed(entities: Array<Entity>): Void {}
 	public static macro function build():Array<Field> {
 		var fields = Context.getBuildFields();
 		var initializeField = null;

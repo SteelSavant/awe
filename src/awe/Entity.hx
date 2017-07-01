@@ -17,7 +17,15 @@ abstract Entity(Int) to Int from Int {
 	public var id(get, never): Int;
 	inline function get_id(): Int
 		return this;
-
+	@:allow(awe)
+	function insertIntoSubscriptions(world: World): Void
+		for(sub in world.subscriptions)
+			if(sub.aspect.matches(world.compositions[this]))
+				sub.inserted([this]);
+	function removeFromSubscriptions(world: World): Void
+		for(sub in world.subscriptions)
+			if(sub.aspect.matches(world.compositions[this]))
+				sub.removed([this]);
 	/**
 		Finds the composition bits of this entity.
 		@param world The world that this `Entity` is contained in.
@@ -26,7 +34,6 @@ abstract Entity(Int) to Int from Int {
 	@:access(awe)
 	public inline function getComposition(world: World): BitVector
 		return world.compositions.get(this);
-		
 	#if macro
 
 	static function wrapGet(world: ExprOf<Entity>, ty: Type, cty: ComponentType) {

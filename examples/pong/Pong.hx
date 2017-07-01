@@ -117,7 +117,7 @@ class CollisionSystem extends EntitySystem {
 		var delta = world.delta;
 		var nextX = pos.x + vel.x * delta;
 		var nextY = pos.y + vel.y * delta;
-		for(other in this.matchers) {
+		for(other in subscription.entities) {
 			if(other == entity) continue;
 			var opos: Position = positions.get(entity);
 			var osize: Size = sizes.get(entity);

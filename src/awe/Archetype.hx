@@ -41,7 +41,7 @@ class Archetype {
 		@return The created entity.
 	**/
 	public function create(world: World): Entity {
-		var entity:Entity = untyped world.entityCount++;
+		var entity:Entity = world.entityCount++;
 		for(type in types) {
 			if(!type.isEmpty()) {
 				var list = world.components.get(type.getPure());
@@ -54,19 +54,14 @@ class Archetype {
 		}
 		world.entities.add(entity);
 		world.compositions.set(entity, cid);
+		entity.insertIntoSubscriptions(world);
 		return entity;
 	}
 	public function createSome(world: World, count: Int): ArrayList<Entity> {
-		var entities = new ArrayList<Entity>(count);
-		var entity:Entity = cast -1;
+		var list = new ArrayList<Entity>(count);
 		for(i in 0...count)
-			entities.add(untyped world.entityCount++);
-		for(type in types) {
-			var list = world.components.get(type);
-			for(entity in entities)
-				list.add(entity, null);
-		}
-		return entities;
+			list.add(create(world));
+		return list;
 	}
 	/**
 		Constructs an `Archetype` from some component types.
