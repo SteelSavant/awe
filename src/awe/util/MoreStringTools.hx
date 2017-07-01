@@ -3,7 +3,7 @@ package awe.util;
 using StringTools;
 
 class MoreStringTools {
-	/** Returns true if this char a vowel. **/
+	/** Returns true if this char is a vowel. **/
 	public static function isVowel(char: String):Bool
 		return switch(char) {
 			case 'a' | 'e' | 'i' | 'u' | 'o':

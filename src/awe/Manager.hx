@@ -1,22 +1,21 @@
 package awe;
 
 class Manager {
-	/** The engine that contains this manager. **/
-	public var engine(default, null): Engine;
+	/** The world that contains this manager. **/
+	public var world(default, null): World;
 	/**
-		Initializes this manager in the `Engine`.
-		@param engine The `Engine` to initialize this in.
+		Initializes this manager in the `World`.
+		@param world The `World` to initialize this in.
 	**/
-	public function initialize(engine: Engine): Void {
-		this.engine = engine;
-		engine.injector.injectInto(this);
+	public function initialize(world: World): Void {
+		this.world = world;
 	}
 	/**
-		Called when an entity is added to the engine.
+		Called when an entity is added to the world.
 	**/
 	public function added(entity: Entity): Void {}
 	/**
-		Called when an entity is deleted from the engine.
+		Called when an entity is deleted from the world.
 	**/
 	public function removed(entity: Entity): Void {}
 }

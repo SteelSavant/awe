@@ -37,14 +37,14 @@ class Archetype {
 	}
 	/**
 		Create a new `Entity` with the components given by this `Archetype`.
-		@param engine The engine to create the entity in.
+		@param world The world to create the entity in.
 		@return The created entity.
 	**/
-	public function create(engine: Engine): Entity {
-		var entity:Entity = untyped engine.entityCount++;
+	public function create(world: World): Entity {
+		var entity:Entity = untyped world.entityCount++;
 		for(type in types) {
 			if(!type.isEmpty()) {
-				var list = engine.components.get(type.getPure());
+				var list = world.components.get(type.getPure());
 				#if debug
 				if(list == null)
 					throw 'Component list for $type is null!';
@@ -52,17 +52,17 @@ class Archetype {
 				list.add(entity, null);
 			}
 		}
-		engine.entities.add(entity);
-		engine.compositions.set(entity, cid);
+		world.entities.add(entity);
+		world.compositions.set(entity, cid);
 		return entity;
 	}
-	public function createSome(engine: Engine, count: Int): Bag<Entity> {
+	public function createSome(world: World, count: Int): Bag<Entity> {
 		var entities = new Bag(count);
 		var entity:Entity = cast -1;
 		for(i in 0...count)
-			entities.add(untyped engine.entityCount++);
+			entities.add(untyped world.entityCount++);
 		for(type in types) {
-			var list = engine.components.get(type);
+			var list = world.components.get(type);
 			for(entity in entities)
 				list.add(entity, null);
 		}

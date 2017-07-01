@@ -15,7 +15,7 @@ import haxe.Serializer;
 import haxe.Unserializer;
 
 /** Represents a list of components. **/
-interface IComponentList {
+interface IComponentList<T: Component> {
 	/** How many components this list can hold without re-allocating. **/
 	public var capacity(get, never): Int;
 	/** How many components this list contains. **/
@@ -25,12 +25,12 @@ interface IComponentList {
 		@param id The `Entity` to retrieve the component for.
 		@return The component.
 	**/
-	public function get<T: Component>(id: Entity): Null<T>;
+	public function get(id: Entity): Null<T>;
 	/**
 		Add the component to this list with the given ID.
 		@param id The `Entity` to add a component to.
 	**/
-	public function add<T: Component>(id: Entity, value: T): Void;
+	public function add(id: Entity, value: T): Void;
 	/**
 		Remove the component corresponding to the ID given.
 		@param id The `Entity` to remove from this list.
@@ -40,7 +40,7 @@ interface IComponentList {
 		Iterate through the items in this list.
 		@return The iterator for this list.
 	**/
-	public function iterator(): ComponentListIterator;
+	public function iterator(): ComponentListIterator<T>;
 
 	/**
 		Serialize this list into a `String`.
@@ -53,10 +53,10 @@ interface IComponentList {
 	**/
 	public function unserialize(value: String): Void;
 }
-class ComponentList implements IComponentList {
+class ComponentList<T: Component> implements IComponentList<T> {
 	public var capacity(get, never): Int;
 	public var length(default, null): Int;
-	var list: Vector<Component>;
+	var list: Vector<T>;
 
 	public inline function get_capacity(): Int
 		return list.length;
@@ -67,16 +67,16 @@ class ComponentList implements IComponentList {
 	}
 
 	@:keep
-	public inline function get<T: Component>(entity: Entity): Null<T>
+	public inline function get(entity: Entity): Null<T>
 		return cast list.get(entity.id);
 
-	public function add<T: Component>(entity: Entity, value: T): Void {
+	public function add(entity: Entity, value: T): Void {
 		if(entity.id >= list.length) {
 			var vector = new Vector(capacity << 1);
 			Vector.blit(list, 0, vector, 0, list.length);
 			list = vector;
 		}
-		list.set(entity.id, value);
+		list[entity.id] = value;
 		length = Std.int(Math.max(length, entity.id + 1));
 	}
 	public inline function remove(entity: Entity): Void
@@ -86,17 +86,17 @@ class ComponentList implements IComponentList {
 		return new ComponentListIterator(this);
 
 	public function serialize() {
-		var arr = this.list.toArray().slice(0, length);
+		var arr = list.toArray().slice(0, length);
 		return "c" + Serializer.run(arr);
 	}
 
 	public function unserialize(value: String) {
-		var array:Array<Component> = Unserializer.run(value.substr(1));
+		var array:Array<T> = Unserializer.run(value.substr(1));
 		this.length = array.length;
 		this.list = Vector.fromArrayCopy(array);
 	}
-	public static function genericUnserialize(value: String): IComponentList {
-		var list:IComponentList = Type.createEmptyInstance(switch(value.charCodeAt(0)) {
+	public static function genericUnserialize(value: String): IComponentList<Dynamic> {
+		var list:IComponentList<Dynamic> = Type.createEmptyInstance(switch(value.charCodeAt(0)) {
 			case 'p'.code: cast PackedComponentList;
 			case 'c'.code: ComponentList;
 			default: null;
@@ -106,35 +106,35 @@ class ComponentList implements IComponentList {
 	}
 }
 
-
-class ComponentListItem {
+@:generic
+class ComponentListItem<T: Component> {
 	public var index(default, null): Entity;
-	public var component(default, null): Component;
+	public var component(default, null): T;
 
-	public function new(index: Entity, component: Component) {
+	public function new(index: Entity, component: T) {
 		this.index = index;
 		this.component = component;
 	}
 }
 
-class ComponentListIterator {
-	var list: IComponentList;
+class ComponentListIterator<T: Component> {
+	var list: IComponentList<T>;
 	var index: Int = 0;
-	public function new(list: IComponentList) {
+	public function new(list: IComponentList<T>) {
 		this.list = list;
 	}
 	public inline function hasNext()
 		return index < list.length;
 
-	public function next():ComponentListItem {
+	public function next():ComponentListItem<T> {
 		while(list.get(cast index) == null)
 			index++;
-		return new ComponentListItem(cast (index + 1, Entity), list.get(cast index++));
+		return new ComponentListItem<T>(cast (index + 1, Entity), list.get(cast index++));
 	}
 }
 
-
-class PackedComponentList implements IComponentList {
+@:generic
+class PackedComponentList<T: Component> implements IComponentList<T> {
 	public var capacity(get, never): Int;
 	public var length(default, null): Int;
 	var buffer: PackedComponent;
@@ -152,22 +152,22 @@ class PackedComponentList implements IComponentList {
 		buffer.__offset = 0;
 	}
 
-	public static macro function build(of: ExprOf<Class<Component>>): ExprOf<PackedComponentList> {
+	public static macro function build<T: Component>(of: ExprOf<Class<T>>): ExprOf<PackedComponentList<T>> {
 		var ty = of.resolveTypeLiteral();
 		var cty = ComponentType.get(ty);
 		if(!cty.isPacked())
 			Context.error("Component type is not packed", of.pos);
 		var size = of.resolveTypeLiteral().toComplexType().sizeOf();
-		return macro new PackedComponentList(32, $v{size});
+		return macro new PackedComponentList<Dynamic>(32, $v{size});
 	}
 
 	@:keep
-	public inline function get<T: Component>(entity: Entity): Null<T> {
+	public inline function get(entity: Entity): Null<T> {
 		buffer.__offset = entity.id * size;
 		return entity.id >= length ? null : cast buffer;
 	}
 
-	public function add<T: Component>(entity: Entity, value: T): Void {
+	public function add(entity: Entity, value: T): Void {
 		var value:PackedComponent = cast value;
 		if(entity.id * size >= capacity) {
 			var nbytes = Bytes.alloc(capacity << 1);

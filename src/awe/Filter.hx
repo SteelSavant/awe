@@ -113,7 +113,7 @@ class Filter {
 		return (components.contains(allSet) || oneSet.intersects(components)) && !noneSet.intersects(components);
 	}
 
-	public function matching(engine: Engine): Array<Entity> {
-		return [for(i in 0...engine.entityCount) cast i];
+	public function matching(world: World): Array<Entity> {
+		return [for(i in 0...world.entityCount) cast i];
 	}
 }

@@ -13,20 +13,13 @@ import awe.util.Bag;
 import awe.util.BitSet;
 using awe.util.MoreStringTools;
 import awe.ComponentList;
-#if doc
-	@:extern interface Injector {
-		public function injectInto(v: Dynamic): Void;
-	}
-#else
-	import minject.Injector;
-#end
 
 /**
-	The central type of `Engine`.
+	The central object on which components, systems, etc. are added.
 **/
-class Engine {
+class World {
 	/** The component lists for each type of `Component`. **/
-	public var components(default, null): Map<ComponentType, IComponentList>;
+	public var components(default, null): Map<ComponentType, IComponentList<Dynamic>>;
 	/** The systems to run. **/
 	public var systems(default, null): Bag<System>;
 	/** The managers. **/
@@ -37,21 +30,17 @@ class Engine {
 	public var compositions(default, null): Map<Entity, BitSet>;
 	/** How many entities have been created so far. **/
 	public var entityCount(default, null): Int;
-	/** This is used to inject the `IComponentList` into the `System`s. **/
-	public var injector(default, null):Injector;
 
 	/** 
-		Construct a new engine.
-		Note: `Engine.build` should be preferred.
+		Construct a new world.
+		Note: `World.create` should be preferred.
 		@param components The component lists for each type of `Component`.
 		@param systems The systems to run.
-		@param injector This is used to inject the `IComponentList` into the `System`s.
 	**/
-	public function new(components, systems, managers, injector) {
+	public function new(components, systems, managers) {
 		this.components = components;
 		this.systems = systems;
 		this.managers = managers;
-		this.injector = injector;
 		entities = new Bag();
 		compositions = new Map();
 		entityCount = 0;
@@ -60,49 +49,45 @@ class Engine {
 		for(manager in managers)
 			manager.initialize(this);
 	}
-	public static macro function build(setup: ExprOf<EngineSetup>): ExprOf<Engine> {
+	public static macro function build(setup: ExprOf<WorldConfiguration>): ExprOf<World> {
 		var debug = Context.defined("debug");
-		if(debug)
-			Sys.println("Setting up Engine..");
 		var expectedCount: Null<Int> = setup.getField("expectedEntityCount").getValue();
 		var components = [for(component in setup.assertField("components").getArray()) {
-			var cty = ComponentType.get(component.resolveTypeLiteral());
+			var ty = component.resolveTypeLiteral();
+			var complex = ty.toComplexType();
+			var cty = ComponentType.get(ty);
 			var list = if(cty.isEmpty())
 				macro null;
 			else if(cty.isPacked())
 				macro awe.ComponentList.PackedComponentList.build($component);
 			else
-				macro new awe.ComponentList($v{expectedCount});
+				macro new awe.ComponentList<$complex>($v{expectedCount});
 			macro $v{cty.getPure()} => $list;
 		}];
 		var systems = setup.assertField("systems").getArray();
 		var managers = setup.assertField("managers").getArray();
 		var components = { expr: ExprDef.EArrayDecl(components), pos: setup.pos };
 		var block = [
-			(macro var components:Map<awe.ComponentType, awe.ComponentList.IComponentList> = $components),
+			(macro var components:Map<awe.ComponentType, awe.ComponentList.IComponentList<Dynamic>> = $components),
 			(macro var systems:awe.util.Bag<awe.System> = new awe.util.Bag($v{systems.length})),
 			(macro var managers:awe.util.Bag<awe.Manager> = new awe.util.Bag($v{managers.length})),
 			(macro var csystem:awe.System = null),
-			(macro var cmanager:awe.Manager = null),
-			macro var injector = new minject.Injector()
+			(macro var cmanager:awe.Manager = null)
 		];
 		for(system in systems) {
 			var ty = Context.typeof(system);
 			block.push(macro systems.add(csystem = $system));
-			block.push(macro injector.mapType($v{ty.toString()}, csystem).toValue(csystem));
 		}
 		for(manager in managers) {
 			var ty = Context.typeof(manager);
 			block.push(macro managers.add(cmanager = $manager));
-			block.push(macro injector.mapType($v{ty.toString()}, cmanager).toValue(cmanager));
 		}
 		for(component in setup.assertField("components").getArray()) {
 			var cty = ComponentType.get(component.resolveTypeLiteral());
 			var parts = component.toString().split(".");
 			var name = parts[parts.length - 1].toLowerCase().pluralize();
-			block.push(macro injector.mapType('awe.IComponentList', $v{name}).toValue(components.get($v{cty.getPure()})));
 		}
-		block.push(macro new Engine(components, systems, managers, injector));
+		block.push(macro new World(components, systems, managers));
 		var expr = {
 			expr: ExprDef.EBlock(block),
 			pos: Context.currentPos()
@@ -138,7 +123,7 @@ class Engine {
 		}
 	}
 }
-typedef EngineSetup = {
+typedef WorldConfiguration = {
 	?expectedEntityCount: Int,
 	?components: Array<Class<Component>>,
 	?systems: Array<System>,

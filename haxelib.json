@@ -9,6 +9,6 @@
 	"contributors": ["tombebbington"],
 	"classPath": "src",
 	"dependencies": {
-		"minject": ""
+		"polygonal-ds": ""
 	}
 }

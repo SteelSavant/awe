@@ -20,51 +20,51 @@ abstract Entity(Int) to Int from Int {
 
 	/**
 		Finds the composition bits of this entity.
-		@param engine The engine this `Entity` is contained in.
+		@param world The world that this `Entity` is contained in.
 		@return The composition bits.
 	**/
-	public inline function getComposition(engine: Engine): BitSet
-		return engine.compositions.get(this);
+	public inline function getComposition(world: World): BitSet
+		return world.compositions.get(this);
 
 	#if macro
 
-	static function wrapGet(engine: ExprOf<Entity>, ty: Type, cty: ComponentType) {
-		var list = macro $engine.components.get($v{cty.getPure()});
+	static function wrapGet(world: ExprOf<Entity>, ty: Type, cty: ComponentType) {
+		var list = macro $world.components.get($v{cty.getPure()});
 		return Context.defined("debug") ? macro {
 			var list = $list;
 			if(list == null)
-				throw "Component `" + $v{ty.toString()} + "` has not been registered with the Engine";
+				throw "Component `" + $v{ty.toString()} + "` has not been registered with the World";
 			list;
 		} : list;
 	}
 	#end
 	#if doc
 	/**
-		Add the component to the `Engine`, and attach it to this entity.
-		@param engine The engine this entity is in.
+		Add the component to the `World`, and attach it to this entity.
+		@param world The world this entity is in.
 		@param value The component to attach to this entity.
 	**/
-	public static function add<T: Component>(engine: Engine, value: T): Void {}
+	public static function add<T: Component>(world: World, value: T): Void {}
 	/**
-		Retrieve the component attached to this entity from the `Engine`.
-		@param engine The engine this entity is in.
+		Retrieve the component attached to this entity from the `World`.
+		@param world The world this entity is in.
 		@param kind The component type to find.
 		@return The component of the type given.
 	**/
-	public static function get<T: Component>(engine: Engine, kind: Class<T>): Null<T> return null;
+	public static function get<T: Component>(world: World, kind: Class<T>): Null<T> return null;
 	#else
 
-	public macro function add<T: Component>(self: ExprOf<Entity>, engine: ExprOf<Engine>, value: ExprOf<T>): ExprOf<Void> {
+	public macro function add<T: Component>(self: ExprOf<Entity>, world: ExprOf<World>, value: ExprOf<T>): ExprOf<Void> {
 		var ty = Context.typeof(value);
 		var cty = ComponentType.get(ty);
-		var list = wrapGet(engine, ty, cty);
+		var list = wrapGet(world, ty, cty);
 		return macro $list.add($self, $value);
 	}
 
-	public macro function get<T: Component>(self: ExprOf<Entity>, engine: ExprOf<Engine>, cl: ExprOf<Class<T>>): ExprOf<Null<T>> {
+	public macro function get<T: Component>(self: ExprOf<Entity>, world: ExprOf<World>, cl: ExprOf<Class<T>>): ExprOf<Null<T>> {
 		var ty = MacroTools.resolveTypeLiteral(cl);
 		var cty = ComponentType.get(ty);
-		var list = wrapGet(engine, ty, cty);
+		var list = wrapGet(world, ty, cty);
 		return macro $list.get($self);
 	}
 	#end

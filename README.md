@@ -6,15 +6,15 @@ an entity component system, every thing in the world is represented by an int,
 which is called an entity id. You can then attach data to these entities and run
 system on entities with a selection of components.
 
-Making the `Engine`
+Making the `World`
 -------------------
 
-The `Engine` is the what encapsulates all the components and systems contained in
-the project. To construct it, you call `Engine.build(...)` with the entities and
+The `World` is the what encapsulates all the components and systems contained in
+the project. To construct it, you call `World.build(...)` with the entities and
 systems you want it to have.
 
 ``` haxe
-var engine = Engine.build({
+var world = World.build({
 	systems: [InputSystem, MovementSystem, RenderSystem, GravitySystem],
 	components: [Input, Position, Velocity, Acceleration, Gravity, Follow]
 });
@@ -22,7 +22,7 @@ var engine = Engine.build({
 Making Entities
 ---------------
 
-An `Entity` represents a single thing in the `Engine`. To construct this, you need to
+An `Entity` represents a single thing in the `World`. To construct this, you need to
 construct an `Archetype` by calling `Archetype.build(...)` with the components that
 make it up.
 

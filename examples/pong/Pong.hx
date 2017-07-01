@@ -1,7 +1,7 @@
 import awe.Archetype;
 import awe.Component;
 import awe.ComponentList;
-import awe.Engine;
+import awe.World;
 import awe.Entity;
 import awe.System;
 import awe.Filter;
@@ -76,9 +76,9 @@ class Speed implements Component {
 
 
 class BounceSystem extends EntitySystem {
-	@inject('positions') public var positions: awe.IComponentList;
-	@inject('sizes') public var sizes: awe.IComponentList;
-	@inject('velocities') public var velocities: awe.IComponentList;
+	@inject('positions') public var positions: awe.IComponentList<Position>;
+	@inject('sizes') public var sizes: awe.IComponentList<Size>;
+	@inject('velocities') public var velocities: awe.IComponentList<Velocity>;
 	@inject public var draw: DrawSystem;
 	public override function new() {
 		super(Filter.build(Bounce & Position & Size & Velocity));
@@ -98,8 +98,8 @@ class BounceSystem extends EntitySystem {
 	}
 }
 class MovementSystem extends EntitySystem {
-	@inject('positions') public var positions: awe.IComponentList;
-	@inject('velocities') public var velocities: awe.IComponentList;
+	@inject('positions') public var positions: awe.IComponentList<Position>;
+	@inject('velocities') public var velocities: awe.IComponentList<Velocity>;
 	public override function new() {
 		super(Filter.build(Position & Velocity));
 	}
@@ -112,9 +112,9 @@ class MovementSystem extends EntitySystem {
 }
 
 class CollisionSystem extends EntitySystem {
-	@inject('positions') public var positions: awe.IComponentList;
-	@inject('sizes') public var sizes: awe.IComponentList;
-	@inject('velocities') public var velocities: awe.IComponentList;
+	@inject('positions') public var positions: awe.IComponentList<Position>;
+	@inject('sizes') public var sizes: awe.IComponentList<Size>;
+	@inject('velocities') public var velocities: awe.IComponentList<Velocity>;
 	public override function new() {
 		super(Filter.build(Collide & Position & Size & Velocity));
 	}
@@ -143,9 +143,9 @@ class CollisionSystem extends EntitySystem {
 class DrawSystem extends EntitySystem {
 	var context: CanvasRenderingContext2D;
 	public var canvas: CanvasElement;
-	@inject('draws') public var draws: awe.IComponentList;
-	@inject('positions') public var positions: awe.IComponentList;
-	@inject('sizes') public var sizes: awe.IComponentList;
+	@inject('draws') public var draws: awe.IComponentList<Draw>;
+	@inject('positions') public var positions: awe.IComponentList<Position>;
+	@inject('sizes') public var sizes: awe.IComponentList<Size>;
 	public override function new() {
 		super(Filter.build(Position & Draw & Size));
 		canvas = cast js.Browser.document.getElementById("pong");
@@ -166,9 +166,9 @@ class DrawSystem extends EntitySystem {
 }
 
 class InputSystem extends EntitySystem {
-	@inject('inputs') public var inputs: awe.IComponentList;
-	@inject('speeds') public var speeds: awe.IComponentList;
-	@inject('velocities') public var velocities: awe.IComponentList;
+	@inject('inputs') public var inputs: awe.IComponentList<Input>;
+	@inject('speeds') public var speeds: awe.IComponentList<Speed>;
+	@inject('velocities') public var velocities: awe.IComponentList<Velocity>;
 	@inject public var draw: DrawSystem;
 
 	var input: InputData;
@@ -178,8 +178,8 @@ class InputSystem extends EntitySystem {
 		input = InputData.None;
 	}
 
-	public override function initialize(engine: Engine) {
-		super.initialize(engine);
+	public override function initialize(world: World) {
+		super.initialize(world);
 		draw.canvas.onkeydown = function(event) {
 			switch(event.keyCode) {
 				case 40: input = Down;
@@ -194,8 +194,8 @@ class InputSystem extends EntitySystem {
 	}
 
 	public override function updateEntity(delta: Float, entity: Entity): Void {
-		var speed: Speed = speeds.get(entity);
-		var velocity: Velocity = velocities.get(entity);
+		var speed = speeds.get(entity);
+		var velocity = velocities.get(entity);
 		velocity.y = speed.speed * delta * (switch input {
 			case Up: -1;
 			case Down: 1;
@@ -207,7 +207,7 @@ class InputSystem extends EntitySystem {
 class Pong {
 	static function main() {
 		js.Browser.window.onload = function(_) {
-			var engine = Engine.build({
+			var world = World.build({
 				components: [Bounce, Collide, Side, Speed, Position, Velocity, Size, Input, Draw],
 				systems: [
 					new BounceSystem(),
@@ -222,20 +222,20 @@ class Pong {
 				expectedEntityCount: 3
 			});
 			var playerArch = Archetype.build(Size, Collide, Speed, Input, Position, Velocity, Draw);
-			var player = playerArch.create(engine);
-			player.add(engine, new Draw("red"));
-			player.add(engine, new Size(3, 50));
-			player.add(engine, new Position(65, 55));
-			player.add(engine, new Velocity(0, 0));
-			player.add(engine, new Speed(7000));
-			player.add(engine, new Input());
+			var player = playerArch.create(world);
+			player.add(world, new Draw("red"));
+			player.add(world, new Size(3, 50));
+			player.add(world, new Position(65, 55));
+			player.add(world, new Velocity(0, 0));
+			player.add(world, new Speed(7000));
+			player.add(world, new Input());
 			var ballArch = Archetype.build(Size, Collide, Position, Velocity, Draw, Bounce);
-			var ball = ballArch.create(engine);
-			ball.add(engine, new Draw("blue"));
-			ball.add(engine, new Size(30, 30));
-			ball.add(engine, new Position(300, 300));
-			ball.add(engine, new Velocity(1000, 1000));
-			engine.delayLoop(0.04);
+			var ball = ballArch.create(world);
+			ball.add(world, new Draw("blue"));
+			ball.add(world, new Size(30, 30));
+			ball.add(world, new Position(300, 300));
+			ball.add(world, new Velocity(1000, 1000));
+			world.delayLoop(0.04);
 		};
 	}
 }
