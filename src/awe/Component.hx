@@ -252,7 +252,7 @@ class AutoComponent {
 			pos: Context.currentPos(),
 			kind: FieldType.FFun({
 				ret: macro: awe.ComponentType,
-				expr: macro return cast $v{ComponentType.getLocal() | ComponentType.PACKED_FLAG},
+				expr: macro return cast $v{ComponentType.getLocal()},
 				args: []
 			}),
 			access: [

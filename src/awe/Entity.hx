@@ -7,7 +7,7 @@ using haxe.macro.ExprTools;
 using haxe.macro.TypeTools;
 import haxe.macro.Expr;
 using awe.util.MacroTools;
-import awe.util.BitSet;
+import de.polygonal.ds.BitVector;
 
 /**
 	Reperesents a single thing in a `World`.
@@ -23,17 +23,18 @@ abstract Entity(Int) to Int from Int {
 		@param world The world that this `Entity` is contained in.
 		@return The composition bits.
 	**/
-	public inline function getComposition(world: World): BitSet
+	@:access(awe)
+	public inline function getComposition(world: World): BitVector
 		return world.compositions.get(this);
-
+		
 	#if macro
 
 	static function wrapGet(world: ExprOf<Entity>, ty: Type, cty: ComponentType) {
-		var list = macro $world.components.get($v{cty.getPure()});
+		var list = macro untyped $world.components.get($v{cty.getPure()});
 		return Context.defined("debug") ? macro {
 			var list = $list;
 			if(list == null)
-				throw "Component `" + $v{ty.toString()} + "` has not been registered with the World";
+				"Component `" + $v{ty.toString()} + "` has not been registered with the World";
 			list;
 		} : list;
 	}

@@ -1435,28 +1435,28 @@
 	</class>
 	<class path="awe.Archetype" params="" file="src/awe/Archetype.hx">
 		<types><c path="Array"><x path="awe.ComponentType"/></c></types>
-		<cid><x path="awe.util.BitSet"/></cid>
+		<cid><x path="de.polygonal.ds.ArrayList"/></cid>
 		<create public="1" set="method" line="43">
-			<f a="engine">
-				<c path="awe.Engine"/>
+			<f a="world">
+				<c path="awe.World"/>
 				<x path="awe.Entity"/>
 			</f>
 			<meta><m n=":has_untyped"/></meta>
 			<haxe_doc>Create a new `Entity` with the components given by this `Archetype`.
-		@param engine The engine to create the entity in.
+		@param world The world to create the entity in.
 		@return The created entity.</haxe_doc>
 		</create>
 		<createSome public="1" set="method" line="59">
-			<f a="engine:count">
-				<c path="awe.Engine"/>
+			<f a="world:count">
+				<c path="awe.World"/>
 				<x path="Int"/>
-				<x path="awe.util.Bag"><x path="awe.Entity"/></x>
+				<x path="awe.util.ArrayList"><x path="awe.Entity"/></x>
 			</f>
 			<meta><m n=":has_untyped"/></meta>
 		</createSome>
 		<new public="1" set="method" line="34">
 			<f a="cid:types">
-				<x path="awe.util.BitSet"/>
+				<x path="de.polygonal.ds.ArrayList"/>
 				<c path="Array"><x path="awe.ComponentType"/></c>
 				<x path="Void"/>
 			</f>
@@ -1733,14 +1733,14 @@
 			<meta><m n=":op"><e>A!=B</e></m></meta>
 		</neq>
 	</class>
-	<class path="awe.Injector" params="" file="src/awe/Engine.hx" module="awe.Engine" interface="1">
+	<class path="awe.Injector" params="" file="src/awe/World.hx" module="awe.World" interface="1">
 		<injectInto public="1" set="method"><f a="v">
 	<d/>
 	<x path="Void"/>
 </f></injectInto>
 		<meta><m n=":extern"/></meta>
 	</class>
-	<class path="awe.Engine" params="" file="src/awe/Engine.hx">
+	<class path="awe.World" params="" file="src/awe/World.hx">
 		<components public="1" set="null">
 			<x path="Map">
 				<x path="awe.ComponentType"/>
@@ -1749,21 +1749,21 @@
 			<haxe_doc>The component lists for each type of `Component`.</haxe_doc>
 		</components>
 		<systems public="1" set="null">
-			<x path="awe.util.Bag"><c path="awe.System"/></x>
+			<x path="awe.util.ArrayList"><c path="awe.System"/></x>
 			<haxe_doc>The systems to run.</haxe_doc>
 		</systems>
 		<managers public="1" set="null">
-			<x path="awe.util.Bag"><c path="awe.Manager"/></x>
+			<x path="awe.util.ArrayList"><c path="awe.Manager"/></x>
 			<haxe_doc>The managers.</haxe_doc>
 		</managers>
 		<entities public="1" set="null">
-			<x path="awe.util.Bag"><x path="awe.Entity"/></x>
+			<x path="awe.util.ArrayList"><x path="awe.Entity"/></x>
 			<haxe_doc>The entities that the systems run on.</haxe_doc>
 		</entities>
 		<compositions public="1" set="null">
 			<x path="Map">
 				<x path="awe.Entity"/>
-				<x path="awe.util.BitSet"/>
+				<x path="de.polygonal.ds.ArrayList"/>
 			</x>
 			<haxe_doc>The composition of each entity.</haxe_doc>
 		</compositions>
@@ -1799,20 +1799,20 @@
 					<x path="awe.ComponentType"/>
 					<c path="awe.IComponentList"/>
 				</x>
-				<x path="awe.util.Bag"><c path="awe.System"/></x>
-				<x path="awe.util.Bag"><c path="awe.Manager"/></x>
+				<x path="awe.util.ArrayList"><c path="awe.System"/></x>
+				<x path="awe.util.ArrayList"><c path="awe.Manager"/></x>
 				<c path="awe.Injector"/>
 				<x path="Void"/>
 			</f>
-			<haxe_doc>Construct a new engine.
-		Note: `Engine.build` should be preferred.
+			<haxe_doc>Construct a new world.
+		Note: `World.build` should be preferred.
 		@param components The component lists for each type of `Component`.
 		@param systems The systems to run.
 		@param injector This is used to inject the `IComponentList` into the `System`s.</haxe_doc>
 		</new>
-		<haxe_doc>The central type of `Engine`.</haxe_doc>
+		<haxe_doc>The central type of `World`.</haxe_doc>
 	</class>
-	<typedef path="awe.EngineSetup" params="" file="src/awe/Engine.hx" module="awe.Engine"><a>
+	<typedef path="awe.EngineSetup" params="" file="src/awe/World.hx" module="awe.World"><a>
 	<systems>
 		<t path="Null"><c path="Array"><c path="awe.System"/></c></t>
 		<meta><m n=":optional"/></meta>
@@ -1849,34 +1849,34 @@
 		<meta><m n=":impl"/></meta>
 	</get_id>
 	<getComposition public="1" get="inline" set="null" line="26" static="1">
-		<f a="this:engine">
+		<f a="this:world">
 			<x path="Int"/>
-			<c path="awe.Engine"/>
-			<x path="awe.util.BitSet"/>
+			<c path="awe.World"/>
+			<x path="de.polygonal.ds.ArrayList"/>
 		</f>
 		<meta><m n=":impl"/></meta>
 		<haxe_doc>Finds the composition bits of this entity.
-		@param engine The engine this `Entity` is contained in.
+		@param world The world this `Entity` is contained in.
 		@return The composition bits.</haxe_doc>
 	</getComposition>
 	<add public="1" params="T" set="method" line="47" static="1">
-		<f a="engine:value">
-			<c path="awe.Engine"/>
+		<f a="world:value">
+			<c path="awe.World"/>
 			<c path="add.T"/>
 			<x path="Void"/>
 		</f>
-		<haxe_doc>Add the component to the `Engine`, and attach it to this entity.
-		@param engine The engine this entity is in.
+		<haxe_doc>Add the component to the `World`, and attach it to this entity.
+		@param world The world this entity is in.
 		@param value The component to attach to this entity.</haxe_doc>
 	</add>
 	<get public="1" params="T" set="method" line="54" static="1">
-		<f a="engine:kind">
-			<c path="awe.Engine"/>
+		<f a="world:kind">
+			<c path="awe.World"/>
 			<x path="Class"><c path="get.T"/></x>
 			<t path="Null"><c path="get.T"/></t>
 		</f>
-		<haxe_doc>Retrieve the component attached to this entity from the `Engine`.
-		@param engine The engine this entity is in.
+		<haxe_doc>Retrieve the component attached to this entity from the `World`.
+		@param world The world this entity is in.
 		@param kind The component type to find.
 		@return The component of the type given.</haxe_doc>
 	</get>
@@ -1904,34 +1904,34 @@
 			<meta><m n=":impl"/></meta>
 		</get_id>
 		<getComposition public="1" get="inline" set="null" line="26" static="1">
-			<f a="this:engine">
+			<f a="this:world">
 				<x path="Int"/>
-				<c path="awe.Engine"/>
-				<x path="awe.util.BitSet"/>
+				<c path="awe.World"/>
+				<x path="de.polygonal.ds.ArrayList"/>
 			</f>
 			<meta><m n=":impl"/></meta>
 			<haxe_doc>Finds the composition bits of this entity.
-		@param engine The engine this `Entity` is contained in.
+		@param world The world this `Entity` is contained in.
 		@return The composition bits.</haxe_doc>
 		</getComposition>
 		<add public="1" params="T" set="method" line="47" static="1">
-			<f a="engine:value">
-				<c path="awe.Engine"/>
+			<f a="world:value">
+				<c path="awe.World"/>
 				<c path="add.T"/>
 				<x path="Void"/>
 			</f>
-			<haxe_doc>Add the component to the `Engine`, and attach it to this entity.
-		@param engine The engine this entity is in.
+			<haxe_doc>Add the component to the `World`, and attach it to this entity.
+		@param world The world this entity is in.
 		@param value The component to attach to this entity.</haxe_doc>
 		</add>
 		<get public="1" params="T" set="method" line="54" static="1">
-			<f a="engine:kind">
-				<c path="awe.Engine"/>
+			<f a="world:kind">
+				<c path="awe.World"/>
 				<x path="Class"><c path="get.T"/></x>
 				<t path="Null"><c path="get.T"/></t>
 			</f>
-			<haxe_doc>Retrieve the component attached to this entity from the `Engine`.
-		@param engine The engine this entity is in.
+			<haxe_doc>Retrieve the component attached to this entity from the `World`.
+		@param world The world this entity is in.
 		@param kind The component type to find.
 		@return The component of the type given.</haxe_doc>
 		</get>
@@ -1945,9 +1945,9 @@
 		</toString>
 	</class>
 	<class path="awe.Filter" params="" file="src/awe/Filter.hx">
-		<allSet set="null"><x path="awe.util.BitSet"/></allSet>
-		<oneSet set="null"><x path="awe.util.BitSet"/></oneSet>
-		<noneSet set="null"><x path="awe.util.BitSet"/></noneSet>
+		<allSet set="null"><x path="de.polygonal.ds.ArrayList"/></allSet>
+		<oneSet set="null"><x path="de.polygonal.ds.ArrayList"/></oneSet>
+		<noneSet set="null"><x path="de.polygonal.ds.ArrayList"/></noneSet>
 		<toString public="1" set="method" line="105">
 			<f a=""><c path="String"/></f>
 			<haxe_doc>Make a string representation of this filter.
@@ -1955,21 +1955,21 @@
 		</toString>
 		<matches public="1" get="inline" set="null" line="112">
 			<f a="components">
-				<x path="awe.util.BitSet"/>
+				<x path="de.polygonal.ds.ArrayList"/>
 				<x path="Bool"/>
 			</f>
 			<haxe_doc>Returns true if the `components` set fulfills this filter.
-		@param components The `BitSet` of components to check against.
+		@param components The `BitVector` of components to check against.
 		@return If the `components` set fulfills this filter.</haxe_doc>
 		</matches>
-		<matching public="1" set="method" line="116"><f a="engine">
-	<c path="awe.Engine"/>
+		<matching public="1" set="method" line="116"><f a="world">
+	<c path="awe.World"/>
 	<c path="Array"><x path="awe.Entity"/></c>
 </f></matching>
 		<new public="1" set="method" line="49"><f a="allSet:oneSet:noneSet">
-	<x path="awe.util.BitSet"/>
-	<x path="awe.util.BitSet"/>
-	<x path="awe.util.BitSet"/>
+	<x path="de.polygonal.ds.ArrayList"/>
+	<x path="de.polygonal.ds.ArrayList"/>
+	<x path="de.polygonal.ds.ArrayList"/>
 	<x path="Void"/>
 </f></new>
 		<haxe_doc><![CDATA[A filter for matching entities' components against. This is used to check
@@ -2003,31 +2003,31 @@
 	```]]></haxe_doc>
 	</class>
 	<class path="awe.Manager" params="" file="src/awe/Manager.hx">
-		<engine public="1" set="null">
-			<c path="awe.Engine"/>
-			<haxe_doc>The engine that contains this manager.</haxe_doc>
-		</engine>
+		<world public="1" set="null">
+			<c path="awe.World"/>
+			<haxe_doc>The world that contains this manager.</haxe_doc>
+		</world>
 		<initialize public="1" set="method" line="10">
-			<f a="engine">
-				<c path="awe.Engine"/>
+			<f a="world">
+				<c path="awe.World"/>
 				<x path="Void"/>
 			</f>
-			<haxe_doc>Initializes this manager in the `Engine`.
-		@param engine The `Engine` to initialize this in.</haxe_doc>
+			<haxe_doc>Initializes this manager in the `World`.
+		@param world The `World` to initialize this in.</haxe_doc>
 		</initialize>
 		<added public="1" set="method" line="17">
 			<f a="entity">
 				<x path="awe.Entity"/>
 				<x path="Void"/>
 			</f>
-			<haxe_doc>Called when an entity is added to the engine.</haxe_doc>
+			<haxe_doc>Called when an entity is added to the world.</haxe_doc>
 		</added>
 		<removed public="1" set="method" line="21">
 			<f a="entity">
 				<x path="awe.Entity"/>
 				<x path="Void"/>
 			</f>
-			<haxe_doc>Called when an entity is deleted from the engine.</haxe_doc>
+			<haxe_doc>Called when an entity is deleted from the world.</haxe_doc>
 		</removed>
 	</class>
 	<typedef path="awe.PackedComponent" params="" file="src/awe/PackedComponent.hx"><a>
@@ -2035,10 +2035,10 @@
 	<__bytes><c path="haxe.io.Bytes"/></__bytes>
 </a></typedef>
 	<class path="awe.System" params="" file="src/awe/System.hx">
-		<engine public="1" set="null">
-			<c path="awe.Engine"/>
-			<haxe_doc>The engine that contains this system.</haxe_doc>
-		</engine>
+		<world public="1" set="null">
+			<c path="awe.World"/>
+			<haxe_doc>The world that contains this system.</haxe_doc>
+		</world>
 		<enabled public="1">
 			<x path="Bool"/>
 			<haxe_doc>If this system is enabled or not.</haxe_doc>
@@ -2049,12 +2049,12 @@
 		@return If this should be processed or not.</haxe_doc>
 		</shouldProcess>
 		<initialize public="1" set="method" line="27">
-			<f a="engine">
-				<c path="awe.Engine"/>
+			<f a="world">
+				<c path="awe.World"/>
 				<x path="Void"/>
 			</f>
-			<haxe_doc>Initializes this system in the `Engine`.
-		@param engine The `Engine` to initialize this in.</haxe_doc>
+			<haxe_doc>Initializes this system in the `World`.
+		@param world The `World` to initialize this in.</haxe_doc>
 		</initialize>
 		<update public="1" set="method" line="36">
 			<f a="delta">
@@ -2077,7 +2077,7 @@
 			<haxe_doc>The filter to check an entity against before adding to this system.</haxe_doc>
 		</filter>
 		<matchers public="1" set="null">
-			<x path="awe.util.Bag"><x path="awe.Entity"/></x>
+			<x path="awe.util.ArrayList"><x path="awe.Entity"/></x>
 			<haxe_doc>The entities that match the `filter`.</haxe_doc>
 		</matchers>
 		<updateMatchers public="1" set="method" line="49"><f a=""><x path="Void"/></f></updateMatchers>
@@ -2099,7 +2099,7 @@
 		<extends path="awe.Manager"/>
 		<groups><x path="Map">
 	<c path="String"/>
-	<x path="awe.util.Bag"><x path="awe.Entity"/></x>
+	<x path="awe.util.ArrayList"><x path="awe.Entity"/></x>
 </x></groups>
 		<add public="1" set="method" line="21">
 			<f a="entity:group">
@@ -2114,7 +2114,7 @@
 		<getEntities public="1" get="inline" set="null" line="31">
 			<f a="group">
 				<c path="String"/>
-				<x path="awe.util.Bag"><x path="awe.Entity"/></x>
+				<x path="awe.util.ArrayList"><x path="awe.Entity"/></x>
 			</f>
 			<haxe_doc>Get the entities contained in a given group.
 		@param group The group to check.
@@ -2123,7 +2123,7 @@
 		<getGroups public="1" set="method" line="39">
 			<f a="entity">
 				<x path="awe.Entity"/>
-				<x path="awe.util.Bag"><c path="String"/></x>
+				<x path="awe.util.ArrayList"><c path="String"/></x>
 			</f>
 			<haxe_doc>Get all groups the entity belongs to..
 		@param entity The entity to get the groups of.
@@ -2161,53 +2161,53 @@
 		<new public="1" set="method" line="12"><f a=""><x path="Void"/></f></new>
 		<haxe_doc>Handles entity grouping.</haxe_doc>
 	</class>
-	<abstract path="awe.util.Bag" params="T" file="src/awe/util/Bag.hx">
+	<abstract path="awe.util.ArrayList" params="T" file="src/awe/util/ArrayList.hx">
 		<from>
 			<icast field="fromVector"><x path="haxe.ds.Vector"><c path="fromVector.T"/></x></icast>
 			<icast field="fromArray"><c path="Array"><c path="fromArray.T"/></c></icast>
 		</from>
-		<this><c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c></this>
-		<to><icast field="toArray"><c path="Array"><c path="awe.util.Bag.T"/></c></icast></to>
+		<this><c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c></this>
+		<to><icast field="toArray"><c path="Array"><c path="awe.util.ArrayList.T"/></c></icast></to>
 		<haxe_doc>A fast collection type similar to `Array` in usage but does not preserve order
 	of its entities. It is faster to add to than an `Array` because it is actually
 	represented internally as a `haxe.ds.Vector` with automatic resizing.</haxe_doc>
-		<impl><class path="awe.util._Bag.Bag_Impl_" params="" file="src/awe/util/Bag.hx" private="1" module="awe.util.Bag">
+		<impl><class path="awe.util._Bag.Bag_Impl_" params="" file="src/awe/util/ArrayList.hx" private="1" module="awe.util.ArrayList">
 	<length public="1" get="accessor" set="null" static="1">
 		<x path="Int"/>
 		<meta><m n=":impl"/></meta>
-		<haxe_doc>How many items are contained in this bag.</haxe_doc>
+		<haxe_doc>How many items are contained in this ArrayList.</haxe_doc>
 	</length>
 	<capacity public="1" get="accessor" set="null" static="1">
 		<x path="Int"/>
 		<meta><m n=":impl"/></meta>
-		<haxe_doc>How many items can be stored in this bag without re-allocating.</haxe_doc>
+		<haxe_doc>How many items can be stored in this ArrayList without re-allocating.</haxe_doc>
 	</capacity>
 	<_new public="1" get="inline" set="null" line="20" static="1">
 		<f a="?capacity">
 			<x path="Int"/>
-			<x path="awe.util.Bag"><c path="awe.util.Bag.T"/></x>
+			<x path="awe.util.ArrayList"><c path="awe.util.ArrayList.T"/></x>
 		</f>
 		<meta><m n=":impl"/></meta>
-		<haxe_doc>Construct a new Bag with the capacity given or 16.
-		@param capacity How many items can be stored in this bag without re-allocating.</haxe_doc>
+		<haxe_doc>Construct a new ArrayList with the capacity given or 16.
+		@param capacity How many items can be stored in this ArrayList without re-allocating.</haxe_doc>
 	</_new>
 	<get_capacity get="inline" set="null" line="23" static="1">
 		<f a="this">
-			<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
+			<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
 			<x path="Int"/>
 		</f>
 		<meta><m n=":impl"/></meta>
 	</get_capacity>
 	<get_length get="inline" set="null" line="31" static="1">
 		<f a="this">
-			<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
+			<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
 			<x path="Int"/>
 		</f>
 		<meta><m n=":impl"/></meta>
 	</get_length>
 	<clear public="1" get="inline" set="null" line="40" static="1">
 		<f a="this">
-			<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
+			<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
 			<x path="Void"/>
 		</f>
 		<meta><m n=":impl"/></meta>
@@ -2215,94 +2215,94 @@
 	</clear>
 	<contains public="1" get="inline" set="null" line="48" static="1">
 		<f a="this:value">
-			<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
-			<c path="awe.util.Bag.T"/>
+			<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
+			<c path="awe.util.ArrayList.T"/>
 			<x path="Bool"/>
 		</f>
 		<meta><m n=":impl"/></meta>
-		<haxe_doc>Check if this bag contains the value given.
+		<haxe_doc>Check if this ArrayList contains the value given.
 		@param value The value to check is contained.
-		@return If this value is contained in this bag.</haxe_doc>
+		@return If this value is contained in this ArrayList.</haxe_doc>
 	</contains>
 	<add public="1" get="inline" set="null" line="55" static="1">
 		<f a="this:item">
-			<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
-			<c path="awe.util.Bag.T"/>
+			<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
+			<c path="awe.util.ArrayList.T"/>
 			<x path="Void"/>
 		</f>
 		<meta><m n=":impl"/></meta>
-		<haxe_doc>Add the item to this bag.
+		<haxe_doc>Add the item to this ArrayList.
 		@param item The item to add.</haxe_doc>
 	</add>
 	<ensureCapacity public="1" get="inline" set="null" line="62" static="1">
 		<f a="this:capacity">
-			<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
+			<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
 			<x path="Int"/>
 			<x path="Void"/>
 		</f>
 		<meta><m n=":impl"/></meta>
-		<haxe_doc>Ensure that this bag can store up to `capacity` without re-allocating.
+		<haxe_doc>Ensure that this ArrayList can store up to `capacity` without re-allocating.
 		@param capacity The capacity to make sure is allocated.</haxe_doc>
 	</ensureCapacity>
 	<get public="1" get="inline" set="null" line="66" static="1">
 		<f a="this:index">
-			<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
+			<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
 			<x path="Int"/>
-			<t path="Null"><c path="awe.util.Bag.T"/></t>
+			<t path="Null"><c path="awe.util.ArrayList.T"/></t>
 		</f>
 		<meta>
 			<m n=":impl"/>
 			<m n=":arrayAccess"/>
 		</meta>
-		<haxe_doc>Retrieve the `index`th item from this bag.</haxe_doc>
+		<haxe_doc>Retrieve the `index`th item from this ArrayList.</haxe_doc>
 	</get>
 	<set public="1" get="inline" set="null" line="70" static="1">
 		<f a="this:index:value">
-			<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
+			<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
 			<x path="Int"/>
-			<c path="awe.util.Bag.T"/>
-			<c path="awe.util.Bag.T"/>
+			<c path="awe.util.ArrayList.T"/>
+			<c path="awe.util.ArrayList.T"/>
 		</f>
 		<meta>
 			<m n=":impl"/>
 			<m n=":arrayAccess"/>
 		</meta>
-		<haxe_doc>Set the `index`th item in this bag to `value`.</haxe_doc>
+		<haxe_doc>Set the `index`th item in this ArrayList to `value`.</haxe_doc>
 	</set>
 	<iterator public="1" get="inline" set="null" line="77" static="1">
 		<f a="this">
-			<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
-			<c path="awe.util.BagIterator"><c path="awe.util.Bag.T"/></c>
+			<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
+			<c path="awe.util.BagIterator"><c path="awe.util.ArrayList.T"/></c>
 		</f>
 		<meta><m n=":impl"/></meta>
-		<haxe_doc>Iterate through this bag's contents.
+		<haxe_doc>Iterate through this ArrayList's contents.
 		@return The iterator.</haxe_doc>
 	</iterator>
 	<remove public="1" get="inline" set="null" line="85" static="1">
 		<f a="this:item">
-			<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
-			<c path="awe.util.Bag.T"/>
+			<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
+			<c path="awe.util.ArrayList.T"/>
 			<x path="Bool"/>
 		</f>
 		<meta><m n=":impl"/></meta>
-		<haxe_doc>Remove `item` from this bag.
+		<haxe_doc>Remove `item` from this ArrayList.
 		@param item The item to try to remove.
 		@return If the item could be found and removed.</haxe_doc>
 	</remove>
 	<removeLast public="1" get="inline" set="null" line="92" static="1">
 		<f a="this">
-			<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
-			<t path="Null"><c path="awe.util.Bag.T"/></t>
+			<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
+			<t path="Null"><c path="awe.util.ArrayList.T"/></t>
 		</f>
 		<meta><m n=":impl"/></meta>
-		<haxe_doc>Remove the last item from this bag.
+		<haxe_doc>Remove the last item from this ArrayList.
 		@return The ex-last item.</haxe_doc>
 	</removeLast>
 	<blit public="1" get="inline" set="null" line="103" static="1">
 		<f a="this:srcPos:dest:destPos:len">
-			<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
+			<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
 			<x path="Int"/>
-			<x path="awe.util.Bag"><c path="awe.util.Bag.T"/></x>
+			<x path="awe.util.ArrayList"><c path="awe.util.ArrayList.T"/></x>
 			<x path="Int"/>
 			<x path="Int"/>
 			<x path="Void"/>
@@ -2313,7 +2313,7 @@
 	<fromVector public="1" params="T" get="inline" set="null" line="112" static="1">
 		<f a="vector">
 			<x path="haxe.ds.Vector"><c path="fromVector.T"/></x>
-			<x path="awe.util.Bag"><unknown/></x>
+			<x path="awe.util.ArrayList"><unknown/></x>
 		</f>
 		<meta>
 			<m n=":has_untyped"/>
@@ -2323,14 +2323,14 @@
 	<fromArray public="1" params="T" set="method" line="125" static="1">
 		<f a="array">
 			<c path="Array"><c path="fromArray.T"/></c>
-			<x path="awe.util.Bag"><unknown/></x>
+			<x path="awe.util.ArrayList"><unknown/></x>
 		</f>
 		<meta><m n=":from"/></meta>
 	</fromArray>
 	<toArray public="1" get="inline" set="null" line="136" static="1">
 		<f a="this">
-			<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
-			<c path="Array"><c path="awe.util.Bag.T"/></c>
+			<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
+			<c path="Array"><c path="awe.util.ArrayList.T"/></c>
 		</f>
 		<meta>
 			<m n=":impl"/>
@@ -2340,43 +2340,43 @@
 	<meta><m n=":directlyUsed"/></meta>
 </class></impl>
 	</abstract>
-	<class path="awe.util._Bag.Bag_Impl_" params="" file="src/awe/util/Bag.hx" private="1" module="awe.util.Bag">
+	<class path="awe.util._Bag.Bag_Impl_" params="" file="src/awe/util/ArrayList.hx" private="1" module="awe.util.ArrayList">
 		<length public="1" get="accessor" set="null" static="1">
 			<x path="Int"/>
 			<meta><m n=":impl"/></meta>
-			<haxe_doc>How many items are contained in this bag.</haxe_doc>
+			<haxe_doc>How many items are contained in this ArrayList.</haxe_doc>
 		</length>
 		<capacity public="1" get="accessor" set="null" static="1">
 			<x path="Int"/>
 			<meta><m n=":impl"/></meta>
-			<haxe_doc>How many items can be stored in this bag without re-allocating.</haxe_doc>
+			<haxe_doc>How many items can be stored in this ArrayList without re-allocating.</haxe_doc>
 		</capacity>
 		<_new public="1" get="inline" set="null" line="20" static="1">
 			<f a="?capacity">
 				<x path="Int"/>
-				<x path="awe.util.Bag"><c path="awe.util.Bag.T"/></x>
+				<x path="awe.util.ArrayList"><c path="awe.util.ArrayList.T"/></x>
 			</f>
 			<meta><m n=":impl"/></meta>
-			<haxe_doc>Construct a new Bag with the capacity given or 16.
-		@param capacity How many items can be stored in this bag without re-allocating.</haxe_doc>
+			<haxe_doc>Construct a new ArrayList with the capacity given or 16.
+		@param capacity How many items can be stored in this ArrayList without re-allocating.</haxe_doc>
 		</_new>
 		<get_capacity get="inline" set="null" line="23" static="1">
 			<f a="this">
-				<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
+				<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
 				<x path="Int"/>
 			</f>
 			<meta><m n=":impl"/></meta>
 		</get_capacity>
 		<get_length get="inline" set="null" line="31" static="1">
 			<f a="this">
-				<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
+				<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
 				<x path="Int"/>
 			</f>
 			<meta><m n=":impl"/></meta>
 		</get_length>
 		<clear public="1" get="inline" set="null" line="40" static="1">
 			<f a="this">
-				<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
+				<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
 				<x path="Void"/>
 			</f>
 			<meta><m n=":impl"/></meta>
@@ -2384,94 +2384,94 @@
 		</clear>
 		<contains public="1" get="inline" set="null" line="48" static="1">
 			<f a="this:value">
-				<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
-				<c path="awe.util.Bag.T"/>
+				<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
+				<c path="awe.util.ArrayList.T"/>
 				<x path="Bool"/>
 			</f>
 			<meta><m n=":impl"/></meta>
-			<haxe_doc>Check if this bag contains the value given.
+			<haxe_doc>Check if this ArrayList contains the value given.
 		@param value The value to check is contained.
-		@return If this value is contained in this bag.</haxe_doc>
+		@return If this value is contained in this ArrayList.</haxe_doc>
 		</contains>
 		<add public="1" get="inline" set="null" line="55" static="1">
 			<f a="this:item">
-				<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
-				<c path="awe.util.Bag.T"/>
+				<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
+				<c path="awe.util.ArrayList.T"/>
 				<x path="Void"/>
 			</f>
 			<meta><m n=":impl"/></meta>
-			<haxe_doc>Add the item to this bag.
+			<haxe_doc>Add the item to this ArrayList.
 		@param item The item to add.</haxe_doc>
 		</add>
 		<ensureCapacity public="1" get="inline" set="null" line="62" static="1">
 			<f a="this:capacity">
-				<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
+				<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
 				<x path="Int"/>
 				<x path="Void"/>
 			</f>
 			<meta><m n=":impl"/></meta>
-			<haxe_doc>Ensure that this bag can store up to `capacity` without re-allocating.
+			<haxe_doc>Ensure that this ArrayList can store up to `capacity` without re-allocating.
 		@param capacity The capacity to make sure is allocated.</haxe_doc>
 		</ensureCapacity>
 		<get public="1" get="inline" set="null" line="66" static="1">
 			<f a="this:index">
-				<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
+				<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
 				<x path="Int"/>
-				<t path="Null"><c path="awe.util.Bag.T"/></t>
+				<t path="Null"><c path="awe.util.ArrayList.T"/></t>
 			</f>
 			<meta>
 				<m n=":impl"/>
 				<m n=":arrayAccess"/>
 			</meta>
-			<haxe_doc>Retrieve the `index`th item from this bag.</haxe_doc>
+			<haxe_doc>Retrieve the `index`th item from this ArrayList.</haxe_doc>
 		</get>
 		<set public="1" get="inline" set="null" line="70" static="1">
 			<f a="this:index:value">
-				<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
+				<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
 				<x path="Int"/>
-				<c path="awe.util.Bag.T"/>
-				<c path="awe.util.Bag.T"/>
+				<c path="awe.util.ArrayList.T"/>
+				<c path="awe.util.ArrayList.T"/>
 			</f>
 			<meta>
 				<m n=":impl"/>
 				<m n=":arrayAccess"/>
 			</meta>
-			<haxe_doc>Set the `index`th item in this bag to `value`.</haxe_doc>
+			<haxe_doc>Set the `index`th item in this ArrayList to `value`.</haxe_doc>
 		</set>
 		<iterator public="1" get="inline" set="null" line="77" static="1">
 			<f a="this">
-				<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
-				<c path="awe.util.BagIterator"><c path="awe.util.Bag.T"/></c>
+				<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
+				<c path="awe.util.BagIterator"><c path="awe.util.ArrayList.T"/></c>
 			</f>
 			<meta><m n=":impl"/></meta>
-			<haxe_doc>Iterate through this bag's contents.
+			<haxe_doc>Iterate through this ArrayList's contents.
 		@return The iterator.</haxe_doc>
 		</iterator>
 		<remove public="1" get="inline" set="null" line="85" static="1">
 			<f a="this:item">
-				<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
-				<c path="awe.util.Bag.T"/>
+				<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
+				<c path="awe.util.ArrayList.T"/>
 				<x path="Bool"/>
 			</f>
 			<meta><m n=":impl"/></meta>
-			<haxe_doc>Remove `item` from this bag.
+			<haxe_doc>Remove `item` from this ArrayList.
 		@param item The item to try to remove.
 		@return If the item could be found and removed.</haxe_doc>
 		</remove>
 		<removeLast public="1" get="inline" set="null" line="92" static="1">
 			<f a="this">
-				<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
-				<t path="Null"><c path="awe.util.Bag.T"/></t>
+				<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
+				<t path="Null"><c path="awe.util.ArrayList.T"/></t>
 			</f>
 			<meta><m n=":impl"/></meta>
-			<haxe_doc>Remove the last item from this bag.
+			<haxe_doc>Remove the last item from this ArrayList.
 		@return The ex-last item.</haxe_doc>
 		</removeLast>
 		<blit public="1" get="inline" set="null" line="103" static="1">
 			<f a="this:srcPos:dest:destPos:len">
-				<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
+				<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
 				<x path="Int"/>
-				<x path="awe.util.Bag"><c path="awe.util.Bag.T"/></x>
+				<x path="awe.util.ArrayList"><c path="awe.util.ArrayList.T"/></x>
 				<x path="Int"/>
 				<x path="Int"/>
 				<x path="Void"/>
@@ -2482,7 +2482,7 @@
 		<fromVector public="1" params="T" get="inline" set="null" line="112" static="1">
 			<f a="vector">
 				<x path="haxe.ds.Vector"><c path="fromVector.T"/></x>
-				<x path="awe.util.Bag"><unknown/></x>
+				<x path="awe.util.ArrayList"><unknown/></x>
 			</f>
 			<meta>
 				<m n=":has_untyped"/>
@@ -2492,14 +2492,14 @@
 		<fromArray public="1" params="T" set="method" line="125" static="1">
 			<f a="array">
 				<c path="Array"><c path="fromArray.T"/></c>
-				<x path="awe.util.Bag"><unknown/></x>
+				<x path="awe.util.ArrayList"><unknown/></x>
 			</f>
 			<meta><m n=":from"/></meta>
 		</fromArray>
 		<toArray public="1" get="inline" set="null" line="136" static="1">
 			<f a="this">
-				<c path="awe.util.BagData"><c path="awe.util.Bag.T"/></c>
-				<c path="Array"><c path="awe.util.Bag.T"/></c>
+				<c path="awe.util.BagData"><c path="awe.util.ArrayList.T"/></c>
+				<c path="Array"><c path="awe.util.ArrayList.T"/></c>
 			</f>
 			<meta>
 				<m n=":impl"/>
@@ -2508,7 +2508,7 @@
 		</toArray>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<class path="awe.util.BagData" params="T" file="src/awe/util/Bag.hx" module="awe.util.Bag">
+	<class path="awe.util.BagData" params="T" file="src/awe/util/ArrayList.hx" module="awe.util.ArrayList">
 		<data public="1" set="null"><x path="haxe.ds.Vector"><c path="awe.util.BagData.T"/></x></data>
 		<length public="1" set="null"><x path="Int"/></length>
 		<ensureCapacity public="1" set="method" line="156"><f a="capacity">
@@ -2556,12 +2556,12 @@
 			<m n=":generic"/>
 		</meta>
 	</class>
-	<class path="awe.util.BagIterator" params="T" file="src/awe/util/Bag.hx" module="awe.util.Bag">
-		<bag><c path="awe.util.BagData"><c path="awe.util.BagIterator.T"/></c></bag>
+	<class path="awe.util.BagIterator" params="T" file="src/awe/util/ArrayList.hx" module="awe.util.ArrayList">
+		<ArrayList><c path="awe.util.BagData"><c path="awe.util.BagIterator.T"/></c></ArrayList>
 		<index><x path="Int"/></index>
 		<hasNext public="1" get="inline" set="null" line="233"><f a=""><x path="Bool"/></f></hasNext>
 		<next public="1" get="inline" set="null" line="236"><f a=""><c path="awe.util.BagIterator.T"/></f></next>
-		<new public="1" get="inline" set="null" line="228"><f a="bag">
+		<new public="1" get="inline" set="null" line="228"><f a="ArrayList">
 	<c path="awe.util.BagData"><c path="awe.util.BagIterator.T"/></c>
 	<x path="Void"/>
 </f></new>
@@ -2570,16 +2570,16 @@
 			<m n=":generic"/>
 		</meta>
 	</class>
-	<typedef path="awe.util.BitSetData" params="" file="src/awe/util/BitSet.hx" module="awe.util.BitSet"><x path="awe.util.Bag"><x path="Int"/></x></typedef>
-	<abstract path="awe.util.BitSet" params="" file="src/awe/util/BitSet.hx">
+	<typedef path="awe.util.BitSetData" params="" file="src/awe/util/BitVector.hx" module="de.polygonal.ds.ArrayList"><x path="awe.util.ArrayList"><x path="Int"/></x></typedef>
+	<abstract path="de.polygonal.ds.ArrayList" params="" file="src/awe/util/BitVector.hx">
 		<from><icast field="fromArray"><c path="Array"><x path="Int"/></c></icast></from>
 		<this><t path="awe.util.BitSetData"/></this>
 		<to>
-			<icast field="toBag"><x path="awe.util.Bag"><x path="Int"/></x></icast>
+			<icast field="toBag"><x path="awe.util.ArrayList"><x path="Int"/></x></icast>
 			<icast field="toBytes"><c path="haxe.io.Bytes"/></icast>
 		</to>
 		<haxe_doc>Compactly stores bits.</haxe_doc>
-		<impl><class path="awe.util._BitSet.BitSet_Impl_" params="" file="src/awe/util/BitSet.hx" private="1" module="awe.util.BitSet">
+		<impl><class path="awe.util._BitSet.BitSet_Impl_" params="" file="src/awe/util/BitVector.hx" private="1" module="de.polygonal.ds.ArrayList">
 	<capacity public="1" get="accessor" set="null" static="1">
 		<x path="Int"/>
 		<meta><m n=":impl"/></meta>
@@ -2592,22 +2592,22 @@
 	<_new public="1" get="inline" set="null" line="28" static="1">
 		<f a="?value">
 			<x path="Int"/>
-			<x path="awe.util.BitSet"/>
+			<x path="de.polygonal.ds.ArrayList"/>
 		</f>
 		<meta><m n=":impl"/></meta>
-		<haxe_doc>Create a new BitSet with the given value for its first word.
+		<haxe_doc>Create a new BitVector with the given value for its first word.
 		@param value The value to use for the first word.</haxe_doc>
 	</_new>
 	<toBag public="1" get="inline" set="null" line="43" static="1">
 		<f a="this">
 			<t path="awe.util.BitSetData"/>
-			<x path="awe.util.Bag"><x path="Int"/></x>
+			<x path="awe.util.ArrayList"><x path="Int"/></x>
 		</f>
 		<meta>
 			<m n=":impl"/>
 			<m n=":to"/>
 		</meta>
-		<haxe_doc>Convert this to a Bag of Ints.
+		<haxe_doc>Convert this to a ArrayList of Ints.
 		@return The converted value.</haxe_doc>
 	</toBag>
 	<resize set="method" line="47" static="1">
@@ -2713,7 +2713,7 @@
 			<x path="Bool"/>
 		</f>
 		<meta><m n=":impl"/></meta>
-		<haxe_doc>Check if this `BitSet` contains no true bits.
+		<haxe_doc>Check if this `BitVector` contains no true bits.
 		@return If it is empty or not.</haxe_doc>
 	</isEmpty>
 	<clear public="1" get="inline" set="null" line="163" static="1">
@@ -2727,7 +2727,7 @@
 	<contains public="1" set="method" line="175" static="1">
 		<f a="this:set">
 			<t path="awe.util.BitSetData"/>
-			<x path="awe.util.BitSet"/>
+			<x path="de.polygonal.ds.ArrayList"/>
 			<x path="Bool"/>
 		</f>
 		<meta><m n=":impl"/></meta>
@@ -2738,7 +2738,7 @@
 	<intersects public="1" set="method" line="198" static="1">
 		<f a="this:set">
 			<t path="awe.util.BitSetData"/>
-			<x path="awe.util.BitSet"/>
+			<x path="de.polygonal.ds.ArrayList"/>
 			<x path="Bool"/>
 		</f>
 		<meta><m n=":impl"/></meta>
@@ -2749,7 +2749,7 @@
 	<and public="1" set="method" line="215" static="1">
 		<f a="this:set">
 			<t path="awe.util.BitSetData"/>
-			<x path="awe.util.BitSet"/>
+			<x path="de.polygonal.ds.ArrayList"/>
 			<x path="Void"/>
 		</f>
 		<meta>
@@ -2762,7 +2762,7 @@
 	<or public="1" set="method" line="231" static="1">
 		<f a="this:set">
 			<t path="awe.util.BitSetData"/>
-			<x path="awe.util.BitSet"/>
+			<x path="de.polygonal.ds.ArrayList"/>
 			<x path="Void"/>
 		</f>
 		<meta>
@@ -2801,7 +2801,7 @@
 	<fromArray public="1" get="inline" set="null" line="268" static="1">
 		<f a="array">
 			<c path="Array"><x path="Int"/></c>
-			<x path="awe.util.BitSet"/>
+			<x path="de.polygonal.ds.ArrayList"/>
 		</f>
 		<meta><m n=":from"/></meta>
 	</fromArray>
@@ -2817,7 +2817,7 @@
 	<meta><m n=":directlyUsed"/></meta>
 </class></impl>
 	</abstract>
-	<class path="awe.util._BitSet.BitSet_Impl_" params="" file="src/awe/util/BitSet.hx" private="1" module="awe.util.BitSet">
+	<class path="awe.util._BitSet.BitSet_Impl_" params="" file="src/awe/util/BitVector.hx" private="1" module="de.polygonal.ds.ArrayList">
 		<capacity public="1" get="accessor" set="null" static="1">
 			<x path="Int"/>
 			<meta><m n=":impl"/></meta>
@@ -2830,22 +2830,22 @@
 		<_new public="1" get="inline" set="null" line="28" static="1">
 			<f a="?value">
 				<x path="Int"/>
-				<x path="awe.util.BitSet"/>
+				<x path="de.polygonal.ds.ArrayList"/>
 			</f>
 			<meta><m n=":impl"/></meta>
-			<haxe_doc>Create a new BitSet with the given value for its first word.
+			<haxe_doc>Create a new BitVector with the given value for its first word.
 		@param value The value to use for the first word.</haxe_doc>
 		</_new>
 		<toBag public="1" get="inline" set="null" line="43" static="1">
 			<f a="this">
 				<t path="awe.util.BitSetData"/>
-				<x path="awe.util.Bag"><x path="Int"/></x>
+				<x path="awe.util.ArrayList"><x path="Int"/></x>
 			</f>
 			<meta>
 				<m n=":impl"/>
 				<m n=":to"/>
 			</meta>
-			<haxe_doc>Convert this to a Bag of Ints.
+			<haxe_doc>Convert this to a ArrayList of Ints.
 		@return The converted value.</haxe_doc>
 		</toBag>
 		<resize set="method" line="47" static="1">
@@ -2951,7 +2951,7 @@
 				<x path="Bool"/>
 			</f>
 			<meta><m n=":impl"/></meta>
-			<haxe_doc>Check if this `BitSet` contains no true bits.
+			<haxe_doc>Check if this `BitVector` contains no true bits.
 		@return If it is empty or not.</haxe_doc>
 		</isEmpty>
 		<clear public="1" get="inline" set="null" line="163" static="1">
@@ -2965,7 +2965,7 @@
 		<contains public="1" set="method" line="175" static="1">
 			<f a="this:set">
 				<t path="awe.util.BitSetData"/>
-				<x path="awe.util.BitSet"/>
+				<x path="de.polygonal.ds.ArrayList"/>
 				<x path="Bool"/>
 			</f>
 			<meta><m n=":impl"/></meta>
@@ -2976,7 +2976,7 @@
 		<intersects public="1" set="method" line="198" static="1">
 			<f a="this:set">
 				<t path="awe.util.BitSetData"/>
-				<x path="awe.util.BitSet"/>
+				<x path="de.polygonal.ds.ArrayList"/>
 				<x path="Bool"/>
 			</f>
 			<meta><m n=":impl"/></meta>
@@ -2987,7 +2987,7 @@
 		<and public="1" set="method" line="215" static="1">
 			<f a="this:set">
 				<t path="awe.util.BitSetData"/>
-				<x path="awe.util.BitSet"/>
+				<x path="de.polygonal.ds.ArrayList"/>
 				<x path="Void"/>
 			</f>
 			<meta>
@@ -3000,7 +3000,7 @@
 		<or public="1" set="method" line="231" static="1">
 			<f a="this:set">
 				<t path="awe.util.BitSetData"/>
-				<x path="awe.util.BitSet"/>
+				<x path="de.polygonal.ds.ArrayList"/>
 				<x path="Void"/>
 			</f>
 			<meta>
@@ -3039,7 +3039,7 @@
 		<fromArray public="1" get="inline" set="null" line="268" static="1">
 			<f a="array">
 				<c path="Array"><x path="Int"/></c>
-				<x path="awe.util.BitSet"/>
+				<x path="de.polygonal.ds.ArrayList"/>
 			</f>
 			<meta><m n=":from"/></meta>
 		</fromArray>
@@ -3123,8 +3123,8 @@
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
 	<abstract path="awe.util.Signal" params="T" file="src/awe/util/Signal.hx">
-		<this><x path="awe.util.Bag"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x></this>
-		<to><icast field="getListeners"><x path="awe.util.Bag"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x></icast></to>
+		<this><x path="awe.util.ArrayList"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x></this>
+		<to><icast field="getListeners"><x path="awe.util.ArrayList"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x></icast></to>
 		<haxe_doc>Dispatches events to listeners.</haxe_doc>
 		<impl><class path="awe.util._Signal.Signal_Impl_" params="" file="src/awe/util/Signal.hx" private="1" module="awe.util.Signal">
 	<_new public="1" get="inline" set="null" line="8" static="1">
@@ -3134,7 +3134,7 @@
 	</_new>
 	<dispatch public="1" get="inline" set="null" line="15" static="1">
 		<f a="this:event">
-			<x path="awe.util.Bag"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
+			<x path="awe.util.ArrayList"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
 			<c path="awe.util.Signal.T"/>
 			<x path="Void"/>
 		</f>
@@ -3144,7 +3144,7 @@
 	</dispatch>
 	<add public="1" get="inline" set="null" line="23" static="1">
 		<f a="this:dispatch">
-			<x path="awe.util.Bag"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
+			<x path="awe.util.ArrayList"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
 			<c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c>
 			<x path="Void"/>
 		</f>
@@ -3154,7 +3154,7 @@
 	</add>
 	<remove public="1" get="inline" set="null" line="30" static="1">
 		<f a="this:dispatch">
-			<x path="awe.util.Bag"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
+			<x path="awe.util.ArrayList"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
 			<c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c>
 			<x path="Void"/>
 		</f>
@@ -3164,7 +3164,7 @@
 	</remove>
 	<clear public="1" get="inline" set="null" line="34" static="1">
 		<f a="this">
-			<x path="awe.util.Bag"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
+			<x path="awe.util.ArrayList"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
 			<x path="Void"/>
 		</f>
 		<meta><m n=":impl"/></meta>
@@ -3172,8 +3172,8 @@
 	</clear>
 	<getListeners public="1" get="inline" set="null" line="41" static="1">
 		<f a="this">
-			<x path="awe.util.Bag"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
-			<x path="awe.util.Bag"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
+			<x path="awe.util.ArrayList"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
+			<x path="awe.util.ArrayList"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
 		</f>
 		<meta>
 			<m n=":impl"/>
@@ -3192,7 +3192,7 @@
 		</_new>
 		<dispatch public="1" get="inline" set="null" line="15" static="1">
 			<f a="this:event">
-				<x path="awe.util.Bag"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
+				<x path="awe.util.ArrayList"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
 				<c path="awe.util.Signal.T"/>
 				<x path="Void"/>
 			</f>
@@ -3202,7 +3202,7 @@
 		</dispatch>
 		<add public="1" get="inline" set="null" line="23" static="1">
 			<f a="this:dispatch">
-				<x path="awe.util.Bag"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
+				<x path="awe.util.ArrayList"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
 				<c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c>
 				<x path="Void"/>
 			</f>
@@ -3212,7 +3212,7 @@
 		</add>
 		<remove public="1" get="inline" set="null" line="30" static="1">
 			<f a="this:dispatch">
-				<x path="awe.util.Bag"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
+				<x path="awe.util.ArrayList"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
 				<c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c>
 				<x path="Void"/>
 			</f>
@@ -3222,7 +3222,7 @@
 		</remove>
 		<clear public="1" get="inline" set="null" line="34" static="1">
 			<f a="this">
-				<x path="awe.util.Bag"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
+				<x path="awe.util.ArrayList"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
 				<x path="Void"/>
 			</f>
 			<meta><m n=":impl"/></meta>
@@ -3230,8 +3230,8 @@
 		</clear>
 		<getListeners public="1" get="inline" set="null" line="41" static="1">
 			<f a="this">
-				<x path="awe.util.Bag"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
-				<x path="awe.util.Bag"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
+				<x path="awe.util.ArrayList"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
+				<x path="awe.util.ArrayList"><c path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></c></x>
 			</f>
 			<meta>
 				<m n=":impl"/>

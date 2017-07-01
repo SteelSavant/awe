@@ -7,7 +7,7 @@ using haxe.macro.TypeTools;
 using awe.util.MacroTools;
 import haxe.macro.Expr;
 
-/** A Unique Identifier for a class implementing Component */
+/** A Unique Identifier for a*-++ class implementing Component */
 abstract ComponentType(Int) from Int to Int {
 	#if macro
 	static var count:Int = 1;
@@ -19,10 +19,6 @@ abstract ComponentType(Int) from Int to Int {
 			types.get(tys)
 		else {
 			var cty = count++;
-			if(Component.AutoComponent.canPack(ty))
-				cty |= PACKED_FLAG;
-			if(Component.AutoComponent.isEmpty(ty))
-				cty |= EMPTY_FLAG;
 			types.set(tys, cty);
 			count;
 		}

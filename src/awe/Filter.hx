@@ -1,5 +1,4 @@
 package awe;
-import awe.util.BitSet;
 import haxe.macro.Expr;
 #if macro
 import awe.Component.AutoComponent;
@@ -10,6 +9,9 @@ using haxe.macro.ComplexTypeTools;
 using haxe.macro.Context;
 import haxe.macro.Context;
 using awe.util.MacroTools;
+using awe.util.BitVectorTools;
+
+import de.polygonal.ds.BitVector;
 
 /**
 	A filter for matching entities' components against. This is used to check
@@ -43,9 +45,9 @@ using awe.util.MacroTools;
 	```
 **/
 class Filter {
-	var allSet(default, null): BitSet;
-	var oneSet(default, null): BitSet;
-	var noneSet(default, null): BitSet;
+	var allSet(default, null): BitVector;
+	var oneSet(default, null): BitVector;
+	var noneSet(default, null): BitVector;
 	public function new(allSet, oneSet, noneSet) {
 		this.allSet = allSet;
 		this.oneSet = oneSet;
@@ -55,10 +57,10 @@ class Filter {
 		var debug = Context.defined("debug");
 		if(debug)
 			Sys.println("Building filter from " + expr.toString());
-		var all = new BitSet(0);
-		var one = new BitSet(0);
-		var none = new BitSet(0);
-		function innerBuild(expr: Expr, ?set: BitSet) {
+		var all = new BitVector(64);
+		var one = new BitVector(64);
+		var none = new BitVector(64);
+		function innerBuild(expr: Expr, ?set: BitVector) {
 			set = set == null ? all : set;
 			switch(expr.expr) {
 				case EConst(CIdent("_")):
@@ -90,7 +92,7 @@ class Filter {
 					var cty = ComponentType.get(ty);
 					if(debug)
 						Sys.println("Adding " + ty.toString() + " (id = " + cty.getPure() + ") to filter");
-					set.setBit(ComponentType.get(ty).getPure());
+					set.set(ComponentType.get(ty).getPure());
 				default:
 					Context.error("Invalid expression for filter", Context.currentPos());
 			}
@@ -106,10 +108,10 @@ class Filter {
 		return "all: " + allSet + "; one: " + oneSet + "; none: " + noneSet;
 	/**
 		Returns true if the `components` set fulfills this filter.
-		@param components The `BitSet` of components to check against.
+		@param components The `BitVector` of components to check against.
 		@return If the `components` set fulfills this filter.
 	**/
-	public inline function matches(components: BitSet): Bool {
+	public function matches(components: BitVector): Bool {
 		return (components.contains(allSet) || oneSet.intersects(components)) && !noneSet.intersects(components);
 	}
 

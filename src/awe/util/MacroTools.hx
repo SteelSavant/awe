@@ -6,37 +6,22 @@ using haxe.macro.ExprTools;
 using haxe.macro.TypeTools;
 using haxe.macro.ComplexTypeTools;
 using haxe.macro.Context;
+import haxe.Serializer;
+import haxe.io.Bytes;
 #end
+import de.polygonal.ds.BitVector;
 /** Some handy macro tools. **/
 class MacroTools {
 	#if macro
-	public static function wrapBits(bits: BitSet):ExprOf<BitSet> {
-		var bag = bits.toBag();
-		var pos = Context.currentPos();
-		return switch(bag.length) {
-			case 0: macro new awe.util.BitSet();
-			case 1: macro new awe.util.BitSet($v{bag.get(0)});
-			default:
-				var block = [
-					{
-						expr: ExprDef.EVars([
-							{
-								type: macro: awe.util.Bag<Int>,
-								expr: macro new awe.util.Bag<Int>($v{bag.length}),
-								name: "bag"
-							}
-						]),
-						pos: pos
-					}
-				];
-				for(item in bag)
-					block.push(macro bag.add($v{item}));
-				block.push(macro untyped bag);
-				{
-					expr: ExprDef.EBlock(block),
-					pos: pos
-				};
-		}
+	public static function wrapBits(bits: BitVector):ExprOf<BitVector> {
+		var b = [
+			macro var v = new de.polygonal.ds.BitVector($v{bits.numBits})
+		];
+		for(i in 0...bits.numBits)
+			if(bits.has(i))
+				b.push(macro v.set($v{i}));
+		b.push(macro v);
+		return macro $b{b};
 	}
 	public static function getArray(value: Expr): Array<Expr> {
 		return switch(value.expr) {

@@ -1,10 +1,10 @@
-import awe.util.Bag;
+import awe.util.ArrayList;
 
 class Main {
 	static function main() {
-		var bag = new Bag();
-		bag.add(32);
-		trace(bag.contains(32));
-		trace(bag.contains(31));
+		var ArrayList = new ArrayList();
+		ArrayList.add(32);
+		trace(ArrayList.contains(32));
+		trace(ArrayList.contains(31));
 	}
 }

@@ -9,8 +9,8 @@ using haxe.macro.ExprTools;
 import haxe.macro.Expr;
 using awe.util.MacroTools;
 #end
-import awe.util.Bag;
-import awe.util.BitSet;
+import de.polygonal.ds.ArrayList;
+import de.polygonal.ds.BitVector;
 /**
 	Blueprints for fast `Entity` construction.
 
@@ -25,13 +25,13 @@ import awe.util.BitSet;
 **/
 class Archetype {
 	var types: Array<ComponentType>;
-	var cid: BitSet;
+	var cid: BitVector;
 	/**
 		Create a new Archetype.
 		@param cid The component ID.
 		@param types The component types to construct and attach.
 	**/
-	public function new(cid: BitSet, types: Array<ComponentType>) {
+	public function new(cid: BitVector, types: Array<ComponentType>) {
 		this.cid = cid;
 		this.types = types;
 	}
@@ -56,8 +56,8 @@ class Archetype {
 		world.compositions.set(entity, cid);
 		return entity;
 	}
-	public function createSome(world: World, count: Int): Bag<Entity> {
-		var entities = new Bag(count);
+	public function createSome(world: World, count: Int): ArrayList<Entity> {
+		var entities = new ArrayList<Entity>(count);
 		var entity:Entity = cast -1;
 		for(i in 0...count)
 			entities.add(untyped world.entityCount++);
@@ -72,11 +72,11 @@ class Archetype {
 		Constructs an `Archetype` from some component types.
 	**/
 	public static macro function build(types: Array<ExprOf<Class<Component>>>): ExprOf<Archetype> {
-		var cid = new BitSet();
+		var cid = new BitVector(32);
 		var types = [for(tye in types) {
 			var ty = MacroTools.resolveTypeLiteral(tye);
 			var cty = awe.ComponentType.get(ty);
-			cid.setBit(cty.getPure());
+			cid.set(cty.getPure());
 			macro $v{cty};
 		}];
 		return macro new Archetype(${cid.wrapBits()}, ${{expr: ExprDef.EArrayDecl(types), pos: Context.currentPos()}});

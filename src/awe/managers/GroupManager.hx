@@ -1,16 +1,16 @@
 package awe.managers;
 
-import awe.util.Bag;
+import de.polygonal.ds.ArrayList;
 import awe.Manager;
 
 /**
 	Handles entity grouping.
 **/
 class GroupManager extends Manager {
-	var groups: Map<String, Bag<Entity>>;
+	var groups: Map<String, ArrayList<Entity>>;
 
 	public function new() {
-		groups = new Map<String, Bag<Entity>>();
+		groups = new Map<String, ArrayList<Entity>>();
 	}
 
 	/**
@@ -20,7 +20,7 @@ class GroupManager extends Manager {
 	**/
 	public function add(entity: Entity, group: String): Void {
 		if(!groups.exists(group))
-			groups.set(group, new Bag(8));
+			groups.set(group, new ArrayList(8));
 		groups.get(group).add(entity);
 	}
 	/**
@@ -28,7 +28,7 @@ class GroupManager extends Manager {
 		@param group The group to check.
 		@return The entities.
 	**/
-	public inline function getEntities(group: String): Bag<Entity>
+	public inline function getEntities(group: String): ArrayList<Entity>
 		return groups.get(group);
 
 	/**
@@ -36,8 +36,8 @@ class GroupManager extends Manager {
 		@param entity The entity to get the groups of.
 		@return The groups it belongs to.
 	**/
-	public function getGroups(entity: Entity): Bag<String> {
-		var contained = new Bag(8);
+	public function getGroups(entity: Entity): ArrayList<String> {
+		var contained = new ArrayList(8);
 		for(group in groups.keys()) {
 			if(groups.get(group).contains(entity))
 				contained.add(group);

@@ -3,10 +3,10 @@ package awe.util;
 /**
 	Dispatches events to listeners.
 */
-abstract Signal<T>(Bag<SignalListener<T>>) {
+abstract Signal<T>(ArrayList<SignalListener<T>>) {
 	/** Create a new signal. */
 	public inline function new()
-		this = new Bag<SignalListener<T>>(8);
+		this = new ArrayList<SignalListener<T>>(8);
 
 	/**
 		Dispatch `event`, notifying all listeners of the event.
@@ -38,6 +38,6 @@ abstract Signal<T>(Bag<SignalListener<T>>) {
 		Get all the listeners binded to this.
 		@return The listeners.
 	**/
-	@:to public inline function getListeners(): Bag<SignalListener<T>>
+	@:to public inline function getListeners(): ArrayList<SignalListener<T>>
 		return this;
 }

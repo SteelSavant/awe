@@ -8,10 +8,8 @@ import awe.Filter;
 import js.html.CanvasRenderingContext2D;
 import js.html.CanvasElement;
 
-@Empty
 class Collide implements Component {}
 
-@Pack
 class Size implements Component {
 	public var w: Float;
 	public var h: Float;
@@ -20,7 +18,6 @@ class Size implements Component {
 		this.h = h;
 	}
 }
-@Pack
 class Position implements Component {
 	public var x: Float;
 	public var y: Float;
@@ -29,7 +26,6 @@ class Position implements Component {
 		this.y = y;
 	}
 }
-@Pack
 class Velocity implements Component {
 	public var x: Float;
 	public var y: Float;
@@ -47,14 +43,11 @@ enum InputData {
 class Input implements Component {
 	public function new() {}
 }
-
-@Empty
 class Bounce implements Component {}
 enum SideData {
 	Left;
 	Right;
 }
-@Pack
 class Side implements Component {
 	public var side: SideData;
 	public function new(side: SideData)
@@ -66,8 +59,6 @@ class Draw implements Component {
 	public function new(color: String)
 		this.color = color;
 }
-
-@Pack
 class Speed implements Component {
 	public var speed: Float;
 	public function new(speed: Float)
@@ -76,10 +67,10 @@ class Speed implements Component {
 
 
 class BounceSystem extends EntitySystem {
-	@inject('positions') public var positions: awe.IComponentList<Position>;
-	@inject('sizes') public var sizes: awe.IComponentList<Size>;
-	@inject('velocities') public var velocities: awe.IComponentList<Velocity>;
-	@inject public var draw: DrawSystem;
+	@auto public var positions: awe.IComponentList<Position>;
+	@auto public var sizes: awe.IComponentList<Size>;
+	@auto public var velocities: awe.IComponentList<Velocity>;
+	@auto public var draw: DrawSystem;
 	public override function new() {
 		super(Filter.build(Bounce & Position & Size & Velocity));
 	}
@@ -98,8 +89,8 @@ class BounceSystem extends EntitySystem {
 	}
 }
 class MovementSystem extends EntitySystem {
-	@inject('positions') public var positions: awe.IComponentList<Position>;
-	@inject('velocities') public var velocities: awe.IComponentList<Velocity>;
+	@auto public var positions: awe.IComponentList<Position>;
+	@auto public var velocities: awe.IComponentList<Velocity>;
 	public override function new() {
 		super(Filter.build(Position & Velocity));
 	}
@@ -112,9 +103,9 @@ class MovementSystem extends EntitySystem {
 }
 
 class CollisionSystem extends EntitySystem {
-	@inject('positions') public var positions: awe.IComponentList<Position>;
-	@inject('sizes') public var sizes: awe.IComponentList<Size>;
-	@inject('velocities') public var velocities: awe.IComponentList<Velocity>;
+	@auto public var positions: awe.IComponentList<Position>;
+	@auto public var sizes: awe.IComponentList<Size>;
+	@auto public var velocities: awe.IComponentList<Velocity>;
 	public override function new() {
 		super(Filter.build(Collide & Position & Size & Velocity));
 	}
@@ -143,9 +134,9 @@ class CollisionSystem extends EntitySystem {
 class DrawSystem extends EntitySystem {
 	var context: CanvasRenderingContext2D;
 	public var canvas: CanvasElement;
-	@inject('draws') public var draws: awe.IComponentList<Draw>;
-	@inject('positions') public var positions: awe.IComponentList<Position>;
-	@inject('sizes') public var sizes: awe.IComponentList<Size>;
+	@auto public var draws: awe.IComponentList<Draw>;
+	@auto public var positions: awe.IComponentList<Position>;
+	@auto public var sizes: awe.IComponentList<Size>;
 	public override function new() {
 		super(Filter.build(Position & Draw & Size));
 		canvas = cast js.Browser.document.getElementById("pong");
@@ -166,10 +157,10 @@ class DrawSystem extends EntitySystem {
 }
 
 class InputSystem extends EntitySystem {
-	@inject('inputs') public var inputs: awe.IComponentList<Input>;
-	@inject('speeds') public var speeds: awe.IComponentList<Speed>;
-	@inject('velocities') public var velocities: awe.IComponentList<Velocity>;
-	@inject public var draw: DrawSystem;
+	@auto public var inputs: awe.IComponentList<Input>;
+	@auto public var speeds: awe.IComponentList<Speed>;
+	@auto public var velocities: awe.IComponentList<Velocity>;
+	@auto public var draw: DrawSystem;
 
 	var input: InputData;
 
@@ -182,8 +173,8 @@ class InputSystem extends EntitySystem {
 		super.initialize(world);
 		draw.canvas.onkeydown = function(event) {
 			switch(event.keyCode) {
-				case 40: input = Down;
-				case 38: input = Up;
+				case 40: input = Up;
+				case 38: input = Down;
 			}
 		};
 		draw.canvas.onkeyup = function(event) {
@@ -210,9 +201,9 @@ class Pong {
 			var world = World.build({
 				components: [Bounce, Collide, Side, Speed, Position, Velocity, Size, Input, Draw],
 				systems: [
+					new DrawSystem(),
 					new BounceSystem(),
 					new CollisionSystem(),
-					new DrawSystem(),
 					new MovementSystem(),
 					new InputSystem()
 				],

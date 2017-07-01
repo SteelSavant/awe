@@ -9,8 +9,8 @@ import haxe.macro.Expr;
 #end
 import haxe.io.Bytes;
 import awe.util.Timer;
-import awe.util.Bag;
-import awe.util.BitSet;
+import de.polygonal.ds.ArrayList;
+import de.polygonal.ds.BitVector;
 using awe.util.MoreStringTools;
 import awe.ComponentList;
 
@@ -19,15 +19,20 @@ import awe.ComponentList;
 **/
 class World {
 	/** The component lists for each type of `Component`. **/
-	public var components(default, null): Map<ComponentType, IComponentList<Dynamic>>;
+	@:allow(awe)
+	var components(default, null): Map<ComponentType, IComponentList<Dynamic>>;
 	/** The systems to run. **/
-	public var systems(default, null): Bag<System>;
+	@:allow(awe)
+	var systems(default, null): ArrayList<System>;
 	/** The managers. **/
-	public var managers(default, null): Bag<Manager>;
+	@:allow(awe)
+	var managers(default, null): ArrayList<Manager>;
 	/** The entities that the systems run on. **/
-	public var entities(default, null): Bag<Entity>;
+	@:allow(awe)
+	var entities(default, null): ArrayList<Entity>;
 	/** The composition of each entity. **/
-	public var compositions(default, null): Map<Entity, BitSet>;
+	@:allow(awe)
+	var compositions(default, null): Map<Entity, BitVector>;
 	/** How many entities have been created so far. **/
 	public var entityCount(default, null): Int;
 
@@ -41,13 +46,19 @@ class World {
 		this.components = components;
 		this.systems = systems;
 		this.managers = managers;
-		entities = new Bag();
+		entities = new ArrayList();
 		compositions = new Map();
 		entityCount = 0;
 		for(system in systems)
 			system.initialize(this);
 		for(manager in managers)
 			manager.initialize(this);
+	}
+	public function getSystem<T: System>(cl: Class<T>): T {
+		for(system in systems)
+			if(Std.is(system, cl))
+				return cast system;
+		return null;
 	}
 	public static macro function build(setup: ExprOf<WorldConfiguration>): ExprOf<World> {
 		var debug = Context.defined("debug");
@@ -69,8 +80,8 @@ class World {
 		var components = { expr: ExprDef.EArrayDecl(components), pos: setup.pos };
 		var block = [
 			(macro var components:Map<awe.ComponentType, awe.ComponentList.IComponentList<Dynamic>> = $components),
-			(macro var systems:awe.util.Bag<awe.System> = new awe.util.Bag($v{systems.length})),
-			(macro var managers:awe.util.Bag<awe.Manager> = new awe.util.Bag($v{managers.length})),
+			(macro var systems = new de.polygonal.ds.ArrayList<awe.System>($v{systems.length})),
+			(macro var managers = new de.polygonal.ds.ArrayList<awe.Manager>($v{managers.length})),
 			(macro var csystem:awe.System = null),
 			(macro var cmanager:awe.Manager = null)
 		];
@@ -88,11 +99,7 @@ class World {
 			var name = parts[parts.length - 1].toLowerCase().pluralize();
 		}
 		block.push(macro new World(components, systems, managers));
-		var expr = {
-			expr: ExprDef.EBlock(block),
-			pos: Context.currentPos()
-		};
-		return expr;
+		return macro $b{block};
 	}
 	/**
 		Update all the `System`s contained in this.

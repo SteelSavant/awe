@@ -5,6 +5,6 @@
 --next
 -lib awe
 -main Main
--neko bag.n
+-neko ArrayList.n
 -dce full
--cmd neko bag.n
+-cmd neko ArrayList.n
