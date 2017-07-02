@@ -207,9 +207,7 @@ class Pong {
 					new BounceSystem(),
 					new CollisionSystem(),
 					new MovementSystem(),
-					new InputSystem()
-				],
-				managers: [
+					new InputSystem(),
 					new awe.managers.GroupManager()
 				],
 				expectedEntityCount: 3

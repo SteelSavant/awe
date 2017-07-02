@@ -24,9 +24,6 @@ import awe.ComponentList;
 	/** The systems to run. **/
 	@:allow(awe)
 	var systems(default, null): ArrayList<System>;
-	/** The managers. **/
-	@:allow(awe)
-	var managers(default, null): ArrayList<Manager>;
 	/** The entities that the systems run on. **/
 	@:allow(awe)
 	var entities(default, null): ArrayList<Entity>;
@@ -48,10 +45,9 @@ import awe.ComponentList;
 		@param components The component lists for each type of `Component`.
 		@param systems The systems to run.
 	**/
-	public function new(components, systems, managers) {
+	public function new(components, systems) {
 		this.components = components;
 		this.systems = systems;
-		this.managers = managers;
 		entities = new ArrayList();
 		compositions = new Map();
 		entityCount = 0;
@@ -60,8 +56,6 @@ import awe.ComponentList;
 			if(Std.is(system, System.EntitySystem))
 				subscriptions.add(cast(system, System.EntitySystem).subscription);
 		}
-		for(manager in managers)
-			manager.initialize(this);
 	}
 	public function getSystem<T: System>(cl: Class<T>): T {
 		for(system in systems)
@@ -85,29 +79,22 @@ import awe.ComponentList;
 			macro $v{cty.getPure()} => $list;
 		}];
 		var systems = setup.assertField("systems").getArray();
-		var managers = setup.assertField("managers").getArray();
 		var components = { expr: ExprDef.EArrayDecl(components), pos: setup.pos };
 		var block = [
 			(macro var components:Map<awe.ComponentType, awe.ComponentList.IComponentList<Dynamic>> = $components),
 			(macro var systems = new de.polygonal.ds.ArrayList<awe.System>($v{systems.length})),
-			(macro var managers = new de.polygonal.ds.ArrayList<awe.Manager>($v{managers.length})),
 			(macro var csystem:awe.System = null),
-			(macro var cmanager:awe.Manager = null)
 		];
 		for(system in systems) {
 			var ty = Context.typeof(system);
 			block.push(macro systems.add(csystem = $system));
-		}
-		for(manager in managers) {
-			var ty = Context.typeof(manager);
-			block.push(macro managers.add(cmanager = $manager));
 		}
 		for(component in setup.assertField("components").getArray()) {
 			var cty = ComponentType.get(component.resolveTypeLiteral());
 			var parts = component.toString().split(".");
 			var name = parts[parts.length - 1].toLowerCase().pluralize();
 		}
-		block.push(macro new World(components, systems, managers));
+		block.push(macro new World(components, systems));
 		return macro $b{block};
 	}
 	/**
@@ -149,6 +136,5 @@ import awe.ComponentList;
 typedef WorldConfiguration = {
 	?expectedEntityCount: Int,
 	?components: Array<Class<Component>>,
-	?systems: Array<System>,
-	?managers: Array<Manager>
+	?systems: Array<System>
 }

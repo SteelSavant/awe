@@ -1,5 +1,4 @@
 package awe;
-
 #if macro
 import haxe.macro.Context;
 import haxe.macro.Type;
@@ -41,7 +40,7 @@ class Archetype {
 		@return The created entity.
 	**/
 	public function create(world: World): Entity {
-		var entity:Entity = world.entityCount++;
+		var entity:Entity = new Entity(world);
 		for(type in types) {
 			if(!type.isEmpty()) {
 				var list = world.components.get(type.getPure());
@@ -52,12 +51,13 @@ class Archetype {
 				list.add(entity, null);
 			}
 		}
-		world.entities.add(entity);
-		world.compositions.set(entity, cid);
-		entity.insertIntoSubscriptions(world);
 		return entity;
 	}
 	public function createSome(world: World, count: Int): ArrayList<Entity> {
+		#if debug
+		if(count < 0)
+			throw 'Entity count ($count) should be bigger than zero!';
+		#end
 		var list = new ArrayList<Entity>(count);
 		for(i in 0...count)
 			list.add(create(world));

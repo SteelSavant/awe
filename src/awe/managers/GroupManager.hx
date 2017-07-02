@@ -10,6 +10,7 @@ class GroupManager extends Manager {
 	var groups: Map<String, ArrayList<Entity>>;
 
 	public function new() {
+		super();
 		groups = new Map<String, ArrayList<Entity>>();
 	}
 
