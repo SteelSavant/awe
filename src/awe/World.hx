@@ -11,6 +11,7 @@ import haxe.io.Bytes;
 import awe.util.Timer;
 import de.polygonal.ds.ArrayList;
 import de.polygonal.ds.BitVector;
+import haxe.ds.Vector;
 using awe.util.MoreStringTools;
 import awe.ComponentList;
 
@@ -23,7 +24,7 @@ import awe.ComponentList;
 	var components(default, null): Map<ComponentType, IComponentList<Dynamic>>;
 	/** The systems to run. **/
 	@:allow(awe)
-	var systems(default, null): ArrayList<System>;
+	var systems(default, null): Vector<System>;
 	/** The entities that the systems run on. **/
 	@:allow(awe)
 	var entities(default, null): ArrayList<Entity>;
@@ -73,21 +74,21 @@ import awe.ComponentList;
 			var list = if(cty.isEmpty())
 				macro null;
 			else if(cty.isPacked())
-				macro awe.ComponentList.PackedComponentList.build($component);
+				macro cast awe.ComponentList.PackedComponentList.build($component);
 			else
-				macro new awe.ComponentList<$complex>($v{expectedCount});
+				macro cast new awe.ComponentList<$complex>($v{expectedCount});
 			macro $v{cty.getPure()} => $list;
 		}];
 		var systems = setup.assertField("systems").getArray();
 		var components = { expr: ExprDef.EArrayDecl(components), pos: setup.pos };
 		var block = [
 			(macro var components:Map<awe.ComponentType, awe.ComponentList.IComponentList<Dynamic>> = $components),
-			(macro var systems = new de.polygonal.ds.ArrayList<awe.System>($v{systems.length})),
+			(macro var systems = new haxe.ds.Vector<awe.System>($v{systems.length})),
 			(macro var csystem:awe.System = null),
 		];
-		for(system in systems) {
-			var ty = Context.typeof(system);
-			block.push(macro systems.add(csystem = $system));
+		for(i in 0...systems.length) {
+			var system = systems[i];
+			block.push(macro systems[$v{i}] = (csystem = $system));
 		}
 		for(component in setup.assertField("components").getArray()) {
 			var cty = ComponentType.get(component.resolveTypeLiteral());
