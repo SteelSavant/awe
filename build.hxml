@@ -1,1 +1,8 @@
-examples/pong/build.hxml
+
+-cp examples/pong
+-cp src
+-main Pong
+-js examples/build/pong.js
+-dce full
+-D nopack
+-lib polygonal-ds
