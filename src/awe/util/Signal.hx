@@ -1,12 +1,15 @@
 package awe.util;
 
+import de.polygonal.ds.ArrayList;
+
+typedef SignalListener<T> = T -> Void;
 /**
 	Dispatches events to listeners.
 */
 abstract Signal<T>(ArrayList<SignalListener<T>>) {
 	/** Create a new signal. */
-	public inline function new()
-		this = new ArrayList<SignalListener<T>>(8);
+	public inline function new(capacity: Int = 1)
+		this = new ArrayList<SignalListener<T>>(capacity);
 
 	/**
 		Dispatch `event`, notifying all listeners of the event.
@@ -14,7 +17,7 @@ abstract Signal<T>(ArrayList<SignalListener<T>>) {
 	*/
 	public inline function dispatch(event: T)
 		for(v in this)
-			v.on(event);
+			v(event);
 
 	/**
 		Add a new dispatcher.
