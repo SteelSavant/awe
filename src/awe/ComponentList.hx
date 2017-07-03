@@ -13,13 +13,14 @@ import haxe.ds.Vector;
 import haxe.io.Bytes;
 import haxe.Serializer;
 import haxe.Unserializer;
+import de.polygonal.ds.ArrayList;
 
 /** Represents a list of components. **/
 interface IComponentList<T: Component> {
-	/** How many components this list can hold without re-allocating. **/
-	public var capacity(get, never): Int;
-	/** How many components this list contains. **/
-	public var length(default, null): Int;
+	/**
+	 * The number of entities stored in this list.
+	 */
+	public var length(get, never): Int;
 	/**
 		Retrieve the component corresponding associated to the ID.
 		@param id The `Entity` to retrieve the component for.
@@ -40,7 +41,9 @@ interface IComponentList<T: Component> {
 		Iterate through the items in this list.
 		@return The iterator for this list.
 	**/
-	public function iterator(): ComponentListIterator<T>;
+	public function iterator(): Iterator<ComponentListItem<T>>;
+
+	#if serialize
 
 	/**
 		Serialize this list into a `String`.
@@ -52,61 +55,53 @@ interface IComponentList<T: Component> {
 		@param serial The serialized version of this list.
 	**/
 	public function unserialize(value: String): Void;
+	#end
 }
 class ComponentList<T: Component> implements IComponentList<T> {
-	public var capacity(get, never): Int;
-	public var length(default, null): Int;
-	var list: Vector<T>;
+	var data: ArrayList<T>;
+	public var length(get, never): Int;
+	inline function get_length(): Int
+		return data.size;
+	public inline function new(capacity: Int = 8)
+		data = new ArrayList(capacity);
 
-	public inline function get_capacity(): Int
-		return list.length;
-
-	public function new(capacity: Int = 32) {
-		list = new Vector(capacity);
-		length = 0;
-	}
-
-	@:keep
 	public inline function get(entity: Entity): Null<T>
-		return cast list.get(entity.id);
+		return data.get(entity.id);
 
-	public function add(entity: Entity, value: T): Void {
-		if(entity.id >= list.length) {
-			var vector = new Vector(capacity << 1);
-			Vector.blit(list, 0, vector, 0, list.length);
-			list = vector;
-		}
-		list[entity.id] = value;
-		length = Std.int(Math.max(length, entity.id + 1));
-	}
+	public inline function add(entity: Entity, value: T): Void
+		data.set(entity.id, value);
+
 	public inline function remove(entity: Entity): Void
-		list[entity.id] = null;
+		data.set(entity.id, null);
 
-	public inline function iterator()
-		return new ComponentListIterator(this);
+	public inline function iterator(): ComponentListIterator<T>
+		return new ComponentListIterator<T>(cast data);
+	#if serialize
+	public inline function serialize(): String
+		return "c" + Serializer.run(data.toArray());
 
-	public function serialize() {
-		var arr = list.toArray().slice(0, length);
-		return "c" + Serializer.run(arr);
-	}
-
-	public function unserialize(value: String) {
-		var array:Array<T> = Unserializer.run(value.substr(1));
-		this.length = array.length;
-		this.list = Vector.fromArrayCopy(array);
-	}
 	public static function genericUnserialize(value: String): IComponentList<Dynamic> {
-		var list:IComponentList<Dynamic> = Type.createEmptyInstance(switch(value.charCodeAt(0)) {
-			case 'p'.code: cast PackedComponentList;
-			case 'c'.code: ComponentList;
-			default: null;
-		});
-		list.unserialize(value);
-		return list;
+		switch(value.charCodeAt(0)) {
+			case 'p'.code:
+				var l = new PackedComponentList();
+				l.unserialize(value.substr(1));
+				return l;
+			case 'c'.code:
+				var a = Unserializer.run(value.substr(1));
+				var al = new ArrayList(ComponentType.getComponentCount(), a);
+				var l = new ComponentList();
+				l.list = al;
+				return l;
+			default:
+				return null;
+		}
 	}
+	#end
 }
 
+#if generic
 @:generic
+#end
 class ComponentListItem<T: Component> {
 	public var index(default, null): Entity;
 	public var component(default, null): T;
@@ -116,7 +111,9 @@ class ComponentListItem<T: Component> {
 		this.component = component;
 	}
 }
-
+#if generic
+@:generic
+#end
 class ComponentListIterator<T: Component> {
 	var list: IComponentList<T>;
 	var index: Int = 0;
@@ -133,19 +130,23 @@ class ComponentListIterator<T: Component> {
 	}
 }
 
+#if generic
 @:generic
+#end
 class PackedComponentList<T: Component> implements IComponentList<T> {
-	public var capacity(get, never): Int;
-	public var length(default, null): Int;
+	var _length: Int;
 	var buffer: PackedComponent;
 	var bytes: Bytes;
 	var size: Int;
-	public inline function get_capacity(): Int
-		return bytes.length;
 
-	public function new(capacity: Int = 32, size: Int) {
+
+	public var length(get, never): Int;
+	inline function get_length(): Int
+		return _length;
+
+	public function new(capacity: Int = 32, size: Int = 0) {
 		buffer = cast {};
-		length = 0;
+		_length = 0;
 		this.size = size;
 		bytes = Bytes.alloc(capacity * size);
 		buffer.__bytes = bytes;
@@ -161,7 +162,6 @@ class PackedComponentList<T: Component> implements IComponentList<T> {
 		return macro new PackedComponentList<Dynamic>(32, $v{size});
 	}
 
-	@:keep
 	public inline function get(entity: Entity): Null<T> {
 		buffer.__offset = entity.id * size;
 		return entity.id >= length ? null : cast buffer;
@@ -169,8 +169,8 @@ class PackedComponentList<T: Component> implements IComponentList<T> {
 
 	public function add(entity: Entity, value: T): Void {
 		var value:PackedComponent = cast value;
-		if(entity.id * size >= capacity) {
-			var nbytes = Bytes.alloc(capacity << 1);
+		if(entity.id * size >= bytes.length) {
+			var nbytes = Bytes.alloc(bytes.length * 2);
 			nbytes.blit(0, bytes, 0, bytes.length);
 			bytes = nbytes;
 		}
@@ -181,19 +181,21 @@ class PackedComponentList<T: Component> implements IComponentList<T> {
 			value.__bytes = bytes;
 			value.__offset = entity.id * size;
 		}
-		length = Std.int(Math.max(length, entity.id + 1));
+		_length = Std.int(Math.max(length, entity.id + 1));
 	}
 	public inline function remove(entity: Entity): Void
 		bytes.fill(entity.id * size, size, 0);
 
+	#if serialize
 	public inline function serialize()
 		return "p" + Serializer.run(this.bytes.sub(0, length << 4));
 
 	public function unserialize(value: String) {
 		bytes = Unserializer.run(value.substr(1));
-		length = bytes.length >> 4;
+		_length = bytes.length >> 4;
 	}
+	#end
 
 	public inline function iterator()
-		return new ComponentListIterator(this);
+		return new ComponentListIterator<T>(this);
 }

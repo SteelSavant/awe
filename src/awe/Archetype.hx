@@ -11,48 +11,53 @@ using awe.util.MacroTools;
 import de.polygonal.ds.ArrayList;
 import de.polygonal.ds.BitVector;
 /**
-	Blueprints for fast `Entity` construction.
-
-	This can be constructed by using the `Archetype.build(_)` macro.
-	Using this, you can build an archetype by calling it with the
-	components you want the `Entity` to have.
-
-	### Example
-	```haxe
-	Archetype.build(Position, Velocity);
-	```
-**/
+ * Blueprints for fast construction of `Entity`s.
+ *
+ * This can be constructed by using the `Archetype.build` macro, or by calling
+ * the constructor with the composition and component defaults.
+ */
 class Archetype {
-	var types: Array<ComponentType>;
+	var defaults: Array<Void -> Component>;
 	var cid: BitVector;
 	/**
-		Create a new Archetype.
-		@param cid The component ID.
-		@param types The component types to construct and attach.
-	**/
-	public function new(cid: BitVector, types: Array<ComponentType>) {
+	 * Create a new `Archetype` instance based on its composition and component
+	 * defaults.
+	 * @param cid The composition.
+	 * @param defaults A list of functions that make components.
+	 */
+	public function new(cid: BitVector, defaults: Array<Void -> Component>) {
 		this.cid = cid;
-		this.types = types;
+		this.defaults = defaults;
 	}
 	/**
-		Create a new `Entity` with the components given by this `Archetype`.
-		@param world The world to create the entity in.
-		@return The created entity.
-	**/
+	 * Create a single `Entity`, using this `Archetype` as a template.
+	 * @param world The world to create the entities in.
+	 * @return The entity created.
+	 */
 	public function create(world: World): Entity {
 		var entity:Entity = new Entity(world);
-		for(type in types) {
-			if(!type.isEmpty()) {
-				var list = world.components.get(type.getPure());
-				#if debug
-				if(list == null)
-					throw 'Component list for $type is null!';
-				#end
-				list.add(entity, null);
-			}
+		for(def in defaults) {
+			var inst = def();
+			var ty = inst.getType();
+			if(ty.isEmpty())
+				continue;
+			var list = world.components.get(ty.getPure());
+			if(list == null)
+			#if debug
+				throw 'Component list for $def is null, did you add it to the World in World.create?';
+			#else
+				continue;
+			#end
+			list.add(entity, inst);
 		}
 		return entity;
 	}
+	/**
+	 * Create multiple entities at once, using this `Archetype` as a template.
+	 * @param world The world to create the entities in.
+	 * @param count How many entities will be created.
+	 * @return The list of entities created.
+	 */
 	public function createSome(world: World, count: Int): ArrayList<Entity> {
 		#if debug
 		if(count < 0)
@@ -64,16 +69,35 @@ class Archetype {
 		return list;
 	}
 	/**
-		Constructs an `Archetype` from some component types.
-	**/
+	 * Create an `Archetype` from a list of component classes it will be made with.
+	 *
+	 * This requires the components classes to have a zero-argument constructor.
+	 * @param types The component classes.
+	 * @return The `Archetype` instance.
+	 */
 	public static macro function build(types: Array<ExprOf<Class<Component>>>): ExprOf<Archetype> {
-		var cid = new BitVector(32);
-		var types = [for(tye in types) {
-			var ty = MacroTools.resolveTypeLiteral(tye);
-			var cty = awe.ComponentType.get(ty);
-			cid.set(cty.getPure());
-			macro $v{cty};
-		}];
+		var cid = new BitVector(ComponentType.count);
+		var types = [for(typeExpr in types) {
+				var type = typeExpr.resolveTypeLiteral();
+				var compType = awe.ComponentType.get(type);
+				var complexType = type.toComplexType();
+				if(compType == null)
+					Context.fatalError('awe: Component type ${typeExpr.toString()} cannot be resolved', typeExpr.pos);
+				var path = switch(complexType) {
+					case ComplexType.TPath(path):
+						path;
+					default:
+						Context.fatalError('awe: Component type ${typeExpr.toString()} must be a path', typeExpr.pos);
+						return macro null;
+				}
+				if(compType.isEmpty())
+					macro function() return null;
+				else if(!type.hasConstructor())
+					macro function() return Type.createEmptyInstance($typeExpr);
+				else
+					macro function() return new $path();
+			}
+		];
 		return macro new Archetype(${cid.wrapBits()}, ${{expr: ExprDef.EArrayDecl(types), pos: Context.currentPos()}});
 	}
 }

@@ -13,6 +13,14 @@ import de.polygonal.ds.BitVector;
 /** Some handy macro tools. **/
 class MacroTools {
 	#if macro
+	public static function hasConstructor(type: Type): Bool {
+		switch(Context.follow(type)) {
+			case Type.TInst(classType, _):
+				return classType.get().constructor != null;
+			default:
+				return false;
+		}
+	}
 	public static function wrapBits(bits: BitVector):ExprOf<BitVector> {
 		var b = [
 			macro var v = new de.polygonal.ds.BitVector($v{bits.numBits})

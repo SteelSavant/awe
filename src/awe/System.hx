@@ -98,15 +98,13 @@ class EntitySystem extends System implements EntitySubscription.SubscriptionList
 					}
 				}
 				if(type.toString().indexOf("ComponentList") != -1) {
-					var component = switch(type.toType()) {
-						case Type.TInst(ty, params): {
-							params[0];
-						}
-						default: {
-							Context.fatalError("Invalid component type", field.pos);
-						}
-					};
-					var cty = ComponentType.get(component);
+					var component = switch(type) {
+						case ComplexType.TPath({params: [TypeParam.TPType(ty)]}):
+							ty;
+						default: 
+							Context.fatalError('awe: Unrecognised component list ${type.toString()}', field.pos);
+					}
+					var cty = ComponentType.get(component.toType());
 					initializeExprs.push(macro $i{field.name} = cast world.components[$v{cty.getPure()}]);
 				} else {
 					var type = Context.parse(type.toString(), Context.currentPos());

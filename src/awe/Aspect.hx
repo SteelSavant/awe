@@ -57,9 +57,9 @@ class Aspect {
 		var debug = Context.defined("debug");
 		if(debug)
 			Sys.println("Building aspect from " + expr.toString());
-		var all = new BitVector(64);
-		var one = new BitVector(64);
-		var none = new BitVector(64);
+		var all = new BitVector(ComponentType.count);
+		var one = new BitVector(ComponentType.count);
+		var none = new BitVector(ComponentType.count);
 		function innerBuild(expr: Expr, ?set: BitVector) {
 			set = set == null ? all : set;
 			switch(expr.expr) {

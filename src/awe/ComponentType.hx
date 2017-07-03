@@ -7,20 +7,24 @@ using haxe.macro.TypeTools;
 using awe.util.MacroTools;
 import haxe.macro.Expr;
 
-/** A Unique Identifier for a*-++ class implementing Component */
+/**
+ * A unique identifier for a single component.
+ */
 abstract ComponentType(Int) from Int to Int {
+	public static macro function getComponentCount(): ExprOf<Int>
+		return macro $v{count};
 	#if macro
-	static var count:Int = 1;
+	public static var count:Int = 0;
 	public static var types(default, never) = new Map<String, ComponentType>();
 
 	public static function get(ty: Type): awe.ComponentType {
 		var tys = ty.toString();
-		return if(types.exists(tys)) 
-			types.get(tys)
+		return if(types.exists(tys))
+			types.get(tys);
 		else {
 			var cty = count++;
 			types.set(tys, cty);
-			count;
+			cty;
 		}
 	}
 
