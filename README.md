@@ -1,10 +1,20 @@
 Awe
 ===
 
-Awe is a powerful, fast and simple entity component system based on Artemis. In
-an entity component system, every thing in the world is represented by an int,
-which is called an entity id. You can then attach data to these entities and run
-system on entities with a selection of components.
+Awe is a *pure* entity component system based on [Artemis-odb](https://github.com/junkdog/artemis-odb), but taking advantage of Haxe's features like macros and conditional compilation.
+
+Basic ECS principles
+--------------------
+
+An **entity** represents an individual thing in the world, but does *not* actually
+store any data by itself - this is simply an integer that uniquely identifies an entity.
+
+A **component** is a small, composable piece of data that can be stored about an entity.
+
+A **system** is a kind of object that performs operations on entities with certain 
+component combinations.
+
+More information is on the [t-machine wiki](http://entity-systems.wikidot.com/rdbms-with-code-in-systems).
 
 Making the `World`
 -------------------
@@ -15,8 +25,9 @@ systems you want it to have.
 
 ``` haxe
 var world = World.build({
-	systems: [InputSystem, MovementSystem, RenderSystem, GravitySystem],
-	components: [Input, Position, Velocity, Acceleration, Gravity, Follow]
+	systems: [new InputSystem(), new MovementSystem(), new RenderSystem(), new GravitySystem()],
+	components: [Input, Position, Velocity, Acceleration, Gravity, Follow],
+	expectedEntityCount: ...
 });
 ```
 Making Entities
@@ -28,7 +39,7 @@ make it up.
 
 ``` haxe
 var playerArchetype = Archetype.build(Input, Position, Velocity, Acceleration, Gravity);
-var player = playerArchetype.build();
+var player = playerArchetype.build(world);
 ```
 
 Types of component
@@ -39,3 +50,11 @@ This is a component that can be represented by bytes, thus doesn't have any fiel
 This is a component that is used for marking components and has no fields.
 ### Regular
 This is just a regular component.
+
+Compiler flags
+-----
+These can be passed to haxe by adding '-D flag' to your 'build.hxml' or equivalent.
+### debug
+This prints extra information during compilation.
+### nopack
+This forces Awe's macro system to not pack components.

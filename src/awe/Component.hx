@@ -70,7 +70,7 @@ class AutoComponent {
 					default: null;
 				}
 			default:
-				throw t.toString() + " cannot be accessed";
+				Context.fatalError('awe: Type ${t.toString()} cannot be packed', Context.currentPos());
 		};
 	}
 	static function genFieldSetter(t: ComplexType, name: String, offset: ExprOf<Int>): Expr {
@@ -94,7 +94,7 @@ class AutoComponent {
 					default: null;
 				}
 			default:
-				throw t.toString() + " cannot be set to";
+				Context.fatalError('awe: Type ${t.toString()} cannot be packed', Context.currentPos());
 		};
 	}
 	public static function isPrimitive(t: ComplexType): Bool {
@@ -169,7 +169,8 @@ class AutoComponent {
 		var fields = Context.getBuildFields();
 		var offset = 0;
 		var localClass = Context.getLocalClass().get();
-		if(!localClass.meta.has("Pack") || localClass.meta.has("Empty") || localClass.superClass != null)
+		var shouldPack = localClass.meta.has("Pack") && !Context.defined("nopack");
+		if(!shouldPack || localClass.meta.has("Empty") || localClass.superClass != null)
 			return defaultFields(fields);
 		for(field in fields) {
 			switch(field.kind) {

@@ -115,7 +115,12 @@ class Aspect {
 		return (components.contains(allSet) || oneSet.intersects(components)) && !noneSet.intersects(components);
 	}
 
+	/**
+	 *  Find and return all the entities matching this aspect.
+	 * @param world The `world` to check inside.
+	 * @return The list of entities in the world that match this aspect.
+	 */
 	public function matching(world: World): Array<Entity> {
-		return [for(i in 0...world.entityCount) cast i];
+		return [for(e in world.entities) if(matches(world.compositions[e])) e];
 	}
 }
