@@ -12,19 +12,19 @@ using haxe.macro.TypeTools;
 using StringTools;
 #end
 /**
- *  Performs operations related to entites.
+    Performs operations related to entites.
  */
 class System {
 	/**
-	 *  The world containing this system.
+	    The world containing this system.
 	 */
 	public var world(default, null): World;
 	/**
-	 *  If this system is enabled or not.
+	    If this system is enabled or not.
 	 */
 	public var enabled: Bool;
 	/**
-	 *  Create an enabled system with no world.
+	    Create an enabled system with no world.
 	 */
 	public function new() {
 		enabled = true;
@@ -74,27 +74,27 @@ class System {
 }
 
 /**
- *  Performs operations on entities matching a given `Archetype`.
- *  
- *  Extending this lets you use the '@auto' metadata in front of fields
- *  that are a `IComponentList<...>` or a `System` to automatically
- *  fetch this component list or system from the world in the `initialize`
- *  method.
+    Performs operations on entities matching a given `Archetype`.
+    
+    Extending this lets you use the '@auto' metadata in front of fields
+    that are a `IComponentList<...>` or a `System` to automatically
+    fetch this component list or system from the world in the `initialize`
+    method.
  */
 @:autoBuild(awe.EntitySystem.build())
 class EntitySystem extends System implements EntitySubscription.SubscriptionListener {
 	/**
-	 *  The aspect an entity must match to be considered by the system.
+	    The aspect an entity must match to be considered by the system.
 	 */
 	public var aspect(default, null): Aspect;
 	/**
-	 *  The entity subscription, used to keep track of entities matching the
-	 *  `aspect`.
+	    The entity subscription, used to keep track of entities matching the
+	    `aspect`.
 	 */
 	public var subscription(default, null): EntitySubscription;
 	/**
-	 *  Make a new EntitySystem that tracks entities matching an aspect.
-	 *  @param aspect The aspect tracked entities must match.
+	    Make a new EntitySystem that tracks entities matching an aspect.
+	    @param aspect The aspect tracked entities must match.
 	 */
 	public function new(aspect: Aspect) {
 		super();
@@ -110,8 +110,8 @@ class EntitySystem extends System implements EntitySubscription.SubscriptionList
 		subscription.initialize(world);
 	}
 	/**
-	 *  Called every time `process` is ran for each entity matching `Aspect`
-	 *  @param entity The `Entity` to be processed.
+	    Called every time `process` is ran for each entity matching `Aspect`
+	    @param entity The `Entity` to be processed.
 	 */
 	public function processEntity(entity: Entity): Void {}
 	public override function processSystem(): Void

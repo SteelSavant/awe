@@ -15,9 +15,9 @@ class GroupManager extends System {
 	}
 
 	/**
-	 *	Set the group of the entity.
-	 *	@param entity The entity whose group is being set.
-	 *	@param group The group to set the entity to.
+	    Set the group of the entity.
+	    @param entity The entity whose group is being set.
+	    @param group The group to set the entity to.
 	 */
 	public function add(entity: Entity, group: String): Void {
 		if(!groups.exists(group))
@@ -25,17 +25,17 @@ class GroupManager extends System {
 		groups.get(group).add(entity);
 	}
 	/**
-	 *	Get the entities contained in a given group.
-	 *	@param group The group to check.
-	 *	@return The entities.
+		Get the entities contained in a given group.
+	    @param group The group to check.
+	    @return The entities.
 	 */
 	public inline function getEntities(group: String): ArrayList<Entity>
 		return groups.get(group);
 
 	/**
-	 *	Get all groups the entity belongs to..
-	 *	@param entity The entity to get the groups of.
-	 *	@return The groups it belongs to.
+	    Get all groups the entity belongs to..
+	    @param entity The entity to get the groups of.
+	    @return The groups it belongs to.
 	 */
 	public function getGroups(entity: Entity): ArrayList<String> {
 		var contained = new ArrayList(8);

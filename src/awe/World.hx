@@ -16,9 +16,9 @@ using awe.util.MoreStringTools;
 import awe.ComponentList;
 
 /**
- *  The central object on which components, systems, etc. are added.
- *  
- *  Worlds should be constructed using the `World.build` macro.
+    The central object on which components, systems, etc. are added.
+    
+    Worlds should be constructed using the `World.build` macro.
  */
 @:final class World {
 	@:allow(awe)
@@ -32,15 +32,15 @@ import awe.ComponentList;
 	@:allow(awe)
 	var subscriptions(default, null):ArrayList<EntitySubscription> = new ArrayList<EntitySubscription>();
 	/**
-	 *  How many entities have been created so far.
+	    How many entities have been created so far.
 	 */
 	@:allow(awe)
 	public var entityCount(default, null): Int;
 
 	/**
-	 *  The number of seconds since the last time `process` was called.
-	 *  
-	 *  This must be set manually so it can integrate with custom game loops.
+	    The number of seconds since the last time `process` was called.
+	    
+	    This must be set manually so it can integrate with custom game loops.
 	 */
 	public var delta: Float = 0;
 
@@ -61,9 +61,9 @@ import awe.ComponentList;
 			system.initialize(this);
 	}
 	/**
-	 *  Get the system that is an instance of `cl`.
-	 *  @param cl - The system class to retrieve the instance of.
-	 *  @return - The system.
+	    Get the system that is an instance of `cl`.
+	    @param cl - The system class to retrieve the instance of.
+	    @return - The system.
 	 */
 	public function getSystem<T: System>(cl: Class<T>): Null<T> {
 		for(system in systems)
@@ -72,9 +72,9 @@ import awe.ComponentList;
 		return null;
 	}
 	/**
-	 *  Construct a new instance of `World` based on the `WorldConfiguration` given.
-	 *  @param setup - The configuration to create the world with.
-	 *  @return - The created world.
+	    Construct a new instance of `World` based on the `WorldConfiguration` given.
+	    @param setup - The configuration to create the world with.
+	    @return - The created world.
 	 */
 	public static macro function build(setup: ExprOf<WorldConfiguration>): ExprOf<World> {
 		var debug = Context.defined("debug");

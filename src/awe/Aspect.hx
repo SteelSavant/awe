@@ -114,7 +114,7 @@ class Aspect {
 	}
 
 	/**
-	 *  Find and return all the entities matching this aspect.
+	    Find and return all the entities matching this aspect.
 	 * @param world The `world` to check inside.
 	 * @return The list of entities in the world that match this aspect.
 	 */
