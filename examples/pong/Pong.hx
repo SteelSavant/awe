@@ -8,10 +8,10 @@ import awe.Aspect;
 import js.html.CanvasRenderingContext2D;
 import js.html.CanvasElement;
 
-@empty
+@auto
 class Collide implements Component {}
 
-@pack
+@auto
 class Size implements Component {
 	public var w: Float;
 	public var h: Float;
@@ -20,7 +20,7 @@ class Size implements Component {
 		this.h = h;
 	}
 }
-@pack
+@auto
 class Position implements Component {
 	public var x: Float;
 	public var y: Float;
@@ -29,7 +29,7 @@ class Position implements Component {
 		this.y = y;
 	}
 }
-@pack
+@auto
 class Velocity implements Component {
 	public var x: Float;
 	public var y: Float;
@@ -44,26 +44,28 @@ enum InputData {
 	None;
 }
 
-@empty
+@auto
 class Input implements Component {}
-@empty
+@auto
 class Bounce implements Component {}
 enum SideData {
 	Left;
 	Right;
 }
+@auto
 class Side implements Component {
 	public var side: SideData;
 	public function new(side: SideData = null)
 		this.side = side;
 }
 
+@auto
 class Draw implements Component {
 	public var color: String;
 	public function new(color: String = "white")
 		this.color = color;
 }
-@pack
+@auto
 class Speed implements Component {
 	public var speed: Float;
 	public function new(speed: Float = 100)

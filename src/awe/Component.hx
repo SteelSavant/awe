@@ -168,8 +168,26 @@ class AutoComponent {
 		var fields = Context.getBuildFields();
 		var offset = 0;
 		var localClass = Context.getLocalClass().get();
+		var auto = localClass.meta.hasAny(["Magic", "magic", "Auto", "auto"]);
 		var shouldPack = localClass.meta.hasAny(["Packed", "packed", "pack", "Pack"]) && !Context.defined("nopack");
 		var shouldEmpty = localClass.meta.hasAny(["Empty", "empty"]);
+		if(auto) {
+			var vars = fields.filter(function(f) return f.kind.getName() == "FVar");
+			var varCount = 0;
+			var allPrimitive = true;
+			for(field in fields)
+				switch(field.kind) {
+					case FieldType.FVar(type, _):
+						varCount++;
+						if(!isPrimitive(type)) {
+							allPrimitive = false;
+							break;
+						}
+					default:
+				}
+			shouldPack = !Context.defined("nopack") && allPrimitive;
+			shouldEmpty = varCount == 0;
+		}
 		var componentType = ComponentType.getLocal();
 		if(!(shouldPack || shouldEmpty) || localClass.superClass != null)
 			return defaultFields(fields);

@@ -27,6 +27,10 @@ class EntitySubscription {
         world.subscriptions.add(this);
     }
     @:allow(awe)
+    function insertedSingle(entity: Entity)
+        if(aspect.matches(entity.getComposition(world)))
+            entities.push(entity);
+    @:allow(awe)
     function inserted(entities: Array<Entity>)
         for(entity in entities)
             if(aspect.matches(entity.getComposition(world)))

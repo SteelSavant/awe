@@ -21,7 +21,7 @@ abstract Entity(Int) to Int from Int {
 	function insertIntoSubscriptions(world: World): Void {
 		for(sub in world.subscriptions)
 			if(sub.aspect.matches(world.compositions[this]))
-				sub.inserted([this]);
+				sub.insertedSingle(this);
 		for(system in world.systems)
 			if(Std.is(system, Manager))
 				cast(system, Manager).added(this);

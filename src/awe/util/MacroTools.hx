@@ -90,7 +90,7 @@ class MacroTools {
 	static inline function formatName(pack: Array<String>, name: String)
 		return [name].concat(pack).join(".");
 
-	public static function sizeOf(ty: ComplexType):Int {
+	public static function sizeOf(ty: ComplexType):Null<Int> {
 		var size = switch(ty) {
 			case TOptional(t):
 				sizeOf(t);
