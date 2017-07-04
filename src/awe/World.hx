@@ -62,8 +62,8 @@ import awe.ComponentList;
 	}
 	/**
 	    Get the system that is an instance of `cl`.
-	    @param cl - The system class to retrieve the instance of.
-	    @return - The system.
+	    @param cl The system class to retrieve the instance of.
+	    @return The system.
 	 */
 	public function getSystem<T: System>(cl: Class<T>): Null<T> {
 		for(system in systems)
@@ -73,8 +73,8 @@ import awe.ComponentList;
 	}
 	/**
 	    Construct a new instance of `World` based on the `WorldConfiguration` given.
-	    @param setup - The configuration to create the world with.
-	    @return - The created world.
+	    @param setup The configuration to create the world with.
+	    @return The created world.
 	 */
 	public static macro function build(setup: ExprOf<WorldConfiguration>): ExprOf<World> {
 		var debug = Context.defined("debug");
@@ -105,7 +105,7 @@ import awe.ComponentList;
 		for(component in setup.assertField("components").getArray()) {
 			var cty = ComponentType.get(component.resolveTypeLiteral());
 			var parts = component.toString().split(".");
-			var name = parts[parts.length - 1].toLowerCase().pluralize();
+			var name = parts[parts.length 1].toLowerCase().pluralize();
 		}
 		block.push(macro new World(components, systems));
 		return macro $b{block};
@@ -119,8 +119,8 @@ import awe.ComponentList;
 
 	/**
 	 *	Automatically run `process` at a set interval.
-	 *	@param interval - The interval to run the systems at (in seconds).
-	 *	@return  - The timer that has been created to run this.
+	 *	@param interval The interval to run the systems at (in seconds).
+	 *	@return  The timer that has been created to run this.
 	 */
 	public function delayLoop(interval: Float): Timer {
 		var timer = new Timer(Std.int(interval * 1000));
@@ -133,7 +133,7 @@ import awe.ComponentList;
 		var curr = last;
 		while(true) {
 			curr = Timer.stamp();
-			delta = curr - last;
+			delta = curr last;
 			process();
 			last = curr;
 		}

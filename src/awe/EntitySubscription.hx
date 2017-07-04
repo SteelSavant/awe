@@ -35,7 +35,7 @@ class EntitySubscription {
     var listeners(default, null): Array<SubscriptionListener> = [];
     /**
         Notify `listener` when entities are added / removed matching `aspect`.
-        @param listener - The listener to notify.
+        @param listener The listener to notify.
      */
     public inline function addListener(listener:SubscriptionListener): Void
         listeners.push(listener);
@@ -43,7 +43,7 @@ class EntitySubscription {
     /**
         Stop notifying `listener` when entities are added / removed matching
         `aspect`.
-        @param listener - The listener to notify.
+        @param listener The listener to notify.
      */
     public inline function removeListener(listener:SubscriptionListener): Void
         listeners.remove(listener);
@@ -54,7 +54,7 @@ class EntitySubscription {
     }
     /**
         Initialize this subscription in `world`.
-        @param world - The world to add this to.
+        @param world The world to add this to.
      */
     public function initialize(world: World) {
         this.world = world;

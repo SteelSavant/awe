@@ -48,6 +48,12 @@ class Aspect {
 	var allSet(default, null): BitVector;
 	var oneSet(default, null): BitVector;
 	var noneSet(default, null): BitVector;
+	/**
+	 	Create a new aspect from bit vectors.
+		@param allSet The components to require all of.
+		@param oneSet The components to require at least one of.
+		@param noneSet The components to require none of.
+	*/
 	public function new(allSet, oneSet, noneSet) {
 		this.allSet = allSet;
 		this.oneSet = oneSet;
@@ -108,17 +114,8 @@ class Aspect {
 		Returns true if the `components` set fulfills this aspect.
 		@param components The `BitVector` of components to check against.
 		@return If the `components` set fulfills this aspect.
-	**/
+	*/
 	public function matches(components: BitVector): Bool {
 		return (components.contains(allSet) || oneSet.intersects(components)) && !noneSet.intersects(components);
-	}
-
-	/**
-	    Find and return all the entities matching this aspect.
-	 * @param world The `world` to check inside.
-	 * @return The list of entities in the world that match this aspect.
-	 */
-	public function matching(world: World): Array<Entity> {
-		return [for(e in world.entities) if(matches(world.compositions[e])) e];
 	}
 }

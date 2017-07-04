@@ -11,29 +11,29 @@ using awe.util.MacroTools;
 import de.polygonal.ds.ArrayList;
 import de.polygonal.ds.BitVector;
 /**
- * Blueprints for fast construction of `Entity`s.
- *
- * This can be constructed by using the `Archetype.build` macro, or by calling
- * the constructor with the composition and component defaults.
- */
+	Blueprints for fast construction of `Entity`s.
+
+	This can be constructed by using the `Archetype.build` macro, or by calling
+	the constructor with the composition and component defaults.
+*/
 class Archetype {
 	var defaults: Array<Void -> Component>;
 	var cid: BitVector;
 	/**
-	 * Create a new `Archetype` instance based on its composition and component
-	 * defaults.
-	 * @param cid The composition.
-	 * @param defaults A list of functions that create components.
-	 */
+	 	Create a new `Archetype` instance based on its composition and component
+		defaults.
+		@param cid The composition.
+		@param defaults A list of functions that create components.
+	*/
 	public function new(cid: BitVector, defaults: Array<Void -> Component>) {
 		this.cid = cid;
 		this.defaults = defaults;
 	}
 	/**
-	 * Create a single `Entity`, using this `Archetype` as a template.
-	 * @param world The world to create the entities in.
-	 * @return The entity created.
-	 */
+		Create a single `Entity`, using this `Archetype` as a template.
+		@param world The world to create the entities in.
+		@return The entity created.
+	*/
 	public function create(world: World): Entity {
 		var entity:Entity = new Entity(world);
 		
@@ -52,11 +52,11 @@ class Archetype {
 		return entity;
 	}
 	/**
-	 * Create multiple entities at once, using this `Archetype` as a template.
-	 * @param world The world to create the entities in.
-	 * @param count How many entities will be created.
-	 * @return The list of entities created.
-	 */
+		Create multiple entities at once, using this `Archetype` as a template.
+		@param world The world to create the entities in.
+		@param count How many entities will be created.
+		@return The list of entities created.
+	*/
 	public function createSome(world: World, count: Int): ArrayList<Entity> {
 		#if debug
 		if(count < 0)
@@ -68,12 +68,12 @@ class Archetype {
 		return list;
 	}
 	/**
-	 * Create an `Archetype` from a list of component classes it will be made with.
-	 *
-	 * This requires the components classes to have a zero-argument constructor.
-	 * @param types The component classes.
-	 * @return The created `Archetype` instance.
-	 */
+		Create an `Archetype` from a list of component classes it will be made with.
+		
+		This requires the components classes to have a zero-argument constructor.
+		@param types The component classes.
+		@return The created `Archetype` instance.
+	*/
 	public static macro function build(types: Array<ExprOf<Class<Component>>>): ExprOf<Archetype> {
 		var cid = new BitVector(ComponentType.count);
 		var types = [for(typeExpr in types) {

@@ -8,8 +8,8 @@ using awe.util.MacroTools;
 import haxe.macro.Expr;
 
 /**
- * A unique identifier for a single component.
- */
+	Uniquely identifies every kind of component.
+*/
 abstract ComponentType(Int) from Int to Int {
 	public static macro function getComponentCount(): ExprOf<Int>
 		return macro $v{count};
@@ -41,12 +41,24 @@ abstract ComponentType(Int) from Int to Int {
 
 	public static inline var PACKED_FLAG = 1 << 31;
 	public static inline var EMPTY_FLAG = 1 << 30;
+	/**
+		Returns true if this component is marked as empty.
+	  	@return If this component is marked empty.
+	*/
 	public inline function isEmpty():Bool
 		return this & EMPTY_FLAG != 0;
 
+	/**
+		Returns true if this component is marked as packed.
+		@return If this component is marked packed.
+	*/
 	public inline function isPacked():Bool
 		return this & PACKED_FLAG != 0;
 
+	/**
+		Returns the component type free of markers.
+		@return The pure component type.
+	*/
 	public inline function getPure():ComponentType
 		return this & ~PACKED_FLAG & ~EMPTY_FLAG;
 

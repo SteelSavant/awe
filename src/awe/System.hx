@@ -31,22 +31,22 @@ class System {
 		world = null;
 	}
 	/**
-	 *	Check if this system should be processed.
-	 *	@return If this should be processed or not.
+		Check if this system should be processed.
+		@return If this should be processed or not.
 	 */
 	public inline function checkProcessing(): Bool
 		return enabled;
 
 	/**
-	 *	Initializes this system in the `World`.
-	 *	@param world The `World` to initialize this in.
+		Initializes this system in the `World`.
+	@param world The `World` to initialize this in.
 	 */
 	public function initialize(world: World): Void
 		this.world = world;
 
 	/**
-	 *	Process this system by running `begin`, `processSystem`, then `end`.
-	 */
+	 	Process this system by running `begin`, `processSystem`, then `end`.
+	*/
 	@:final public function process(): Void {
 		if(checkProcessing()) {
 			begin();
@@ -55,21 +55,21 @@ class System {
 		}
 	}
 	/**
-	 *	Called as the middle step of processing.
-	 */
+		Called as the middle step of processing.
+	*/
 	public function processSystem(): Void {}
 
 	/**
-	 *	Called before processing starts.
-	 */
+		Called before processing starts.
+	*/
 	public function begin(): Void {}
 	/**
-	 *	Called after processing has finished.
-	 */
+		Called after processing has finished.
+	*/
 	public function end(): Void {}
 	/**
-	 *	Free resources used by this system.
-	 */
+		Free resources used by this system, and prepare for deletion.
+	*/
 	public function dispose(): Void {}
 }
 

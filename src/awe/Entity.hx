@@ -13,7 +13,9 @@ import de.polygonal.ds.BitVector;
 	Reperesents a single thing in a `World`.
 **/
 abstract Entity(Int) to Int from Int {
-	/** The identifier of this entity. **/
+	/**
+		The identifier of this entity.
+	*/
 	public var id(get, never): Int;
 	inline function get_id(): Int
 		return this;
@@ -28,13 +30,20 @@ abstract Entity(Int) to Int from Int {
 			if(sub.aspect.matches(world.compositions[this]))
 				sub.removed([this]);
 	}
-
+	/**
+		Construct a new, empty entity inside the world.
+		@param world The world to make the entity inside.
+	*/
 	public function new(world: World) {
 		this = world.entityCount++;
 		world.entities.add(this);
 		world.compositions.set(this, new BitVector(32));
 		insertIntoSubscriptions(world);
 	}
+	/**
+	 *  Delete this entity from the world.
+	 *  @param world The world to delete this entity from.
+	 */
 	public function delete(world: World): Void {
 		removeFromSubscriptions(world);
 		world.entities.remove(this);
