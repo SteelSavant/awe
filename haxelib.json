@@ -1,14 +1,14 @@
 {
 	"name": "awe",
-	"url" : "https://github.com/TomBebbington/awe/",
+	"url" : "https://github.com/TomBebb/awe/",
 	"license": "BSD",
 	"tags": ["cross", "game", "utility", "ecs"],
-	"description": "Powerful, fast and simple entity component system based on Artemis",
-	"version": "1.0.0",
-	"releasenote": "Initial release, everything is working correctly.",
+	"description": "Awe is a powerful, fast and simple entity component system based on Artemis",
+	"version": "0.1.0",
+	"releasenote": "Initial release, everything seems to be working correctly.",
 	"contributors": ["tombebbington"],
 	"classPath": "src",
 	"dependencies": {
-		"polygonal-ds": ""
+		"polygonal-ds": "2.0.0"
 	}
 }
