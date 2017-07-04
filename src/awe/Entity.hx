@@ -22,17 +22,11 @@ abstract Entity(Int) to Int from Int {
 		for(sub in world.subscriptions)
 			if(sub.aspect.matches(world.compositions[this]))
 				sub.insertedSingle(this);
-		for(system in world.systems)
-			if(Std.is(system, Manager))
-				cast(system, Manager).added(this);
 	}
 	function removeFromSubscriptions(world: World): Void {
 		for(sub in world.subscriptions)
 			if(sub.aspect.matches(world.compositions[this]))
 				sub.removed([this]);
-		for(system in world.systems)
-			if(Std.is(system, Manager))
-				cast(system, Manager).removed(this);
 	}
 
 	public function new(world: World) {
