@@ -133,7 +133,7 @@ import awe.ComponentList;
 		var curr = last;
 		while(true) {
 			curr = Timer.stamp();
-			delta = curr last;
+			delta = curr - last;
 			process();
 			last = curr;
 		}
