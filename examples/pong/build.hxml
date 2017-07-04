@@ -1,5 +1,3 @@
 -main Pong
--js examples/pong/build/pong.js
--cp src
--cp examples/pong
--lib polygonal-ds
+-lib awe
+-js build/pong.js

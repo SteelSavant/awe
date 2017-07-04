@@ -1,7 +1,5 @@
 package awe.util;
 
-import haxe.ds.Vector;
-
 typedef Thread =
 #if neko
 	neko.vm.Thread
