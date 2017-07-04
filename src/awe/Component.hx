@@ -168,9 +168,17 @@ class AutoComponent {
 		var fields = Context.getBuildFields();
 		var offset = 0;
 		var localClass = Context.getLocalClass().get();
-		var shouldPack = localClass.meta.has("Pack") && !Context.defined("nopack");
-		if(!shouldPack || localClass.meta.has("Empty") || localClass.superClass != null)
+		var shouldPack = localClass.meta.hasAny(["Packed", "packed", "pack", "Pack"]) && !Context.defined("nopack");
+		var shouldEmpty = localClass.meta.hasAny(["Empty", "empty"]);
+		var componentType = ComponentType.getLocal();
+		if(!(shouldPack || shouldEmpty) || localClass.superClass != null)
 			return defaultFields(fields);
+		var advancedComponentType = componentType;
+		if(shouldPack)
+			advancedComponentType |= ComponentType.PACKED_FLAG;
+		else if(shouldEmpty)
+			advancedComponentType |= ComponentType.EMPTY_FLAG;
+		ComponentType.advancedTypes[componentType] = advancedComponentType;
 		for(field in fields) {
 			switch(field.kind) {
 				case FieldType.FVar(t, e):
@@ -252,7 +260,7 @@ class AutoComponent {
 			pos: Context.currentPos(),
 			kind: FieldType.FFun({
 				ret: macro: awe.ComponentType,
-				expr: macro return cast $v{ComponentType.getLocal()},
+				expr: macro return cast $v{advancedComponentType},
 				args: []
 			}),
 			access: [

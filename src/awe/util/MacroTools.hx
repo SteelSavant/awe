@@ -13,6 +13,12 @@ import de.polygonal.ds.BitVector;
 /** Some handy macro tools. **/
 class MacroTools {
 	#if macro
+	public static function hasAny(meta: MetaAccess, texts: Array<String>): Bool {
+		for(text in texts)
+			if(meta.has(text))
+				return true;
+		return false;
+	}
 	public static function hasConstructor(type: Type): Bool {
 		switch(Context.follow(type)) {
 			case Type.TInst(classType, _):

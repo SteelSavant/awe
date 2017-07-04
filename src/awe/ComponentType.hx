@@ -15,15 +15,16 @@ abstract ComponentType(Int) from Int to Int {
 		return macro $v{count};
 	#if macro
 	public static var count:Int = 0;
-	public static var types(default, never) = new Map<String, ComponentType>();
-
+	public static var basicTypes(default, never) = new Map<String, ComponentType>();
+	public static var advancedTypes(default, never) = new Map<ComponentType, ComponentType>();
 	public static function get(ty: Type): awe.ComponentType {
 		var tys = ty.toString();
-		return if(types.exists(tys))
-			types.get(tys);
+		return if(basicTypes.exists(tys))
+			advancedTypes.get(basicTypes.get(tys));
 		else {
 			var cty = count++;
-			types.set(tys, cty);
+			basicTypes[tys] = cty;
+			advancedTypes[cty] = cty;
 			cty;
 		}
 	}
