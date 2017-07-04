@@ -1,6 +1,7 @@
 -neko _
 -cp src
 -xml doc/doc.xml
+-lib polygonal-ds
 -D doc
 --no-output
 --macro include('awe', true, null, ['src'])
