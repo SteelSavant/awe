@@ -105,7 +105,7 @@ import awe.ComponentList;
 		for(component in setup.assertField("components").getArray()) {
 			var cty = ComponentType.get(component.resolveTypeLiteral());
 			var parts = component.toString().split(".");
-			var name = parts[parts.length 1].toLowerCase().pluralize();
+			var name = parts[parts.length - 1].toLowerCase().pluralize();
 		}
 		block.push(macro new World(components, systems));
 		return macro $b{block};
