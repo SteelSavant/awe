@@ -22,6 +22,10 @@ class EntitySubscription {
     function new(aspect: Aspect) {
         this.aspect = aspect;
     }
+    public function initialize(world: World) {
+        this.world = world;
+        world.subscriptions.add(this);
+    }
     @:allow(awe)
     function inserted(entities: Array<Entity>)
         for(entity in entities)

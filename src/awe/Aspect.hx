@@ -90,8 +90,6 @@ class Aspect {
 				case EField(_, _) | EConst(CIdent(_)):
 					var ty = expr.resolveTypeLiteral();
 					var cty = ComponentType.get(ty);
-					if(debug)
-						Sys.println("Adding " + ty.toString() + " (id = " + cty.getPure() + ") to aspect");
 					set.set(ComponentType.get(ty).getPure());
 				default:
 					Context.error("Invalid expression for aspect", Context.currentPos());

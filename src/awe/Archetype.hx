@@ -36,20 +36,19 @@ class Archetype {
 	 */
 	public function create(world: World): Entity {
 		var entity:Entity = new Entity(world);
+		
 		for(def in defaults) {
 			var inst = def();
-			var ty = inst.getType();
-			if(ty.isEmpty())
+			if(inst == null)
 				continue;
+			var ty = inst.getType();
 			var list = world.components.get(ty.getPure());
 			if(list == null)
-			#if debug
 				throw 'Component list for $def is null, did you add it to the World in World.create?';
-			#else
-				continue;
-			#end
 			list.add(entity, inst);
 		}
+		world.compositions[entity] = cid;
+		entity.insertIntoSubscriptions(world);
 		return entity;
 	}
 	/**
@@ -81,6 +80,7 @@ class Archetype {
 				var type = typeExpr.resolveTypeLiteral();
 				var compType = awe.ComponentType.get(type);
 				var complexType = type.toComplexType();
+				cid.set(compType.getPure());
 				if(compType == null)
 					Context.fatalError('awe: Component type ${typeExpr.toString()} cannot be resolved', typeExpr.pos);
 				var path = switch(complexType) {
@@ -89,13 +89,11 @@ class Archetype {
 					default:
 						Context.fatalError('awe: Component type ${typeExpr.toString()} must be a path', typeExpr.pos);
 						return macro null;
-				}
+				};
 				if(compType.isEmpty())
 					macro function() return null;
-				else if(!type.hasConstructor())
-					macro function() return Type.createEmptyInstance($typeExpr);
 				else
-					macro function() return new $path();
+					macro function() return Type.createEmptyInstance($typeExpr);
 			}
 		];
 		return macro new Archetype(${cid.wrapBits()}, ${{expr: ExprDef.EArrayDecl(types), pos: Context.currentPos()}});

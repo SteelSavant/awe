@@ -1,3 +1,4 @@
 -main Pong
 -lib awe
 -js build/pong.js
+-D nopack

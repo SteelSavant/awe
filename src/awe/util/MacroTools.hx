@@ -4,6 +4,7 @@ import haxe.macro.Expr;
 import haxe.macro.Type;
 using haxe.macro.ExprTools;
 using haxe.macro.TypeTools;
+using haxe.macro.TypedExprTools;
 using haxe.macro.ComplexTypeTools;
 using haxe.macro.Context;
 import haxe.Serializer;
@@ -22,8 +23,15 @@ class MacroTools {
 	public static function hasConstructor(type: Type): Bool {
 		switch(Context.follow(type)) {
 			case Type.TInst(classType, _):
-				return classType.get().constructor != null;
+				var constructorRef = classType.get().constructor;
+				if(constructorRef == null)
+					return false;
+				var constructor = constructorRef.get();
+				if(constructor == null)
+					return false;
+				return constructor.isPublic && constructor.expr != null;
 			default:
+				throw '$type should be class instance';
 				return false;
 		}
 	}

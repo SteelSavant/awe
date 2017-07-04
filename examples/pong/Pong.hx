@@ -8,9 +8,10 @@ import awe.Aspect;
 import js.html.CanvasRenderingContext2D;
 import js.html.CanvasElement;
 
+@empty
 class Collide implements Component {}
 
-
+@pack
 class Size implements Component {
 	public var w: Float;
 	public var h: Float;
@@ -19,6 +20,7 @@ class Size implements Component {
 		this.h = h;
 	}
 }
+@pack
 class Position implements Component {
 	public var x: Float;
 	public var y: Float;
@@ -27,6 +29,7 @@ class Position implements Component {
 		this.y = y;
 	}
 }
+@pack
 class Velocity implements Component {
 	public var x: Float;
 	public var y: Float;
@@ -41,7 +44,9 @@ enum InputData {
 	None;
 }
 
+@empty
 class Input implements Component {}
+@empty
 class Bounce implements Component {}
 enum SideData {
 	Left;
@@ -58,6 +63,7 @@ class Draw implements Component {
 	public function new(color: String = "white")
 		this.color = color;
 }
+@pack
 class Speed implements Component {
 	public var speed: Float;
 	public function new(speed: Float = 100)
@@ -189,8 +195,8 @@ class InputSystem extends EntitySystem {
 		var speed = speeds.get(entity);
 		var velocity = velocities.get(entity);
 		velocity.y = speed.speed * world.delta * (switch input {
-			case Up: -1;
-			case Down: 1;
+			case Up: 1;
+			case Down: -1;
 			case None: 0;
 		});
 	}
@@ -211,23 +217,22 @@ class Pong {
 				],
 				expectedEntityCount: 3
 			});
-			var playerArch = Archetype.build(Size, Collide, Speed, Input, Position, Velocity, Draw);
+			var playerArch = Archetype.build(Size, Speed, Input, Position, Velocity, Draw);
 			var player = playerArch.create(world);
 			player.get(world, Draw).color = "red";
+			player.get(world, Velocity).set(0, 0);
 			var size: Size = player.get(world, Size);
-			trace(size);
 			size.set(3, 50);
 			var pos:Position = player.get(world, Position);
-			trace(pos);
 			pos.set(65, 55);
-			player.get(world, Speed).speed = 7000;
-			var ballArch = Archetype.build(Size, Collide, Position, Velocity, Draw, Bounce);
+			player.get(world, Speed).speed = 1000;
+			var ballArch = Archetype.build(Size, Position, Velocity, Draw, Bounce);
 			var ball = ballArch.create(world);
 			ball.get(world, Draw).color = "blue";
 			ball.get(world, Size).set(30, 30);
 			ball.get(world, Position).set(300, 300);
-			ball.get(world, Velocity).set(1000, 1000);
-			world.delayLoop(0.04);
+			ball.get(world, Velocity).set(100, 100);
+			world.delayLoop(0.05);
 		};
 	}
 }

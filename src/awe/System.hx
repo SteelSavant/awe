@@ -78,7 +78,7 @@ class EntitySystem extends System implements EntitySubscription.SubscriptionList
 	}
 	public override function initialize(world: World) {
 		super.initialize(world);
-		world.subscriptions.add(subscription);
+		subscription.initialize(world);
 	}
 	public function processEntity(entity: Entity): Void {}
 	public override function processSystem(): Void
