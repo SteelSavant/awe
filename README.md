@@ -1,6 +1,8 @@
 Awe
 ===
 
+[API Reference](https://tombebb.github.io/awe/)
+
 Awe is a *pure* entity component system based on [Artemis-odb](https://github.com/junkdog/artemis-odb), but taking advantage of Haxe's features like macros and conditional compilation.
 
 Basic ECS principles
