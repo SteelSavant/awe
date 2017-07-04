@@ -41,7 +41,7 @@ class System {
 	 *	Initializes this system in the `World`.
 	 *	@param world The `World` to initialize this in.
 	 */
-	public inline function initialize(world: World): Void
+	public function initialize(world: World): Void
 		this.world = world;
 
 	/**

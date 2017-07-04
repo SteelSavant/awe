@@ -1466,7 +1466,7 @@
 			<haxe_doc>* Create a new `Archetype` instance based on its composition and component
 	 * defaults.
 	 * @param cid The composition.
-	 * @param defaults A list of functions that make components.</haxe_doc>
+	 * @param defaults A list of functions that create components.</haxe_doc>
 		</new>
 		<haxe_doc>* Blueprints for fast construction of `Entity`s.
  *
@@ -1786,7 +1786,7 @@
 			<m n=":allow"><e>awe</e></m>
 		</meta>
 	</insertIntoSubscriptions>
-	<removeFromSubscriptions set="method" line="29" static="1">
+	<removeFromSubscriptions set="method" line="26" static="1">
 		<f a="this:world">
 			<x path="Int"/>
 			<c path="awe.World"/>
@@ -1794,14 +1794,14 @@
 		</f>
 		<meta><m n=":impl"/></meta>
 	</removeFromSubscriptions>
-	<_new public="1" set="method" line="38" static="1">
+	<_new public="1" set="method" line="32" static="1">
 		<f a="world">
 			<c path="awe.World"/>
 			<x path="awe.Entity"/>
 		</f>
 		<meta><m n=":impl"/></meta>
 	</_new>
-	<delete public="1" set="method" line="44" static="1">
+	<delete public="1" set="method" line="38" static="1">
 		<f a="this:world">
 			<x path="Int"/>
 			<c path="awe.World"/>
@@ -1809,7 +1809,7 @@
 		</f>
 		<meta><m n=":impl"/></meta>
 	</delete>
-	<getComposition public="1" get="inline" set="null" line="54" static="1">
+	<getComposition public="1" get="inline" set="null" line="48" static="1">
 		<f a="this:world">
 			<x path="Int"/>
 			<c path="awe.World"/>
@@ -1820,7 +1820,7 @@
 		@param world The world that this `Entity` is contained in.
 		@return The composition bits.</haxe_doc>
 	</getComposition>
-	<add public="1" params="T" set="method" line="74" static="1">
+	<add public="1" params="T" set="method" line="68" static="1">
 		<f a="world:value">
 			<c path="awe.World"/>
 			<c path="add.T"/>
@@ -1830,7 +1830,7 @@
 		@param world The world this entity is in.
 		@param value The component to attach to this entity.</haxe_doc>
 	</add>
-	<get public="1" params="T" set="method" line="81" static="1">
+	<get public="1" params="T" set="method" line="75" static="1">
 		<f a="world:kind">
 			<c path="awe.World"/>
 			<x path="Class"><c path="get.T"/></x>
@@ -1841,7 +1841,7 @@
 		@param kind The component type to find.
 		@return The component of the type given.</haxe_doc>
 	</get>
-	<toString public="1" get="inline" set="null" line="99" static="1">
+	<toString public="1" get="inline" set="null" line="93" static="1">
 		<f a="this">
 			<x path="Int"/>
 			<c path="String"/>
@@ -1879,7 +1879,7 @@
 				<m n=":allow"><e>awe</e></m>
 			</meta>
 		</insertIntoSubscriptions>
-		<removeFromSubscriptions set="method" line="29" static="1">
+		<removeFromSubscriptions set="method" line="26" static="1">
 			<f a="this:world">
 				<x path="Int"/>
 				<c path="awe.World"/>
@@ -1887,14 +1887,14 @@
 			</f>
 			<meta><m n=":impl"/></meta>
 		</removeFromSubscriptions>
-		<_new public="1" set="method" line="38" static="1">
+		<_new public="1" set="method" line="32" static="1">
 			<f a="world">
 				<c path="awe.World"/>
 				<x path="awe.Entity"/>
 			</f>
 			<meta><m n=":impl"/></meta>
 		</_new>
-		<delete public="1" set="method" line="44" static="1">
+		<delete public="1" set="method" line="38" static="1">
 			<f a="this:world">
 				<x path="Int"/>
 				<c path="awe.World"/>
@@ -1902,7 +1902,7 @@
 			</f>
 			<meta><m n=":impl"/></meta>
 		</delete>
-		<getComposition public="1" get="inline" set="null" line="54" static="1">
+		<getComposition public="1" get="inline" set="null" line="48" static="1">
 			<f a="this:world">
 				<x path="Int"/>
 				<c path="awe.World"/>
@@ -1913,7 +1913,7 @@
 		@param world The world that this `Entity` is contained in.
 		@return The composition bits.</haxe_doc>
 		</getComposition>
-		<add public="1" params="T" set="method" line="74" static="1">
+		<add public="1" params="T" set="method" line="68" static="1">
 			<f a="world:value">
 				<c path="awe.World"/>
 				<c path="add.T"/>
@@ -1923,7 +1923,7 @@
 		@param world The world this entity is in.
 		@param value The component to attach to this entity.</haxe_doc>
 		</add>
-		<get public="1" params="T" set="method" line="81" static="1">
+		<get public="1" params="T" set="method" line="75" static="1">
 			<f a="world:kind">
 				<c path="awe.World"/>
 				<x path="Class"><c path="get.T"/></x>
@@ -1934,7 +1934,7 @@
 		@param kind The component type to find.
 		@return The component of the type given.</haxe_doc>
 		</get>
-		<toString public="1" get="inline" set="null" line="99" static="1">
+		<toString public="1" get="inline" set="null" line="93" static="1">
 			<f a="this">
 				<x path="Int"/>
 				<c path="String"/>
@@ -1948,164 +1948,202 @@
 		</meta>
 	</class>
 	<class path="awe.SubscriptionListener" params="" file="src/awe/EntitySubscription.hx" module="awe.EntitySubscription" interface="1">
-		<inserted public="1" set="method"><f a="entities">
-	<c path="Array"><x path="awe.Entity"/></c>
-	<x path="Void"/>
-</f></inserted>
-		<removed public="1" set="method"><f a="entities">
-	<c path="Array"><x path="awe.Entity"/></c>
-	<x path="Void"/>
-</f></removed>
-		<haxe_doc>*  Matches entities meeting a certain aspect.</haxe_doc>
+		<inserted public="1" set="method">
+			<f a="entities">
+				<c path="Array"><x path="awe.Entity"/></c>
+				<x path="Void"/>
+			</f>
+			<haxe_doc>*  Called when entities are inserted that match the aspect.
+     *  @param entities The newly inserted entities.</haxe_doc>
+		</inserted>
+		<removed public="1" set="method">
+			<f a="entities">
+				<c path="Array"><x path="awe.Entity"/></c>
+				<x path="Void"/>
+			</f>
+			<haxe_doc>*  Called when entities are removed that match the aspect.
+     *  @param entities The removed entities.</haxe_doc>
+		</removed>
+		<haxe_doc>*  Subscribes to entities being inserted and removed.</haxe_doc>
 	</class>
 	<class path="awe.EntitySubscription" params="" file="src/awe/EntitySubscription.hx">
-		<aspect public="1" set="null"><c path="awe.Aspect"/></aspect>
-		<entities public="1" set="null"><c path="Array"><x path="awe.Entity"/></c></entities>
-		<world public="1" set="null"><c path="awe.World"/></world>
+		<aspect public="1" set="null">
+			<c path="awe.Aspect"/>
+			<haxe_doc>*  The aspect to match entities against.</haxe_doc>
+		</aspect>
+		<entities public="1" set="null">
+			<c path="Array"><x path="awe.Entity"/></c>
+			<haxe_doc>*  The entities matching the `aspect`.</haxe_doc>
+		</entities>
+		<world public="1" set="null">
+			<c path="awe.World"/>
+			<haxe_doc>*  The world this subscription lies in.</haxe_doc>
+		</world>
 		<listeners set="null"><c path="Array"><c path="awe.SubscriptionListener"/></c></listeners>
-		<addListener public="1" get="inline" set="null" line="15"><f a="listener">
-	<c path="awe.SubscriptionListener"/>
-	<x path="Void"/>
-</f></addListener>
-		<removeListener public="1" get="inline" set="null" line="18"><f a="listener">
-	<c path="awe.SubscriptionListener"/>
-	<x path="Void"/>
-</f></removeListener>
-		<initialize public="1" set="method" line="25"><f a="world">
-	<c path="awe.World"/>
-	<x path="Void"/>
-</f></initialize>
-		<insertedSingle set="method" line="30">
+		<addListener public="1" get="inline" set="null" line="40">
+			<f a="listener">
+				<c path="awe.SubscriptionListener"/>
+				<x path="Void"/>
+			</f>
+			<haxe_doc>*  Notify `listener` when entities are added / removed matching `aspect`.
+     *  @param listener - The listener to notify.</haxe_doc>
+		</addListener>
+		<removeListener public="1" get="inline" set="null" line="48">
+			<f a="listener">
+				<c path="awe.SubscriptionListener"/>
+				<x path="Void"/>
+			</f>
+			<haxe_doc>*  Stop notifying `listener` when entities are added / removed matching
+     *  `aspect`.
+     *  @param listener - The listener to notify.</haxe_doc>
+		</removeListener>
+		<initialize public="1" set="method" line="59">
+			<f a="world">
+				<c path="awe.World"/>
+				<x path="Void"/>
+			</f>
+			<haxe_doc>*  Initialize this subscription in `world`.
+     *  @param world - The world to add this to.</haxe_doc>
+		</initialize>
+		<insertedSingle set="method" line="64">
 			<f a="entity">
 				<x path="awe.Entity"/>
 				<x path="Void"/>
 			</f>
 			<meta><m n=":allow"><e>awe</e></m></meta>
 		</insertedSingle>
-		<inserted set="method" line="34">
+		<inserted set="method" line="68">
 			<f a="entities">
 				<c path="Array"><x path="awe.Entity"/></c>
 				<x path="Void"/>
 			</f>
 			<meta><m n=":allow"><e>awe</e></m></meta>
 		</inserted>
-		<removed set="method" line="39">
+		<removed set="method" line="73">
 			<f a="entities">
 				<c path="Array"><x path="awe.Entity"/></c>
 				<x path="Void"/>
 			</f>
 			<meta><m n=":allow"><e>awe</e></m></meta>
 		</removed>
-		<new set="method" line="22">
+		<new set="method" line="52">
 			<f a="aspect">
 				<c path="awe.Aspect"/>
 				<x path="Void"/>
 			</f>
 			<meta><m n=":allow"><e>awe</e></m></meta>
 		</new>
+		<haxe_doc>*  Keeps a list of entities that meet the given `aspect`, and runs listeners
+ *  when this list is added to / removed from.</haxe_doc>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
+	<typedef path="awe.PackedComponent" params="" file="src/awe/PackedComponent.hx">
+		<a>
+			<__offset><x path="Int"/></__offset>
+			<__bytes><c path="haxe.io.Bytes"/></__bytes>
+		</a>
+		<haxe_doc>* Extra fields added to a packed component by the `Component.from` macro.</haxe_doc>
+	</typedef>
 	<class path="awe.System" params="" file="src/awe/System.hx">
 		<world public="1" set="null">
 			<c path="awe.World"/>
-			<haxe_doc>The world that contains this system.</haxe_doc>
+			<haxe_doc>*  The world containing this system.</haxe_doc>
 		</world>
 		<enabled public="1">
 			<x path="Bool"/>
-			<haxe_doc>If this system is enabled or not.</haxe_doc>
+			<haxe_doc>*  If this system is enabled or not.</haxe_doc>
 		</enabled>
-		<checkProcessing public="1" get="inline" set="null" line="29">
+		<checkProcessing public="1" get="inline" set="null" line="37">
 			<f a=""><x path="Bool"/></f>
-			<haxe_doc>Check if this system should be processed.
-		@return If this should be processed or not.</haxe_doc>
+			<haxe_doc>*	Check if this system should be processed.
+	 *	@return If this should be processed or not.</haxe_doc>
 		</checkProcessing>
-		<initialize public="1" set="method" line="36">
+		<initialize public="1" set="method" line="44">
 			<f a="world">
 				<c path="awe.World"/>
 				<x path="Void"/>
 			</f>
-			<haxe_doc>Initializes this system in the `World`.
-		@param world The `World` to initialize this in.</haxe_doc>
+			<haxe_doc>*	Initializes this system in the `World`.
+	 *	@param world The `World` to initialize this in.</haxe_doc>
 		</initialize>
-		<process public="1" set="method" line="43">
+		<process public="1" set="method" line="50">
 			<f a=""><x path="Void"/></f>
 			<meta><m n=":final"/></meta>
-			<haxe_doc>Process this system by running `begin`, `processSystem`, then `end`.</haxe_doc>
+			<haxe_doc>*	Process this system by running `begin`, `processSystem`, then `end`.</haxe_doc>
 		</process>
-		<processSystem public="1" set="method" line="53">
+		<processSystem public="1" set="method" line="60">
 			<f a=""><x path="Void"/></f>
-			<haxe_doc>Process this system.</haxe_doc>
+			<haxe_doc>*	Called as the middle step of processing.</haxe_doc>
 		</processSystem>
-		<begin public="1" set="method" line="58">
+		<begin public="1" set="method" line="65">
 			<f a=""><x path="Void"/></f>
-			<haxe_doc>Called before processing starts.</haxe_doc>
+			<haxe_doc>*	Called before processing starts.</haxe_doc>
 		</begin>
-		<end public="1" set="method" line="62">
+		<end public="1" set="method" line="69">
 			<f a=""><x path="Void"/></f>
-			<haxe_doc>Called after processing has finished.</haxe_doc>
+			<haxe_doc>*	Called after processing has finished.</haxe_doc>
 		</end>
-		<dispose public="1" set="method" line="66">
+		<dispose public="1" set="method" line="73">
 			<f a=""><x path="Void"/></f>
-			<haxe_doc>Free resources used by this system.</haxe_doc>
+			<haxe_doc>*	Free resources used by this system.</haxe_doc>
 		</dispose>
-		<new public="1" set="method" line="21">
+		<new public="1" set="method" line="29">
 			<f a=""><x path="Void"/></f>
-			<haxe_doc>Create a new, empty system.</haxe_doc>
+			<haxe_doc>*  Create an enabled system with no world.</haxe_doc>
 		</new>
-		<haxe_doc>A basic system.</haxe_doc>
+		<haxe_doc>*  Performs operations related to entites.</haxe_doc>
 	</class>
-	<class path="awe.Manager" params="" file="src/awe/Manager.hx">
-		<extends path="awe.System"/>
-		<added public="1" set="method" line="7">
-			<f a="entity">
-				<x path="awe.Entity"/>
-				<x path="Void"/>
-			</f>
-			<haxe_doc>Called when an entity is added to the world.</haxe_doc>
-		</added>
-		<removed public="1" set="method" line="11">
-			<f a="entity">
-				<x path="awe.Entity"/>
-				<x path="Void"/>
-			</f>
-			<haxe_doc>Called when an entity is deleted from the world.</haxe_doc>
-		</removed>
-		<new public="1" set="method" line="3"><f a=""><x path="Void"/></f></new>
-		<meta><m n=":directlyUsed"/></meta>
-	</class>
-	<typedef path="awe.PackedComponent" params="" file="src/awe/PackedComponent.hx"><a>
-	<__offset><x path="Int"/></__offset>
-	<__bytes><c path="haxe.io.Bytes"/></__bytes>
-</a></typedef>
 	<class path="awe.EntitySystem" params="" file="src/awe/System.hx" module="awe.System">
 		<extends path="awe.System"/>
 		<implements path="awe.SubscriptionListener"/>
 		<aspect public="1" set="null">
 			<c path="awe.Aspect"/>
-			<haxe_doc>The aspect to check an entity against before adding to this system.</haxe_doc>
+			<haxe_doc>*  The aspect an entity must match to be considered by the system.</haxe_doc>
 		</aspect>
-		<subscription public="1" set="null"><c path="awe.EntitySubscription"/></subscription>
-		<initialize public="1" set="method" line="79" override="1"><f a="world">
-	<c path="awe.World"/>
-	<x path="Void"/>
-</f></initialize>
-		<processEntity public="1" set="method" line="83"><f a="entity">
-	<x path="awe.Entity"/>
-	<x path="Void"/>
-</f></processEntity>
-		<processSystem public="1" set="method" line="84" override="1"><f a=""><x path="Void"/></f></processSystem>
-		<inserted public="1" set="method" line="87"><f a="entities">
+		<subscription public="1" set="null">
+			<c path="awe.EntitySubscription"/>
+			<haxe_doc>*  The entity subscription, used to keep track of entities matching the
+	 *  `aspect`.</haxe_doc>
+		</subscription>
+		<initialize public="1" set="method" line="108" override="1">
+			<f a="world">
+				<c path="awe.World"/>
+				<x path="Void"/>
+			</f>
+			<haxe_doc>*	Initializes this system, as well as the subscription, in the `World`.
+	 *	@param world The `World` to initialize this in.</haxe_doc>
+		</initialize>
+		<processEntity public="1" set="method" line="116">
+			<f a="entity">
+				<x path="awe.Entity"/>
+				<x path="Void"/>
+			</f>
+			<haxe_doc>*  Called every time `process` is ran for each entity matching `Aspect`
+	 *  @param entity The `Entity` to be processed.</haxe_doc>
+		</processEntity>
+		<processSystem public="1" set="method" line="117" override="1"><f a=""><x path="Void"/></f></processSystem>
+		<inserted public="1" set="method" line="120"><f a="entities">
 	<c path="Array"><x path="awe.Entity"/></c>
 	<x path="Void"/>
 </f></inserted>
-		<removed public="1" set="method" line="88"><f a="entities">
+		<removed public="1" set="method" line="121"><f a="entities">
 	<c path="Array"><x path="awe.Entity"/></c>
 	<x path="Void"/>
 </f></removed>
-		<new public="1" set="method" line="74"><f a="aspect">
-	<c path="awe.Aspect"/>
-	<x path="Void"/>
-</f></new>
+		<new public="1" set="method" line="99">
+			<f a="aspect">
+				<c path="awe.Aspect"/>
+				<x path="Void"/>
+			</f>
+			<haxe_doc>*  Make a new EntitySystem that tracks entities matching an aspect.
+	 *  @param aspect The aspect tracked entities must match.</haxe_doc>
+		</new>
+		<haxe_doc><![CDATA[*  Performs operations on entities matching a given `Archetype`.
+ *  
+ *  Extending this lets you use the '@auto' metadata in front of fields
+ *  that are a `IComponentList<...>` or a `System` to automatically
+ *  fetch this component list or system from the world in the `initialize`
+ *  method.]]></haxe_doc>
 		<meta><m n=":autoBuild"><e>awe.EntitySystem.build()</e></m></meta>
 	</class>
 	<class path="awe.World" params="" file="src/awe/World.hx">
@@ -2115,17 +2153,14 @@
 				<c path="awe.IComponentList"><d/></c>
 			</x>
 			<meta><m n=":allow"><e>awe</e></m></meta>
-			<haxe_doc>The component lists for each type of `Component`.</haxe_doc>
 		</components>
 		<systems set="null">
 			<x path="haxe.ds.Vector"><c path="awe.System"/></x>
 			<meta><m n=":allow"><e>awe</e></m></meta>
-			<haxe_doc>The systems to run.</haxe_doc>
 		</systems>
 		<entities set="null">
 			<c path="de.polygonal.ds.ArrayList"><x path="awe.Entity"/></c>
 			<meta><m n=":allow"><e>awe</e></m></meta>
-			<haxe_doc>The entities that the systems run on.</haxe_doc>
 		</entities>
 		<compositions set="null">
 			<x path="Map">
@@ -2133,7 +2168,6 @@
 				<c path="de.polygonal.ds.BitVector"/>
 			</x>
 			<meta><m n=":allow"><e>awe</e></m></meta>
-			<haxe_doc>The composition of each entity.</haxe_doc>
 		</compositions>
 		<subscriptions set="null">
 			<c path="de.polygonal.ds.ArrayList"><c path="awe.EntitySubscription"/></c>
@@ -2142,35 +2176,42 @@
 		<entityCount public="1" set="null">
 			<x path="Int"/>
 			<meta><m n=":allow"><e>awe</e></m></meta>
-			<haxe_doc>How many entities have been created so far.</haxe_doc>
+			<haxe_doc>*  How many entities have been created so far.</haxe_doc>
 		</entityCount>
 		<delta public="1">
 			<x path="Float"/>
-			<haxe_doc>The number of seconds since the last frame.</haxe_doc>
+			<haxe_doc>*  The number of seconds since the last time `process` was called.
+	 *  
+	 *  This must be set manually so it can integrate with custom game loops.</haxe_doc>
 		</delta>
-		<getSystem public="1" params="T" set="method" line="58"><f a="cl">
-	<x path="Class"><c path="getSystem.T"/></x>
-	<c path="getSystem.T"/>
-</f></getSystem>
-		<process public="1" get="inline" set="null" line="101">
+		<getSystem public="1" params="T" set="method" line="68">
+			<f a="cl">
+				<x path="Class"><c path="getSystem.T"/></x>
+				<t path="Null"><c path="getSystem.T"/></t>
+			</f>
+			<haxe_doc>*  Get the system that is an instance of `cl`.
+	 *  @param cl - The system class to retrieve the instance of.
+	 *  @return - The system.</haxe_doc>
+		</getSystem>
+		<process public="1" get="inline" set="null" line="116">
 			<f a=""><x path="Void"/></f>
-			<haxe_doc>Update all the `System`s contained in this.</haxe_doc>
+			<haxe_doc>*	Process all active systems.</haxe_doc>
 		</process>
-		<delayLoop public="1" set="method" line="110">
+		<delayLoop public="1" set="method" line="125">
 			<f a="interval">
 				<x path="Float"/>
 				<c path="awe.util.Timer"/>
 			</f>
-			<haxe_doc>Automatically run all the `System`s at a given interval.
-		@param interval The interval to run the systems at (in seconds).
-		@return The timer that has been created to run this.</haxe_doc>
+			<haxe_doc>*	Automatically run `process` at a set interval.
+	 *	@param interval - The interval to run the systems at (in seconds).
+	 *	@return  - The timer that has been created to run this.</haxe_doc>
 		</delayLoop>
-		<loop public="1" set="method" line="116"><f a=""><x path="Void"/></f></loop>
-		<dispose public="1" set="method" line="129">
+		<loop public="1" set="method" line="131"><f a=""><x path="Void"/></f></loop>
+		<dispose public="1" set="method" line="144">
 			<f a=""><x path="Void"/></f>
 			<haxe_doc>Free resources used by this world.</haxe_doc>
 		</dispose>
-		<new public="1" set="method" line="49">
+		<new public="1" set="method" line="54">
 			<f a="components:systems">
 				<x path="Map">
 					<x path="awe.ComponentType"/>
@@ -2179,12 +2220,15 @@
 				<x path="haxe.ds.Vector"><c path="awe.System"/></x>
 				<x path="Void"/>
 			</f>
-			<haxe_doc>Construct a new world.
-		Note: `World.create` should be preferred.
-		@param components The component lists for each type of `Component`.
-		@param systems The systems to run.</haxe_doc>
+			<haxe_doc>*	Construct a new world.
+	 *
+	 *	Note: The `World.create` macro should be preferred.
+	 *	@param components The component lists for every kind of component.
+	 *	@param systems The systems that are processed.</haxe_doc>
 		</new>
-		<haxe_doc>The central object on which components, systems, etc. are added.</haxe_doc>
+		<haxe_doc>*  The central object on which components, systems, etc. are added.
+ *  
+ *  Worlds should be constructed using the `World.build` macro.</haxe_doc>
 		<meta><m n=":final"/></meta>
 	</class>
 	<typedef path="awe.WorldConfiguration" params="" file="src/awe/World.hx" module="awe.World"><a>
@@ -2202,7 +2246,7 @@
 	</components>
 </a></typedef>
 	<class path="awe.managers.GroupManager" params="" file="src/awe/managers/GroupManager.hx">
-		<extends path="awe.Manager"/>
+		<extends path="awe.System"/>
 		<groups><x path="Map">
 	<c path="String"/>
 	<c path="de.polygonal.ds.ArrayList"><x path="awe.Entity"/></c>
@@ -2213,27 +2257,27 @@
 				<c path="String"/>
 				<x path="Void"/>
 			</f>
-			<haxe_doc>Set the group of the entity.
-		@param entity The entity whose group is being set.
-		@param group The group to set the entity to.</haxe_doc>
+			<haxe_doc>*	Set the group of the entity.
+	 *	@param entity The entity whose group is being set.
+	 *	@param group The group to set the entity to.</haxe_doc>
 		</add>
 		<getEntities public="1" get="inline" set="null" line="32">
 			<f a="group">
 				<c path="String"/>
 				<c path="de.polygonal.ds.ArrayList"><x path="awe.Entity"/></c>
 			</f>
-			<haxe_doc>Get the entities contained in a given group.
-		@param group The group to check.
-		@return The entities.</haxe_doc>
+			<haxe_doc>*	Get the entities contained in a given group.
+	 *	@param group The group to check.
+	 *	@return The entities.</haxe_doc>
 		</getEntities>
 		<getGroups public="1" set="method" line="40">
 			<f a="entity">
 				<x path="awe.Entity"/>
 				<c path="de.polygonal.ds.ArrayList"><c path="String"/></c>
 			</f>
-			<haxe_doc>Get all groups the entity belongs to..
-		@param entity The entity to get the groups of.
-		@return The groups it belongs to.</haxe_doc>
+			<haxe_doc>*	Get all groups the entity belongs to..
+	 *	@param entity The entity to get the groups of.
+	 *	@return The groups it belongs to.</haxe_doc>
 		</getGroups>
 		<isInGroup public="1" get="inline" set="null" line="54">
 			<f a="entity:group">
