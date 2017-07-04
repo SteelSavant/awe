@@ -76,6 +76,10 @@ class EntitySystem extends System implements EntitySubscription.SubscriptionList
 		this.aspect = aspect;
 		subscription = new EntitySubscription(aspect);
 	}
+	public override function initialize(world: World) {
+		super.initialize(world);
+		world.subscriptions.add(subscription);
+	}
 	public function processEntity(entity: Entity): Void {}
 	public override function processSystem(): Void
 		for(entity in subscription.entities)

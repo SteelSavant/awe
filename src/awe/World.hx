@@ -52,11 +52,8 @@ import awe.ComponentList;
 		entities = new ArrayList();
 		compositions = new Map();
 		entityCount = 0;
-		for(system in systems) {
+		for(system in systems)
 			system.initialize(this);
-			if(Std.is(system, System.EntitySystem))
-				subscriptions.add(cast(system, System.EntitySystem).subscription);
-		}
 	}
 	public function getSystem<T: System>(cl: Class<T>): T {
 		for(system in systems)
