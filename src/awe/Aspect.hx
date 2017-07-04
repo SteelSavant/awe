@@ -12,9 +12,26 @@ using awe.util.MacroTools;
 using awe.util.BitVectorTools;
 
 import de.polygonal.ds.BitVector;
-
 /**
-	A aspect for matching entities' components against. This is used to check
+	A generic Aspect base.
+ */
+interface IAspect {
+	/**
+		Returns true if the `components` set fulfills this aspect.
+		@param components The `BitVector` of components to check against.
+		@return If the `components` set fulfills this aspect.
+	*/
+	function matches(components: BitVector): Bool;
+}
+/**
+	Matches any combo of components.
+ */
+class AnyAspect implements IAspect {
+	public inline function matches(components: BitVector): Bool
+		return true;
+}
+/**
+	An aspect for matching entities' components against. This is used to check
 	if a system is interested in processing an entity.
 
 	This can be constructed by using the `Aspect.build(_)` macro.
@@ -44,7 +61,7 @@ import de.polygonal.ds.BitVector;
 	})
 	```
 **/
-class Aspect {
+class Aspect implements IAspect {
 	var allSet(default, null): BitVector;
 	var oneSet(default, null): BitVector;
 	var noneSet(default, null): BitVector;
