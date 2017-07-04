@@ -23,7 +23,7 @@ class Archetype {
 	 * Create a new `Archetype` instance based on its composition and component
 	 * defaults.
 	 * @param cid The composition.
-	 * @param defaults A list of functions that make components.
+	 * @param defaults A list of functions that create components.
 	 */
 	public function new(cid: BitVector, defaults: Array<Void -> Component>) {
 		this.cid = cid;
@@ -72,7 +72,7 @@ class Archetype {
 	 *
 	 * This requires the components classes to have a zero-argument constructor.
 	 * @param types The component classes.
-	 * @return The `Archetype` instance.
+	 * @return The created `Archetype` instance.
 	 */
 	public static macro function build(types: Array<ExprOf<Class<Component>>>): ExprOf<Archetype> {
 		var cid = new BitVector(ComponentType.count);

@@ -16,35 +16,40 @@ using awe.util.MoreStringTools;
 import awe.ComponentList;
 
 /**
-	The central object on which components, systems, etc. are added.
-**/
+ *  The central object on which components, systems, etc. are added.
+ *  
+ *  Worlds should be constructed using the `World.build` macro.
+ */
 @:final class World {
-	/** The component lists for each type of `Component`. **/
 	@:allow(awe)
 	var components(default, null): Map<ComponentType, IComponentList<Dynamic>>;
-	/** The systems to run. **/
 	@:allow(awe)
 	var systems(default, null): Vector<System>;
-	/** The entities that the systems run on. **/
 	@:allow(awe)
 	var entities(default, null): ArrayList<Entity>;
-	/** The composition of each entity. **/
 	@:allow(awe)
 	var compositions(default, null): Map<Entity, BitVector>;
 	@:allow(awe)
 	var subscriptions(default, null):ArrayList<EntitySubscription> = new ArrayList<EntitySubscription>();
-	/** How many entities have been created so far. **/
+	/**
+	 *  How many entities have been created so far.
+	 */
 	@:allow(awe)
 	public var entityCount(default, null): Int;
 
-	/** The number of seconds since the last frame. **/
+	/**
+	 *  The number of seconds since the last time `process` was called.
+	 *  
+	 *  This must be set manually so it can integrate with custom game loops.
+	 */
 	public var delta: Float = 0;
 
 	/** 
-		Construct a new world.
-		Note: `World.create` should be preferred.
-		@param components The component lists for each type of `Component`.
-		@param systems The systems to run.
+	 *	Construct a new world.
+	 *
+	 *	Note: The `World.create` macro should be preferred.
+	 *	@param components The component lists for every kind of component.
+	 *	@param systems The systems that are processed.
 	**/
 	public function new(components, systems) {
 		this.components = components;
@@ -55,12 +60,22 @@ import awe.ComponentList;
 		for(system in systems)
 			system.initialize(this);
 	}
-	public function getSystem<T: System>(cl: Class<T>): T {
+	/**
+	 *  Get the system that is an instance of `cl`.
+	 *  @param cl - The system class to retrieve the instance of.
+	 *  @return - The system.
+	 */
+	public function getSystem<T: System>(cl: Class<T>): Null<T> {
 		for(system in systems)
 			if(Std.is(system, cl))
 				return cast system;
 		return null;
 	}
+	/**
+	 *  Construct a new instance of `World` based on the `WorldConfiguration` given.
+	 *  @param setup - The configuration to create the world with.
+	 *  @return - The created world.
+	 */
 	public static macro function build(setup: ExprOf<WorldConfiguration>): ExprOf<World> {
 		var debug = Context.defined("debug");
 		var expectedCount: Null<Int> = setup.getField("expectedEntityCount").getValue();
@@ -96,17 +111,17 @@ import awe.ComponentList;
 		return macro $b{block};
 	}
 	/**
-		Update all the `System`s contained in this.
-	**/
+	 *	Process all active systems.
+	 */
 	public inline function process()
 		for(system in systems)
 			system.process();
 
 	/**
-		Automatically run all the `System`s at a given interval.
-		@param interval The interval to run the systems at (in seconds).
-		@return The timer that has been created to run this.
-	**/
+	 *	Automatically run `process` at a set interval.
+	 *	@param interval - The interval to run the systems at (in seconds).
+	 *	@return  - The timer that has been created to run this.
+	 */
 	public function delayLoop(interval: Float): Timer {
 		var timer = new Timer(Std.int(interval * 1000));
 		timer.run = process;
