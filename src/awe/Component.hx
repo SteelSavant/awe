@@ -10,7 +10,6 @@ using haxe.macro.ExprTools;
 using haxe.macro.TypeTools;
 using awe.util.MacroTools;
 #end
-import awe.util.ClassMap;
 
 typedef MType = haxe.macro.Type;
 
@@ -30,8 +29,8 @@ interface Component {
 	*/
 	public function getType(): ComponentType;
 }
-#if macro
 class AutoComponent {
+#if macro
 	static function exprPath(t: ComplexType): ExprOf<Class<Dynamic>> {
 		return switch(t) {
 			case TPath(path):
@@ -262,5 +261,5 @@ class AutoComponent {
 		});
 		return fields;
 	}
-}
 #end
+}
