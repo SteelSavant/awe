@@ -65,13 +65,15 @@ class EntitySubscription {
         if(aspect.matches(entity.getComposition(world)))
             entities.push(entity);
     @:allow(awe)
+    function removedSingle(entity: Entity)
+        if(aspect.matches(entity.getComposition(world)))
+            entities.remove(entity);
+    @:allow(awe)
     function inserted(entities: Array<Entity>)
         for(entity in entities)
-            if(aspect.matches(entity.getComposition(world)))
-                entities.push(entity);
+            insertedSingle(entity);
     @:allow(awe)
     function removed(entities: Array<Entity>)
         for(entity in entities)
-            if(aspect.matches(entity.getComposition(world)))
-                entities.remove(entity);
+            removedSingle(entity);
 }

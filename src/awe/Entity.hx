@@ -28,7 +28,7 @@ abstract Entity(Int) to Int from Int {
 	function removeFromSubscriptions(world: World): Void {
 		for(sub in world.subscriptions)
 			if(sub.aspect.matches(world.compositions[this]))
-				sub.removed([this]);
+				sub.removedSingle(this);
 	}
 	/**
 		Construct a new, empty entity inside the world.
