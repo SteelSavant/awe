@@ -2,13 +2,16 @@ package;
 
 import haxe.unit.TestCase;
 import haxe.unit.TestRunner;
+import awe.World;
+import awe.Archetype;
+import awe.Entity;
 using awe.util.BitVectorTools;
 using awe.util.MoreStringTools;
 import awe.util.Signal;
 import de.polygonal.ds.BitVector;
 import awe.Component;
 
-@Packed
+
 class Packed implements Component {
     public var a: Int;
     public function new() {}
@@ -20,7 +23,7 @@ class Empty implements Component {
 class Test extends TestCase {
     public function testComponentBits() {
         var a = new Packed();
-        assertTrue(a.getType().isPacked());
+        assertFalse(a.getType().isPacked());
         assertFalse(a.getType().isEmpty());
         var b = new Empty();
         assertFalse(b.getType().isPacked());
@@ -59,6 +62,22 @@ class Test extends TestCase {
         assertTrue('a'.isVowel());
         assertFalse('b'.isVowel());
         assertEquals("position".pluralize(), "positions");
+    }
+    public function testWorld() {
+        var world: World = World.build({
+            systems: [],
+            components: [Packed, Empty],
+			expectedEntityCount: 1
+        });
+        assertEquals(world.entities.size, 0);
+        var entity: Entity = Archetype.build(Packed, Empty).create(world);
+        assertTrue(entity.has(world, Packed));
+        assertTrue(entity.has(world, Empty));
+        assertTrue(entity.getComposition(world) != null);
+        assertEquals(world.entities.size, 1);
+        entity.delete(world);
+        assertEquals(entity.getComposition(world), null);
+        assertEquals(world.entities.size, 0);
     }
     static function main() {
         var r = new TestRunner();
