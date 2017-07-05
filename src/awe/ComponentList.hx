@@ -22,6 +22,12 @@ interface IComponentList<T: Component> {
 	 */
 	public var length(get, never): Int;
 	/**
+		Setup this component list inside the `world`.
+		This must be ran before other methods are called.
+	 *  @param world The world to initialize this in.
+	 */
+	public function initialize(world: World): Void;
+	/**
 		Retrieve the component corresponding associated to the ID.
 		@param id The `Entity` to retrieve the component for.
 		@return The component.
@@ -59,11 +65,15 @@ interface IComponentList<T: Component> {
 }
 class ComponentList<T: Component> implements IComponentList<T> {
 	var data: ArrayList<T>;
+	var world: World;
 	public var length(get, never): Int;
 	inline function get_length(): Int
 		return data.size;
 	public inline function new(capacity: Int = 8)
 		data = new ArrayList(capacity);
+
+	public inline function initialize(world: World)
+		this.world = world;
 
 	public inline function get(entity: Entity): Null<T>
 		return data.get(entity.id);
@@ -71,8 +81,11 @@ class ComponentList<T: Component> implements IComponentList<T> {
 	public inline function add(entity: Entity, value: T): Void
 		data.set(entity.id, value);
 
-	public inline function remove(entity: Entity): Void
+	public function remove(entity: Entity): Void {
+		var value = data.get(entity.id);
 		data.set(entity.id, null);
+		entity.getComposition(world).clear(value.getType());
+	}
 
 	public inline function iterator(): ComponentListIterator<T>
 		return new ComponentListIterator<T>(cast data);
@@ -138,6 +151,7 @@ class PackedComponentList<T: Component> implements IComponentList<T> {
 	var buffer: PackedComponent;
 	var bytes: Bytes;
 	var size: Int;
+	var world: World;
 
 
 	public var length(get, never): Int;
@@ -152,6 +166,10 @@ class PackedComponentList<T: Component> implements IComponentList<T> {
 		buffer.__bytes = bytes;
 		buffer.__offset = 0;
 	}
+
+
+	public inline function initialize(world: World)
+		this.world = world;
 
 	public static macro function build<T: Component>(of: ExprOf<Class<T>>): ExprOf<PackedComponentList<T>> {
 		var ty = of.resolveTypeLiteral();
@@ -183,8 +201,10 @@ class PackedComponentList<T: Component> implements IComponentList<T> {
 		}
 		_length = Std.int(Math.max(length, entity.id + 1));
 	}
-	public inline function remove(entity: Entity): Void
+	public inline function remove(entity: Entity): Void {
+		entity.getComposition(world).clear(get(entity).getType());
 		bytes.fill(entity.id * size, size, 0);
+	}
 
 	#if serialize
 	public inline function serialize()

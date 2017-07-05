@@ -75,6 +75,9 @@ class Test extends TestCase {
         assertTrue(entity.has(world, Empty));
         assertTrue(entity.getComposition(world) != null);
         assertEquals(world.entities.size, 1);
+        world.getComponentList(Packed).remove(entity);
+        assertFalse(entity.has(world, Packed));
+        assertTrue(entity.has(world, Empty));
         entity.delete(world);
         assertEquals(entity.getComposition(world), null);
         assertEquals(world.entities.size, 0);

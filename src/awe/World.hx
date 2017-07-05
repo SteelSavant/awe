@@ -59,6 +59,18 @@ import awe.ComponentList;
 		entityCount = 0;
 		for(system in systems)
 			system.initialize(this);
+		for(componentList in components) {
+			if(componentList != null)
+				componentList.initialize(this);
+		}
+	}
+	/**
+	    Get the component list corresponding to the component `cl`.
+	    @param cl The component class to retrieve the component list for.
+	    @return The component list.
+	 */
+	public function getComponentList<T: Component>(cl: Class<T>): Null<ComponentList.IComponentList<T>> {
+		return cast components.get(Type.createEmptyInstance(cl).getType());
 	}
 	/**
 	    Get the system that is an instance of `cl`.
