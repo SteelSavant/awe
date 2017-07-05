@@ -26,7 +26,7 @@ import awe.ComponentList;
 	@:allow(awe)
 	var systems(default, null): Vector<System>;
 	@:allow(awe)
-	var entities(default, null): ArrayList<Entity>;
+	public var entities(default, null): ArrayList<Entity>;
 	@:allow(awe)
 	var compositions(default, null): Map<Entity, BitVector>;
 	@:allow(awe)
@@ -35,7 +35,7 @@ import awe.ComponentList;
 	    How many entities have been created so far.
 	 */
 	@:allow(awe)
-	public var entityCount(default, null): Int;
+	var entityCount(default, null): Int;
 
 	/**
 	    The number of seconds since the last time `process` was called.
@@ -78,7 +78,10 @@ import awe.ComponentList;
 	 */
 	public static macro function build(setup: ExprOf<WorldConfiguration>): ExprOf<World> {
 		var debug = Context.defined("debug");
-		var expectedCount: Null<Int> = setup.getField("expectedEntityCount").getValue();
+		var expectedCountExpr = setup.getField("expectedEntityCount");
+		if(expectedCountExpr == null)
+			expectedCountExpr = macro $v{32};
+		var expectedCount: Int = expectedCountExpr.getValue();
 		var components = [for(component in setup.assertField("components").getArray()) {
 			var ty = component.resolveTypeLiteral();
 			var complex = ty.toComplexType();

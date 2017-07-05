@@ -159,7 +159,7 @@ class PackedComponentList<T: Component> implements IComponentList<T> {
 		if(!cty.isPacked())
 			Context.error("Component type is not packed", of.pos);
 		var size = of.resolveTypeLiteral().toComplexType().sizeOf();
-		return macro new PackedComponentList<Dynamic>(32, $v{size});
+		return macro new awe.ComponentList.PackedComponentList<Dynamic>(32, $v{size});
 	}
 
 	public inline function get(entity: Entity): Null<T> {

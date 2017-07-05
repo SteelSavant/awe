@@ -41,8 +41,8 @@ abstract Entity(Int) to Int from Int {
 		insertIntoSubscriptions(world);
 	}
 	/**
-	 *  Delete this entity from the world.
-	 *  @param world The world to delete this entity from.
+		Delete this entity from the world.
+		@param world The world to delete this entity from.
 	 */
 	public function delete(world: World): Void {
 		removeFromSubscriptions(world);
@@ -90,12 +90,26 @@ abstract Entity(Int) to Int from Int {
 		var list = wrapGet(world, ty, cty);
 		return macro $list.add($self, $value);
 	}
-
+	public macro function has<T: Component>(self: ExprOf<Entity>, world: ExprOf<World>, cl: ExprOf<Class<T>>): ExprOf<Bool> {
+		var ty = MacroTools.resolveTypeLiteral(cl);
+		var compTy = ComponentType.get(ty);
+		return macro {
+			if($self.getComposition($world) == null)
+				throw "No composition found, has this entity been deleted?";
+			$self.getComposition($world).has($v{compTy.getPure()});
+		}
+	}
 	public macro function get<T: Component>(self: ExprOf<Entity>, world: ExprOf<World>, cl: ExprOf<Class<T>>): ExprOf<Null<T>> {
 		var ty = MacroTools.resolveTypeLiteral(cl);
 		var cty = ComponentType.get(ty);
 		var list = wrapGet(world, ty, cty);
-		return macro $list.get($self);
+		return macro {
+			var list = $list;
+			if(list == null)
+				null;
+			else
+				list.get($self);
+		}
 	}
 	#end
 	/** Returns the string representation of this data. */
