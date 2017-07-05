@@ -27,6 +27,7 @@ interface IAspect {
 	Matches any combo of components.
  */
 class AnyAspect implements IAspect {
+	public inline function new() {}
 	public inline function matches(components: BitVector): Bool
 		return true;
 }
@@ -76,6 +77,12 @@ class Aspect implements IAspect {
 		this.oneSet = oneSet;
 		this.noneSet = noneSet;
 	}
+	/**
+		Matches any combo of components.
+		@return The aspect.
+	*/
+	public static inline function any():AnyAspect
+		return new AnyAspect();
 	public static macro function build(expr: Expr): ExprOf<Aspect> {
 		var debug = Context.defined("debug");
 		if(debug)
