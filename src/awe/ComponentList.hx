@@ -84,7 +84,7 @@ class ComponentList<T: Component> implements IComponentList<T> {
 	public function remove(entity: Entity): Void {
 		var value = data.get(entity.id);
 		data.set(entity.id, null);
-		entity.getComposition(world).clear(value.getType());
+		entity.getComposition(world).clear(value.getType().getPure());
 	}
 
 	public inline function iterator(): ComponentListIterator<T>
@@ -152,16 +152,18 @@ class PackedComponentList<T: Component> implements IComponentList<T> {
 	var bytes: Bytes;
 	var size: Int;
 	var world: World;
+	var ctype: ComponentType;
 
 
 	public var length(get, never): Int;
 	inline function get_length(): Int
 		return _length;
 
-	public function new(capacity: Int = 32, size: Int = 0) {
+	public function new(ctype: ComponentType, capacity: Int = 4, size: Int = 0) {
 		buffer = cast {};
 		_length = 0;
 		this.size = size;
+		this.ctype = ctype.getPure();
 		bytes = Bytes.alloc(capacity * size);
 		buffer.__bytes = bytes;
 		buffer.__offset = 0;
@@ -177,10 +179,10 @@ class PackedComponentList<T: Component> implements IComponentList<T> {
 		if(!cty.isPacked())
 			Context.error("Component type is not packed", of.pos);
 		var size = of.resolveTypeLiteral().toComplexType().sizeOf();
-		return macro new awe.ComponentList.PackedComponentList<Dynamic>(32, $v{size});
+		return macro new awe.ComponentList.PackedComponentList<Dynamic>(cast $v{cty}, 32, $v{size});
 	}
 
-	public inline function get(entity: Entity): Null<T> {
+	public function get(entity: Entity): Null<T> {
 		buffer.__offset = entity.id * size;
 		return entity.id >= length ? null : cast buffer;
 	}
@@ -195,14 +197,18 @@ class PackedComponentList<T: Component> implements IComponentList<T> {
 		if(value == null)
 			bytes.fill(entity.id * size, size, 0);
 		else {
-			bytes.blit(entity.id * size, value.__bytes, 0, size);
+			bytes.blit(entity.id * size, bytes, 0, size);
 			value.__bytes = bytes;
 			value.__offset = entity.id * size;
 		}
 		_length = Std.int(Math.max(length, entity.id + 1));
 	}
-	public inline function remove(entity: Entity): Void {
-		entity.getComposition(world).clear(get(entity).getType());
+	public function remove(entity: Entity): Void {
+		var comp = entity.getComposition(world);
+		var value: Null<T> = get(entity);
+		if(comp == null || value == null)
+			return;
+		comp.clear(ctype);
 		bytes.fill(entity.id * size, size, 0);
 	}
 

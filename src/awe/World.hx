@@ -70,7 +70,7 @@ import awe.ComponentList;
 	    @return The component list.
 	 */
 	public function getComponentList<T: Component>(cl: Class<T>): Null<ComponentList.IComponentList<T>> {
-		return cast components.get(Type.createEmptyInstance(cl).getType());
+		return cast components.get(Type.createEmptyInstance(cl).getType().getPure());
 	}
 	/**
 	    Get the system that is an instance of `cl`.

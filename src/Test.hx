@@ -11,7 +11,7 @@ import awe.util.Signal;
 import de.polygonal.ds.BitVector;
 import awe.Component;
 
-
+@Packed
 class Packed implements Component {
     public var a: Int;
     public function new() {}
@@ -23,7 +23,7 @@ class Empty implements Component {
 class Test extends TestCase {
     public function testComponentBits() {
         var a = new Packed();
-        assertFalse(a.getType().isPacked());
+        assertTrue(a.getType().isPacked());
         assertFalse(a.getType().isEmpty());
         var b = new Empty();
         assertFalse(b.getType().isPacked());
