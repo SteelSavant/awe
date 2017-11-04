@@ -9,6 +9,6 @@
 	"contributors": ["tombebbington"],
 	"classPath": "src",
 	"dependencies": {
-		"polygonal-ds": "2.0.0"
+		"polygonal-ds": "2.0.1"
 	}
 }
