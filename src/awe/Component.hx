@@ -29,8 +29,8 @@ interface Component {
 	*/
 	public function getType(): ComponentType;
 }
-class AutoComponent {
 #if macro
+class AutoComponent {
 	static function exprPath(t: ComplexType): ExprOf<Class<Dynamic>> {
 		return switch(t) {
 			case TPath(path):
@@ -287,5 +287,5 @@ class AutoComponent {
 		});
 		return fields;
 	}
-#end
 }
+#end

@@ -1,1 +1,2 @@
--main Test
+-cp test
+-main TestAll

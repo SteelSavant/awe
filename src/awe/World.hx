@@ -8,7 +8,6 @@ using awe.util.MacroTools;
 import haxe.macro.Expr;
 #end
 import haxe.io.Bytes;
-import awe.util.Timer;
 import de.polygonal.ds.ArrayList;
 import de.polygonal.ds.BitVector;
 import haxe.ds.Vector;
@@ -131,27 +130,6 @@ import awe.ComponentList;
 		for(system in systems)
 			system.process();
 
-	/**
-		Automatically run `process` at a set interval.
-	 	@param interval The interval to run the systems at (in seconds).
-	 	@return  The timer that has been created to run this.
-	 */
-	public function delayLoop(interval: Float): Timer {
-		var timer = new Timer(Std.int(interval * 1000));
-		timer.run = process;
-		delta = interval;
-		return timer;
-	}
-	public function loop() {
-		var last = Timer.stamp();
-		var curr = last;
-		while(true) {
-			curr = Timer.stamp();
-			delta = curr - last;
-			process();
-			last = curr;
-		}
-	}
 	/**
 		Free resources used by this world.
 	**/

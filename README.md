@@ -37,7 +37,7 @@ Making Entities
 
 An `Entity` represents a single thing in the `World`. To construct this, you need to
 construct an `Archetype` by calling `Archetype.build(...)` with the components that
-make it up.
+compose it.
 
 ``` haxe
 var playerArchetype = Archetype.build(Input, Position, Velocity, Acceleration, Gravity);

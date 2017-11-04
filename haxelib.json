@@ -9,6 +9,7 @@
 	"contributors": ["tombebbington"],
 	"classPath": "src",
 	"dependencies": {
-		"polygonal-ds": "2.0.1"
+		"polygonal-ds": "2.0.1",
+		"utest": "1.7.0"
 	}
 }
