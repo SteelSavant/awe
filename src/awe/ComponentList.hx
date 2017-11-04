@@ -15,16 +15,18 @@ import haxe.Serializer;
 import haxe.Unserializer;
 import de.polygonal.ds.ArrayList;
 
-/** Represents a list of components. **/
+/**
+	Represents a list of components.
+	**/
 interface IComponentList<T: Component> {
 	/**
-	 * The number of entities stored in this list.
+		The number of entities stored in this list.
 	 */
 	public var length(get, never): Int;
 	/**
 		Setup this component list inside the `world`.
 		This must be ran before other methods are called.
-	 *  @param world The world to initialize this in.
+		@param world The world to initialize this in.
 	 */
 	public function initialize(world: World): Void;
 	/**

@@ -102,8 +102,8 @@ class EntitySystem extends System implements EntitySubscription.SubscriptionList
 		subscription = new EntitySubscription(aspect);
 	}
 	/**
-	 *	Initializes this system, as well as the subscription, in the `World`.
-	 *	@param world The `World` to initialize this in.
+		Initializes this system, as well as the subscription, in the `World`.
+		@param world The `World` to initialize this in.
 	 */
 	public override function initialize(world: World) {
 		super.initialize(world);

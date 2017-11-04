@@ -11,7 +11,9 @@ import haxe.Serializer;
 import haxe.io.Bytes;
 #end
 import de.polygonal.ds.BitVector;
-/** Some handy macro tools. **/
+/**
+	Some handy macro tools.
+**/
 class MacroTools {
 	#if macro
 	public static function hasAny(meta: MetaAccess, texts: Array<String>): Bool {

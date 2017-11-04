@@ -45,11 +45,10 @@ import awe.ComponentList;
 	public var delta: Float = 0;
 
 	/** 
-	 *	Construct a new world.
-	 *
-	 *	Note: The `World.create` macro should be preferred.
-	 *	@param components The component lists for every kind of component.
-	 *	@param systems The systems that are processed.
+		Construct a new world.
+		Note: The `World.create` macro should be preferred.
+		@param components The component lists for every kind of component.
+		@param systems The systems that are processed.
 	**/
 	public function new(components, systems) {
 		this.components = components;
@@ -126,16 +125,16 @@ import awe.ComponentList;
 		return macro $b{block};
 	}
 	/**
-	 *	Process all active systems.
+		Process all active systems.
 	 */
 	public inline function process()
 		for(system in systems)
 			system.process();
 
 	/**
-	 *	Automatically run `process` at a set interval.
-	 *	@param interval The interval to run the systems at (in seconds).
-	 *	@return  The timer that has been created to run this.
+		Automatically run `process` at a set interval.
+	 	@param interval The interval to run the systems at (in seconds).
+	 	@return  The timer that has been created to run this.
 	 */
 	public function delayLoop(interval: Float): Timer {
 		var timer = new Timer(Std.int(interval * 1000));
