@@ -36,7 +36,7 @@ abstract Entity(Int) to Int from Int {
 	*/
 	public function new(world: World) {
 		this = world.entityCount++;
-		world.entities.add(this);
+		world._entities.add(this);
 		world.compositions.set(this, new BitVector(32));
 		insertIntoSubscriptions(world);
 	}
@@ -46,7 +46,7 @@ abstract Entity(Int) to Int from Int {
 	 */
 	public function delete(world: World): Void {
 		removeFromSubscriptions(world);
-		world.entities.remove(this);
+		world._entities.remove(this);
 		world.compositions.remove(this);
 	}
 	/**

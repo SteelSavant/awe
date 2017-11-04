@@ -19,37 +19,38 @@ class Vel implements Component {
 
 class TestWorld {
     var world: World;
-    public function new() {
+    function reset() {
         world = World.build({
             systems: [],
             components: [Pos, Vel],
             expectedEntityCount: 16
         });
     }
+    public function new() {    }
     public function testWorldEntity() {
-        world.entities.clear();
-        Assert.equals(world.entities.size, 0);
+        reset();
+        Assert.equals(world.numEntities, 0);
         var entity: Entity = Archetype.build(Pos, Vel).create(world);
         Assert.isTrue(entity.has(world, Pos));
         Assert.isTrue(entity.has(world, Vel));
         Assert.isTrue(entity.getComposition(world) != null);
-        Assert.equals(world.entities.size, 1);
+        Assert.equals(world.numEntities, 1);
         world.getComponentList(Pos).remove(entity);
         Assert.isFalse(entity.has(world, Pos));
         Assert.isTrue(entity.has(world, Vel));
         entity.delete(world);
         Assert.equals(entity.getComposition(world), null);
-        Assert.equals(world.entities.size, 0);
+        Assert.equals(world.numEntities, 0);
     }
     public function testWorldEntities() {
-        Assert.equals(world.entities.size, 0);
+        reset();
+        Assert.equals(world.numEntities, 0);
         var entityArch = Archetype.build(Pos, Vel);
-        world.entities.clear();
         for(i in 0...14) {
             var entity: Entity = entityArch.create(world);
             Assert.isTrue(entity.has(world, Pos));
             Assert.isTrue(entity.has(world, Vel));
         }
-        Assert.equals(world.entities.size, 14);
+        Assert.equals(world.numEntities, 14);
     }
 }

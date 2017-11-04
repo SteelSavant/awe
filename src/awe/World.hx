@@ -25,13 +25,30 @@ import awe.ComponentList;
 	@:allow(awe)
 	var systems(default, null): Vector<System>;
 	@:allow(awe)
-	public var entities(default, null): ArrayList<Entity>;
+	var _entities(default, null): ArrayList<Entity>;
+
+	/**
+		The active entities contained in the World.
+	*/
+	public var entities(get, never): Iterable<Entity>;
+
+	inline function get_entities(): Iterable<Entity>
+		return _entities;
+
+	/**
+		The number of active entities in the world.
+	*/
+	public var numEntities(get, never): Int;
+
+	inline function get_numEntities(): Int
+		return _entities.size;
+
 	@:allow(awe)
 	var compositions(default, null): Map<Entity, BitVector>;
 	@:allow(awe)
 	var subscriptions(default, null):ArrayList<EntitySubscription> = new ArrayList<EntitySubscription>();
 	/**
-	    How many entities have been created so far.
+	    How many entities have been created in total since the world was initialised.
 	 */
 	@:allow(awe)
 	var entityCount(default, null): Int;
@@ -52,7 +69,7 @@ import awe.ComponentList;
 	public function new(components, systems) {
 		this.components = components;
 		this.systems = systems;
-		entities = new ArrayList();
+		_entities = new ArrayList();
 		compositions = new Map();
 		entityCount = 0;
 		for(system in systems)
