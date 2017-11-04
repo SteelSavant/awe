@@ -1610,7 +1610,7 @@
 		</get_length>
 		<length public="1" get="accessor" set="null">
 			<x path="Int"/>
-			<haxe_doc>* The number of entities stored in this list.</haxe_doc>
+			<haxe_doc>The number of entities stored in this list.</haxe_doc>
 		</length>
 		<initialize public="1" set="method">
 			<f a="world">
@@ -1619,7 +1619,7 @@
 			</f>
 			<haxe_doc>Setup this component list inside the `world`.
 		This must be ran before other methods are called.
-	 *  @param world The world to initialize this in.</haxe_doc>
+		@param world The world to initialize this in.</haxe_doc>
 		</initialize>
 		<get public="1" set="method">
 			<f a="id">
@@ -1659,26 +1659,26 @@
 		<data><c path="de.polygonal.ds.ArrayList"><c path="awe.ComponentList.T"/></c></data>
 		<world><c path="awe.World"/></world>
 		<length public="1" get="accessor" set="null"><x path="Int"/></length>
-		<get_length get="inline" set="null" line="70"><f a=""><x path="Int"/></f></get_length>
-		<initialize public="1" get="inline" set="null" line="75"><f a="world">
+		<get_length get="inline" set="null" line="72"><f a=""><x path="Int"/></f></get_length>
+		<initialize public="1" get="inline" set="null" line="77"><f a="world">
 	<c path="awe.World"/>
 	<x path="Void"/>
 </f></initialize>
-		<get public="1" get="inline" set="null" line="78"><f a="entity">
+		<get public="1" get="inline" set="null" line="80"><f a="entity">
 	<x path="awe.Entity"/>
 	<t path="Null"><c path="awe.ComponentList.T"/></t>
 </f></get>
-		<add public="1" get="inline" set="null" line="81"><f a="entity:value">
+		<add public="1" get="inline" set="null" line="83"><f a="entity:value">
 	<x path="awe.Entity"/>
 	<c path="awe.ComponentList.T"/>
 	<x path="Void"/>
 </f></add>
-		<remove public="1" set="method" line="84"><f a="entity">
+		<remove public="1" set="method" line="86"><f a="entity">
 	<x path="awe.Entity"/>
 	<x path="Void"/>
 </f></remove>
-		<iterator public="1" get="inline" set="null" line="90"><f a=""><c path="awe.ComponentListIterator"><c path="awe.ComponentList.T"/></c></f></iterator>
-		<new public="1" get="inline" set="null" line="72"><f a="?capacity">
+		<iterator public="1" get="inline" set="null" line="92"><f a=""><c path="awe.ComponentListIterator"><c path="awe.ComponentList.T"/></c></f></iterator>
+		<new public="1" get="inline" set="null" line="74"><f a="?capacity">
 	<x path="Int"/>
 	<x path="Void"/>
 </f></new>
@@ -1686,7 +1686,7 @@
 	<class path="awe.ComponentListItem" params="T" file="src/awe/ComponentList.hx" module="awe.ComponentList">
 		<index public="1" set="null"><x path="awe.Entity"/></index>
 		<component public="1" set="null"><c path="awe.ComponentListItem.T"/></component>
-		<new public="1" set="method" line="122"><f a="index:component">
+		<new public="1" set="method" line="124"><f a="index:component">
 	<x path="awe.Entity"/>
 	<c path="awe.ComponentListItem.T"/>
 	<x path="Void"/>
@@ -1696,9 +1696,9 @@
 	<class path="awe.ComponentListIterator" params="T" file="src/awe/ComponentList.hx" module="awe.ComponentList">
 		<list><c path="awe.IComponentList"><c path="awe.ComponentListIterator.T"/></c></list>
 		<index><x path="Int"/></index>
-		<hasNext public="1" get="inline" set="null" line="136"><f a=""><x path="Bool"/></f></hasNext>
-		<next public="1" set="method" line="139"><f a=""><c path="awe.ComponentListItem"><c path="awe.ComponentListIterator.T"/></c></f></next>
-		<new public="1" set="method" line="133"><f a="list">
+		<hasNext public="1" get="inline" set="null" line="138"><f a=""><x path="Bool"/></f></hasNext>
+		<next public="1" set="method" line="141"><f a=""><c path="awe.ComponentListItem"><c path="awe.ComponentListIterator.T"/></c></f></next>
+		<new public="1" set="method" line="135"><f a="list">
 	<c path="awe.IComponentList"><c path="awe.ComponentListIterator.T"/></c>
 	<x path="Void"/>
 </f></new>
@@ -1713,26 +1713,26 @@
 		<world><c path="awe.World"/></world>
 		<ctype><x path="awe.ComponentType"/></ctype>
 		<length public="1" get="accessor" set="null"><x path="Int"/></length>
-		<get_length get="inline" set="null" line="159"><f a=""><x path="Int"/></f></get_length>
-		<initialize public="1" get="inline" set="null" line="173"><f a="world">
+		<get_length get="inline" set="null" line="161"><f a=""><x path="Int"/></f></get_length>
+		<initialize public="1" get="inline" set="null" line="175"><f a="world">
 	<c path="awe.World"/>
 	<x path="Void"/>
 </f></initialize>
-		<get public="1" set="method" line="185"><f a="entity">
+		<get public="1" set="method" line="187"><f a="entity">
 	<x path="awe.Entity"/>
 	<t path="Null"><c path="awe.PackedComponentList.T"/></t>
 </f></get>
-		<add public="1" set="method" line="190"><f a="entity:value">
+		<add public="1" set="method" line="192"><f a="entity:value">
 	<x path="awe.Entity"/>
 	<c path="awe.PackedComponentList.T"/>
 	<x path="Void"/>
 </f></add>
-		<remove public="1" set="method" line="206"><f a="entity">
+		<remove public="1" set="method" line="208"><f a="entity">
 	<x path="awe.Entity"/>
 	<x path="Void"/>
 </f></remove>
-		<iterator public="1" get="inline" set="null" line="225"><f a=""><c path="awe.ComponentListIterator"><c path="awe.PackedComponentList.T"/></c></f></iterator>
-		<new public="1" set="method" line="162"><f a="ctype:?capacity:?size">
+		<iterator public="1" get="inline" set="null" line="227"><f a=""><c path="awe.ComponentListIterator"><c path="awe.PackedComponentList.T"/></c></f></iterator>
+		<new public="1" set="method" line="164"><f a="ctype:?capacity:?size">
 	<x path="awe.ComponentType"/>
 	<x path="Int"/>
 	<x path="Int"/>
@@ -2209,8 +2209,8 @@
 				<c path="awe.World"/>
 				<x path="Void"/>
 			</f>
-			<haxe_doc>*	Initializes this system, as well as the subscription, in the `World`.
-	 *	@param world The `World` to initialize this in.</haxe_doc>
+			<haxe_doc>Initializes this system, as well as the subscription, in the `World`.
+		@param world The `World` to initialize this in.</haxe_doc>
 		</initialize>
 		<processEntity public="1" set="method" line="116">
 			<f a="entity">
@@ -2283,7 +2283,7 @@
 	    
 	    This must be set manually so it can integrate with custom game loops.</haxe_doc>
 		</delta>
-		<getComponentList public="1" params="T" set="method" line="72">
+		<getComponentList public="1" params="T" set="method" line="71">
 			<f a="cl">
 				<x path="Class"><c path="getComponentList.T"/></x>
 				<t path="Null"><c path="awe.IComponentList"><c path="getComponentList.T"/></c></t>
@@ -2292,7 +2292,7 @@
 	    @param cl The component class to retrieve the component list for.
 	    @return The component list.</haxe_doc>
 		</getComponentList>
-		<getSystem public="1" params="T" set="method" line="80">
+		<getSystem public="1" params="T" set="method" line="79">
 			<f a="cl">
 				<x path="Class"><c path="getSystem.T"/></x>
 				<t path="Null"><c path="getSystem.T"/></t>
@@ -2301,25 +2301,25 @@
 	    @param cl The system class to retrieve the instance of.
 	    @return The system.</haxe_doc>
 		</getSystem>
-		<process public="1" get="inline" set="null" line="131">
+		<process public="1" get="inline" set="null" line="130">
 			<f a=""><x path="Void"/></f>
-			<haxe_doc>*	Process all active systems.</haxe_doc>
+			<haxe_doc>Process all active systems.</haxe_doc>
 		</process>
-		<delayLoop public="1" set="method" line="140">
+		<delayLoop public="1" set="method" line="139">
 			<f a="interval">
 				<x path="Float"/>
 				<c path="awe.util.Timer"/>
 			</f>
-			<haxe_doc>*	Automatically run `process` at a set interval.
-	 *	@param interval The interval to run the systems at (in seconds).
-	 *	@return  The timer that has been created to run this.</haxe_doc>
+			<haxe_doc>Automatically run `process` at a set interval.
+	 	@param interval The interval to run the systems at (in seconds).
+	 	@return  The timer that has been created to run this.</haxe_doc>
 		</delayLoop>
-		<loop public="1" set="method" line="146"><f a=""><x path="Void"/></f></loop>
-		<dispose public="1" set="method" line="159">
+		<loop public="1" set="method" line="145"><f a=""><x path="Void"/></f></loop>
+		<dispose public="1" set="method" line="158">
 			<f a=""><x path="Void"/></f>
 			<haxe_doc>Free resources used by this world.</haxe_doc>
 		</dispose>
-		<new public="1" set="method" line="54">
+		<new public="1" set="method" line="53">
 			<f a="components:systems">
 				<x path="Map">
 					<x path="awe.ComponentType"/>
@@ -2328,11 +2328,10 @@
 				<x path="haxe.ds.Vector"><c path="awe.System"/></x>
 				<x path="Void"/>
 			</f>
-			<haxe_doc>*	Construct a new world.
-	 *
-	 *	Note: The `World.create` macro should be preferred.
-	 *	@param components The component lists for every kind of component.
-	 *	@param systems The systems that are processed.</haxe_doc>
+			<haxe_doc>Construct a new world.
+		Note: The `World.create` macro should be preferred.
+		@param components The component lists for every kind of component.
+		@param systems The systems that are processed.</haxe_doc>
 		</new>
 		<haxe_doc>The central object on which components, systems, etc. are added.
     
@@ -2449,137 +2448,6 @@
 			<haxe_doc>Transform `word` into a plural.</haxe_doc>
 		</pluralize>
 		<meta><m n=":directlyUsed"/></meta>
-	</class>
-	<typedef path="awe.util.SignalListener" params="T" file="src/awe/util/Signal.hx" module="awe.util.Signal"><f a="">
-	<c path="awe.util.SignalListener.T"/>
-	<x path="Void"/>
-</f></typedef>
-	<abstract path="awe.util.Signal" params="T" file="src/awe/util/Signal.hx">
-		<this><c path="de.polygonal.ds.ArrayList"><t path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></t></c></this>
-		<to><icast field="getListeners"><c path="de.polygonal.ds.ArrayList"><t path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></t></c></icast></to>
-		<haxe_doc>Dispatches events to listeners.</haxe_doc>
-		<impl><class path="awe.util._Signal.Signal_Impl_" params="" file="src/awe/util/Signal.hx" private="1" module="awe.util.Signal">
-	<_new public="1" get="inline" set="null" line="11" static="1">
-		<f a="?capacity">
-			<x path="Int"/>
-			<x path="awe.util.Signal"><c path="awe.util.Signal.T"/></x>
-		</f>
-		<meta><m n=":impl"/></meta>
-		<haxe_doc>Create a new signal.</haxe_doc>
-	</_new>
-	<dispatch public="1" get="inline" set="null" line="18" static="1">
-		<f a="this:event">
-			<c path="de.polygonal.ds.ArrayList"><t path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></t></c>
-			<c path="awe.util.Signal.T"/>
-			<x path="Void"/>
-		</f>
-		<meta><m n=":impl"/></meta>
-		<haxe_doc>Dispatch `event`, notifying all listeners of the event.
-		@param event The event to dispatch to all listeners.</haxe_doc>
-	</dispatch>
-	<add public="1" get="inline" set="null" line="26" static="1">
-		<f a="this:dispatch">
-			<c path="de.polygonal.ds.ArrayList"><t path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></t></c>
-			<t path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></t>
-			<x path="Void"/>
-		</f>
-		<meta><m n=":impl"/></meta>
-		<haxe_doc>Add a new dispatcher.
-		@param dispatch The dispatcher to add.</haxe_doc>
-	</add>
-	<remove public="1" get="inline" set="null" line="33" static="1">
-		<f a="this:dispatch">
-			<c path="de.polygonal.ds.ArrayList"><t path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></t></c>
-			<t path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></t>
-			<x path="Void"/>
-		</f>
-		<meta><m n=":impl"/></meta>
-		<haxe_doc>Add a new dispatcher.
-		@param dispatch The dispatcher to remove.</haxe_doc>
-	</remove>
-	<clear public="1" get="inline" set="null" line="37" static="1">
-		<f a="this">
-			<c path="de.polygonal.ds.ArrayList"><t path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></t></c>
-			<x path="Void"/>
-		</f>
-		<meta><m n=":impl"/></meta>
-		<haxe_doc>Remove all the listeners.</haxe_doc>
-	</clear>
-	<getListeners public="1" get="inline" set="null" line="44" static="1">
-		<f a="this">
-			<c path="de.polygonal.ds.ArrayList"><t path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></t></c>
-			<c path="de.polygonal.ds.ArrayList"><t path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></t></c>
-		</f>
-		<meta>
-			<m n=":impl"/>
-			<m n=":to"/>
-		</meta>
-		<haxe_doc>Get all the listeners binded to this.
-		@return The listeners.</haxe_doc>
-	</getListeners>
-	<meta><m n=":final"/></meta>
-</class></impl>
-	</abstract>
-	<class path="awe.util._Signal.Signal_Impl_" params="" file="src/awe/util/Signal.hx" private="1" module="awe.util.Signal">
-		<_new public="1" get="inline" set="null" line="11" static="1">
-			<f a="?capacity">
-				<x path="Int"/>
-				<x path="awe.util.Signal"><c path="awe.util.Signal.T"/></x>
-			</f>
-			<meta><m n=":impl"/></meta>
-			<haxe_doc>Create a new signal.</haxe_doc>
-		</_new>
-		<dispatch public="1" get="inline" set="null" line="18" static="1">
-			<f a="this:event">
-				<c path="de.polygonal.ds.ArrayList"><t path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></t></c>
-				<c path="awe.util.Signal.T"/>
-				<x path="Void"/>
-			</f>
-			<meta><m n=":impl"/></meta>
-			<haxe_doc>Dispatch `event`, notifying all listeners of the event.
-		@param event The event to dispatch to all listeners.</haxe_doc>
-		</dispatch>
-		<add public="1" get="inline" set="null" line="26" static="1">
-			<f a="this:dispatch">
-				<c path="de.polygonal.ds.ArrayList"><t path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></t></c>
-				<t path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></t>
-				<x path="Void"/>
-			</f>
-			<meta><m n=":impl"/></meta>
-			<haxe_doc>Add a new dispatcher.
-		@param dispatch The dispatcher to add.</haxe_doc>
-		</add>
-		<remove public="1" get="inline" set="null" line="33" static="1">
-			<f a="this:dispatch">
-				<c path="de.polygonal.ds.ArrayList"><t path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></t></c>
-				<t path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></t>
-				<x path="Void"/>
-			</f>
-			<meta><m n=":impl"/></meta>
-			<haxe_doc>Add a new dispatcher.
-		@param dispatch The dispatcher to remove.</haxe_doc>
-		</remove>
-		<clear public="1" get="inline" set="null" line="37" static="1">
-			<f a="this">
-				<c path="de.polygonal.ds.ArrayList"><t path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></t></c>
-				<x path="Void"/>
-			</f>
-			<meta><m n=":impl"/></meta>
-			<haxe_doc>Remove all the listeners.</haxe_doc>
-		</clear>
-		<getListeners public="1" get="inline" set="null" line="44" static="1">
-			<f a="this">
-				<c path="de.polygonal.ds.ArrayList"><t path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></t></c>
-				<c path="de.polygonal.ds.ArrayList"><t path="awe.util.SignalListener"><c path="awe.util.Signal.T"/></t></c>
-			</f>
-			<meta>
-				<m n=":impl"/>
-				<m n=":to"/>
-			</meta>
-			<haxe_doc>Get all the listeners binded to this.
-		@return The listeners.</haxe_doc>
-		</getListeners>
-		<meta><m n=":final"/></meta>
 	</class>
 	<typedef path="awe.util.Thread" params="" file="src/awe/util/Thread.hx"><c path="neko.vm.Thread"/></typedef>
 	<class path="awe.util.Timer" params="" file="src/awe/util/Timer.hx">
