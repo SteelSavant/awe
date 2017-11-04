@@ -13,6 +13,8 @@ import awe.Component;
 @Packed
 class Packed implements Component {
     public var a: Int;
+    public var b: Float;
+    public var c: Bool;
     public function new() {}
 }
 @Empty
@@ -20,6 +22,16 @@ class Empty implements Component {
     public function new() {}
 }
 class Test extends TestCase {
+    public function testPackedComponent() {
+        var a = new Packed();
+        a.a = 5;
+        assertEquals(a.a, 5);
+        a.b = 120;
+        assertEquals(a.b, 120);
+        a.c = true;
+        assert(a.c);
+    }
+
     public function testComponentBits() {
         var a = new Packed();
         assertTrue(a.getType().isPacked());
