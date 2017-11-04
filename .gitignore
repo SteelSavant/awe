@@ -1,7 +1,0 @@
-*.js
-*.n
-target/*
-target
-examples/ArrayList/ArrayList.n
-examples/ArrayList/java
-examples/pong/build
