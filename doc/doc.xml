@@ -1434,6 +1434,32 @@
 			<m n=":coreApi"/>
 		</meta>
 	</class>
+	<class path="Type" params="" file="/usr/share/haxe/std/neko/_std/Type.hx">
+		<createEmptyInstance public="1" params="T" set="method" line="112" static="1">
+			<f a="cl">
+				<x path="Class"><c path="createEmptyInstance.T"/></x>
+				<c path="createEmptyInstance.T"/>
+			</f>
+			<meta><m n=":has_untyped"/></meta>
+			<haxe_doc>Creates an instance of class `cl`.
+
+		This function guarantees that the class constructor is not called.
+
+		If `cl` is null, the result is unspecified.</haxe_doc>
+		</createEmptyInstance>
+		<haxe_doc>The Haxe Reflection API allows retrieval of type information at runtime.
+
+	This class complements the more lightweight Reflect class, with a focus on
+	class and enum instances.
+
+	@see https://haxe.org/manual/types.html
+	@see https://haxe.org/manual/std-reflection.html</haxe_doc>
+		<meta>
+			<m n=":keep"/>
+			<m n=":directlyUsed"/>
+			<m n=":coreApi"/>
+		</meta>
+	</class>
 	<class path="awe.Archetype" params="" file="src/awe/Archetype.hx">
 		<defaults><c path="Array"><f a=""><c path="awe.Component"/></f></c></defaults>
 		<cid><c path="de.polygonal.ds.BitVector"/></cid>
@@ -1473,16 +1499,8 @@
 	This can be constructed by using the `Archetype.build` macro, or by calling
 	the constructor with the composition and component defaults.</haxe_doc>
 	</class>
-	<class path="awe.Aspect" params="" file="src/awe/Aspect.hx">
-		<allSet set="null"><c path="de.polygonal.ds.BitVector"/></allSet>
-		<oneSet set="null"><c path="de.polygonal.ds.BitVector"/></oneSet>
-		<noneSet set="null"><c path="de.polygonal.ds.BitVector"/></noneSet>
-		<toString public="1" set="method" line="111">
-			<f a=""><c path="String"/></f>
-			<haxe_doc>Make a string representation of this aspect.
-		@return The string representation.</haxe_doc>
-		</toString>
-		<matches public="1" set="method" line="118">
+	<class path="awe.IAspect" params="" file="src/awe/Aspect.hx" module="awe.Aspect" interface="1">
+		<matches public="1" set="method">
 			<f a="components">
 				<c path="de.polygonal.ds.BitVector"/>
 				<x path="Bool"/>
@@ -1491,7 +1509,43 @@
 		@param components The `BitVector` of components to check against.
 		@return If the `components` set fulfills this aspect.</haxe_doc>
 		</matches>
-		<new public="1" set="method" line="57">
+		<haxe_doc>A generic Aspect base.</haxe_doc>
+	</class>
+	<class path="awe.AnyAspect" params="" file="src/awe/Aspect.hx" module="awe.Aspect">
+		<implements path="awe.IAspect"/>
+		<matches public="1" get="inline" set="null" line="31"><f a="components">
+	<c path="de.polygonal.ds.BitVector"/>
+	<x path="Bool"/>
+</f></matches>
+		<new public="1" get="inline" set="null" line="30"><f a=""><x path="Void"/></f></new>
+		<haxe_doc>Matches any combo of components.</haxe_doc>
+		<meta><m n=":directlyUsed"/></meta>
+	</class>
+	<class path="awe.Aspect" params="" file="src/awe/Aspect.hx">
+		<implements path="awe.IAspect"/>
+		<any public="1" get="inline" set="null" line="84" static="1">
+			<f a=""><c path="awe.AnyAspect"/></f>
+			<haxe_doc>Matches any combo of components.
+		@return The aspect.</haxe_doc>
+		</any>
+		<allSet set="null"><c path="de.polygonal.ds.BitVector"/></allSet>
+		<oneSet set="null"><c path="de.polygonal.ds.BitVector"/></oneSet>
+		<noneSet set="null"><c path="de.polygonal.ds.BitVector"/></noneSet>
+		<toString public="1" set="method" line="135">
+			<f a=""><c path="String"/></f>
+			<haxe_doc>Make a string representation of this aspect.
+		@return The string representation.</haxe_doc>
+		</toString>
+		<matches public="1" set="method" line="142">
+			<f a="components">
+				<c path="de.polygonal.ds.BitVector"/>
+				<x path="Bool"/>
+			</f>
+			<haxe_doc>Returns true if the `components` set fulfills this aspect.
+		@param components The `BitVector` of components to check against.
+		@return If the `components` set fulfills this aspect.</haxe_doc>
+		</matches>
+		<new public="1" set="method" line="75">
 			<f a="allSet:oneSet:noneSet">
 				<c path="de.polygonal.ds.BitVector"/>
 				<c path="de.polygonal.ds.BitVector"/>
@@ -1503,7 +1557,7 @@
 		@param oneSet The components to require at least one of.
 		@param noneSet The components to require none of.</haxe_doc>
 		</new>
-		<haxe_doc><![CDATA[A aspect for matching entities' components against. This is used to check
+		<haxe_doc><![CDATA[An aspect for matching entities' components against. This is used to check
 	if a system is interested in processing an entity.
 
 	This can be constructed by using the `Aspect.build(_)` macro.
@@ -1558,6 +1612,15 @@
 			<x path="Int"/>
 			<haxe_doc>* The number of entities stored in this list.</haxe_doc>
 		</length>
+		<initialize public="1" set="method">
+			<f a="world">
+				<c path="awe.World"/>
+				<x path="Void"/>
+			</f>
+			<haxe_doc>Setup this component list inside the `world`.
+		This must be ran before other methods are called.
+	 *  @param world The world to initialize this in.</haxe_doc>
+		</initialize>
 		<get public="1" set="method">
 			<f a="id">
 				<x path="awe.Entity"/>
@@ -1594,23 +1657,28 @@
 	<class path="awe.ComponentList" params="T" file="src/awe/ComponentList.hx">
 		<implements path="awe.IComponentList"><c path="awe.ComponentList.T"/></implements>
 		<data><c path="de.polygonal.ds.ArrayList"><c path="awe.ComponentList.T"/></c></data>
+		<world><c path="awe.World"/></world>
 		<length public="1" get="accessor" set="null"><x path="Int"/></length>
-		<get_length get="inline" set="null" line="63"><f a=""><x path="Int"/></f></get_length>
-		<get public="1" get="inline" set="null" line="68"><f a="entity">
+		<get_length get="inline" set="null" line="70"><f a=""><x path="Int"/></f></get_length>
+		<initialize public="1" get="inline" set="null" line="75"><f a="world">
+	<c path="awe.World"/>
+	<x path="Void"/>
+</f></initialize>
+		<get public="1" get="inline" set="null" line="78"><f a="entity">
 	<x path="awe.Entity"/>
 	<t path="Null"><c path="awe.ComponentList.T"/></t>
 </f></get>
-		<add public="1" get="inline" set="null" line="71"><f a="entity:value">
+		<add public="1" get="inline" set="null" line="81"><f a="entity:value">
 	<x path="awe.Entity"/>
 	<c path="awe.ComponentList.T"/>
 	<x path="Void"/>
 </f></add>
-		<remove public="1" get="inline" set="null" line="74"><f a="entity">
+		<remove public="1" set="method" line="84"><f a="entity">
 	<x path="awe.Entity"/>
 	<x path="Void"/>
 </f></remove>
-		<iterator public="1" get="inline" set="null" line="77"><f a=""><c path="awe.ComponentListIterator"><c path="awe.ComponentList.T"/></c></f></iterator>
-		<new public="1" get="inline" set="null" line="65"><f a="?capacity">
+		<iterator public="1" get="inline" set="null" line="90"><f a=""><c path="awe.ComponentListIterator"><c path="awe.ComponentList.T"/></c></f></iterator>
+		<new public="1" get="inline" set="null" line="72"><f a="?capacity">
 	<x path="Int"/>
 	<x path="Void"/>
 </f></new>
@@ -1618,7 +1686,7 @@
 	<class path="awe.ComponentListItem" params="T" file="src/awe/ComponentList.hx" module="awe.ComponentList">
 		<index public="1" set="null"><x path="awe.Entity"/></index>
 		<component public="1" set="null"><c path="awe.ComponentListItem.T"/></component>
-		<new public="1" set="method" line="109"><f a="index:component">
+		<new public="1" set="method" line="122"><f a="index:component">
 	<x path="awe.Entity"/>
 	<c path="awe.ComponentListItem.T"/>
 	<x path="Void"/>
@@ -1628,9 +1696,9 @@
 	<class path="awe.ComponentListIterator" params="T" file="src/awe/ComponentList.hx" module="awe.ComponentList">
 		<list><c path="awe.IComponentList"><c path="awe.ComponentListIterator.T"/></c></list>
 		<index><x path="Int"/></index>
-		<hasNext public="1" get="inline" set="null" line="123"><f a=""><x path="Bool"/></f></hasNext>
-		<next public="1" set="method" line="126"><f a=""><c path="awe.ComponentListItem"><c path="awe.ComponentListIterator.T"/></c></f></next>
-		<new public="1" set="method" line="120"><f a="list">
+		<hasNext public="1" get="inline" set="null" line="136"><f a=""><x path="Bool"/></f></hasNext>
+		<next public="1" set="method" line="139"><f a=""><c path="awe.ComponentListItem"><c path="awe.ComponentListIterator.T"/></c></f></next>
+		<new public="1" set="method" line="133"><f a="list">
 	<c path="awe.IComponentList"><c path="awe.ComponentListIterator.T"/></c>
 	<x path="Void"/>
 </f></new>
@@ -1642,23 +1710,30 @@
 		<buffer><t path="awe.PackedComponent"/></buffer>
 		<bytes><c path="haxe.io.Bytes"/></bytes>
 		<size><x path="Int"/></size>
+		<world><c path="awe.World"/></world>
+		<ctype><x path="awe.ComponentType"/></ctype>
 		<length public="1" get="accessor" set="null"><x path="Int"/></length>
-		<get_length get="inline" set="null" line="144"><f a=""><x path="Int"/></f></get_length>
-		<get public="1" get="inline" set="null" line="165"><f a="entity">
+		<get_length get="inline" set="null" line="159"><f a=""><x path="Int"/></f></get_length>
+		<initialize public="1" get="inline" set="null" line="173"><f a="world">
+	<c path="awe.World"/>
+	<x path="Void"/>
+</f></initialize>
+		<get public="1" set="method" line="185"><f a="entity">
 	<x path="awe.Entity"/>
 	<t path="Null"><c path="awe.PackedComponentList.T"/></t>
 </f></get>
-		<add public="1" set="method" line="170"><f a="entity:value">
+		<add public="1" set="method" line="190"><f a="entity:value">
 	<x path="awe.Entity"/>
 	<c path="awe.PackedComponentList.T"/>
 	<x path="Void"/>
 </f></add>
-		<remove public="1" get="inline" set="null" line="186"><f a="entity">
+		<remove public="1" set="method" line="206"><f a="entity">
 	<x path="awe.Entity"/>
 	<x path="Void"/>
 </f></remove>
-		<iterator public="1" get="inline" set="null" line="199"><f a=""><c path="awe.ComponentListIterator"><c path="awe.PackedComponentList.T"/></c></f></iterator>
-		<new public="1" set="method" line="147"><f a="?capacity:?size">
+		<iterator public="1" get="inline" set="null" line="225"><f a=""><c path="awe.ComponentListIterator"><c path="awe.PackedComponentList.T"/></c></f></iterator>
+		<new public="1" set="method" line="162"><f a="ctype:?capacity:?size">
+	<x path="awe.ComponentType"/>
 	<x path="Int"/>
 	<x path="Int"/>
 	<x path="Void"/>
@@ -1819,8 +1894,8 @@
 			<x path="Void"/>
 		</f>
 		<meta><m n=":impl"/></meta>
-		<haxe_doc>*  Delete this entity from the world.
-	 *  @param world The world to delete this entity from.</haxe_doc>
+		<haxe_doc>Delete this entity from the world.
+		@param world The world to delete this entity from.</haxe_doc>
 	</delete>
 	<getComposition public="1" get="inline" set="null" line="57" static="1">
 		<f a="this:world">
@@ -1854,7 +1929,7 @@
 		@param kind The component type to find.
 		@return The component of the type given.</haxe_doc>
 	</get>
-	<toString public="1" get="inline" set="null" line="102" static="1">
+	<toString public="1" get="inline" set="null" line="116" static="1">
 		<f a="this">
 			<x path="Int"/>
 			<c path="String"/>
@@ -1916,8 +1991,8 @@
 				<x path="Void"/>
 			</f>
 			<meta><m n=":impl"/></meta>
-			<haxe_doc>*  Delete this entity from the world.
-	 *  @param world The world to delete this entity from.</haxe_doc>
+			<haxe_doc>Delete this entity from the world.
+		@param world The world to delete this entity from.</haxe_doc>
 		</delete>
 		<getComposition public="1" get="inline" set="null" line="57" static="1">
 			<f a="this:world">
@@ -1951,7 +2026,7 @@
 		@param kind The component type to find.
 		@return The component of the type given.</haxe_doc>
 		</get>
-		<toString public="1" get="inline" set="null" line="102" static="1">
+		<toString public="1" get="inline" set="null" line="116" static="1">
 			<f a="this">
 				<x path="Int"/>
 				<c path="String"/>
@@ -2029,14 +2104,21 @@
 			</f>
 			<meta><m n=":allow"><e>awe</e></m></meta>
 		</insertedSingle>
-		<inserted set="method" line="68">
+		<removedSingle set="method" line="68">
+			<f a="entity">
+				<x path="awe.Entity"/>
+				<x path="Void"/>
+			</f>
+			<meta><m n=":allow"><e>awe</e></m></meta>
+		</removedSingle>
+		<inserted set="method" line="72">
 			<f a="entities">
 				<c path="Array"><x path="awe.Entity"/></c>
 				<x path="Void"/>
 			</f>
 			<meta><m n=":allow"><e>awe</e></m></meta>
 		</inserted>
-		<removed set="method" line="73">
+		<removed set="method" line="76">
 			<f a="entities">
 				<c path="Array"><x path="awe.Entity"/></c>
 				<x path="Void"/>
@@ -2175,7 +2257,7 @@
 			<x path="haxe.ds.Vector"><c path="awe.System"/></x>
 			<meta><m n=":allow"><e>awe</e></m></meta>
 		</systems>
-		<entities set="null">
+		<entities public="1" set="null">
 			<c path="de.polygonal.ds.ArrayList"><x path="awe.Entity"/></c>
 			<meta><m n=":allow"><e>awe</e></m></meta>
 		</entities>
@@ -2190,7 +2272,7 @@
 			<c path="de.polygonal.ds.ArrayList"><c path="awe.EntitySubscription"/></c>
 			<meta><m n=":allow"><e>awe</e></m></meta>
 		</subscriptions>
-		<entityCount public="1" set="null">
+		<entityCount set="null">
 			<x path="Int"/>
 			<meta><m n=":allow"><e>awe</e></m></meta>
 			<haxe_doc>How many entities have been created so far.</haxe_doc>
@@ -2201,7 +2283,16 @@
 	    
 	    This must be set manually so it can integrate with custom game loops.</haxe_doc>
 		</delta>
-		<getSystem public="1" params="T" set="method" line="68">
+		<getComponentList public="1" params="T" set="method" line="72">
+			<f a="cl">
+				<x path="Class"><c path="getComponentList.T"/></x>
+				<t path="Null"><c path="awe.IComponentList"><c path="getComponentList.T"/></c></t>
+			</f>
+			<haxe_doc>Get the component list corresponding to the component `cl`.
+	    @param cl The component class to retrieve the component list for.
+	    @return The component list.</haxe_doc>
+		</getComponentList>
+		<getSystem public="1" params="T" set="method" line="80">
 			<f a="cl">
 				<x path="Class"><c path="getSystem.T"/></x>
 				<t path="Null"><c path="getSystem.T"/></t>
@@ -2210,11 +2301,11 @@
 	    @param cl The system class to retrieve the instance of.
 	    @return The system.</haxe_doc>
 		</getSystem>
-		<process public="1" get="inline" set="null" line="116">
+		<process public="1" get="inline" set="null" line="131">
 			<f a=""><x path="Void"/></f>
 			<haxe_doc>*	Process all active systems.</haxe_doc>
 		</process>
-		<delayLoop public="1" set="method" line="125">
+		<delayLoop public="1" set="method" line="140">
 			<f a="interval">
 				<x path="Float"/>
 				<c path="awe.util.Timer"/>
@@ -2223,8 +2314,8 @@
 	 *	@param interval The interval to run the systems at (in seconds).
 	 *	@return  The timer that has been created to run this.</haxe_doc>
 		</delayLoop>
-		<loop public="1" set="method" line="131"><f a=""><x path="Void"/></f></loop>
-		<dispose public="1" set="method" line="144">
+		<loop public="1" set="method" line="146"><f a=""><x path="Void"/></f></loop>
+		<dispose public="1" set="method" line="159">
 			<f a=""><x path="Void"/></f>
 			<haxe_doc>Free resources used by this world.</haxe_doc>
 		</dispose>
@@ -2501,7 +2592,7 @@
 </f></new>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<class path="de.polygonal.Printf" params="" file="/usr/share/haxe/lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx">
+	<class path="de.polygonal.Printf" params="" file="/home/tom/.haxe_lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx">
 		<dataTypeMap static="1"><c path="haxe.ds.IntMap"><e path="de.polygonal._Printf.FormatDataType"/></c></dataTypeMap>
 		<formatIntFuncHash static="1"><c path="haxe.ds.IntMap"><f a=":">
 	<x path="Int"/>
@@ -2637,13 +2728,13 @@
  * <p>See <a href="https://github.com/polygonal/printf" target="_blank">https://github.com/polygonal/printf</a>.</p>]]></haxe_doc>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<typedef path="de.polygonal._Printf.FormatArgs" params="" file="/usr/share/haxe/lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf"><a>
+	<typedef path="de.polygonal._Printf.FormatArgs" params="" file="/home/tom/.haxe_lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf"><a>
 	<width><t path="Null"><x path="Int"/></t></width>
 	<precision><t path="Null"><x path="Int"/></t></precision>
 	<pos><x path="Int"/></pos>
 	<flags><x path="haxe.EnumFlags"><e path="de.polygonal._Printf.FormatFlags"/></x></flags>
 </a></typedef>
-	<enum path="de.polygonal._Printf.FormatFlags" params="" file="/usr/share/haxe/lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
+	<enum path="de.polygonal._Printf.FormatFlags" params="" file="/home/tom/.haxe_lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
 		<Minus/>
 		<Plus/>
 		<Space/>
@@ -2658,7 +2749,7 @@
 			<m n=":flatEnum"/>
 		</meta>
 	</enum>
-	<enum path="de.polygonal._Printf.FormatToken" params="" file="/usr/share/haxe/lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
+	<enum path="de.polygonal._Printf.FormatToken" params="" file="/home/tom/.haxe_lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
 		<BareString a="str"><c path="String"/></BareString>
 		<Tag a="type:args">
 			<e path="de.polygonal._Printf.FormatDataType"/>
@@ -2671,7 +2762,7 @@
 		</Unknown>
 		<meta><m n=":directlyUsed"/></meta>
 	</enum>
-	<enum path="de.polygonal._Printf.FormatDataType" params="" file="/usr/share/haxe/lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
+	<enum path="de.polygonal._Printf.FormatDataType" params="" file="/home/tom/.haxe_lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
 		<FmtInteger a="integerType"><e path="de.polygonal._Printf.IntegerType"/></FmtInteger>
 		<FmtFloat a="floatType"><e path="de.polygonal._Printf.FloatType"/></FmtFloat>
 		<FmtString/>
@@ -2679,7 +2770,7 @@
 		<FmtNothing/>
 		<meta><m n=":directlyUsed"/></meta>
 	</enum>
-	<enum path="de.polygonal._Printf.IntegerType" params="" file="/usr/share/haxe/lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
+	<enum path="de.polygonal._Printf.IntegerType" params="" file="/home/tom/.haxe_lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
 		<ICharacter/>
 		<ISignedDecimal/>
 		<IUnsignedDecimal/>
@@ -2691,7 +2782,7 @@
 			<m n=":flatEnum"/>
 		</meta>
 	</enum>
-	<enum path="de.polygonal._Printf.FloatType" params="" file="/usr/share/haxe/lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
+	<enum path="de.polygonal._Printf.FloatType" params="" file="/home/tom/.haxe_lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
 		<FNormal/>
 		<FScientific/>
 		<FNatural/>
@@ -2700,7 +2791,7 @@
 			<m n=":flatEnum"/>
 		</meta>
 	</enum>
-	<class path="de.polygonal.ds.Hashable" params="" file="/usr/share/haxe/lib/polygonal-ds/2,0,0/src/de/polygonal/ds/Hashable.hx" interface="1">
+	<class path="de.polygonal.ds.Hashable" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/Hashable.hx" interface="1">
 		<key public="1" set="null">
 			<x path="Int"/>
 			<haxe_doc>A unique, unsigned 32-bit integer key.
@@ -2709,7 +2800,7 @@
 		</key>
 		<haxe_doc>An object that can be identified by an unique integer key</haxe_doc>
 	</class>
-	<class path="de.polygonal.ds.Collection" params="T" file="/usr/share/haxe/lib/polygonal-ds/2,0,0/src/de/polygonal/ds/Collection.hx" interface="1">
+	<class path="de.polygonal.ds.Collection" params="T" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/Collection.hx" interface="1">
 		<extends path="de.polygonal.ds.Hashable"/>
 		<get_size public="1" set="method">
 			<f a=""><x path="Int"/></f>
@@ -2823,7 +2914,7 @@
 		</clone>
 		<haxe_doc>A collection is an object that stores other objects (its elements)</haxe_doc>
 	</class>
-	<class path="de.polygonal.ds.List" params="T" file="/usr/share/haxe/lib/polygonal-ds/2,0,0/src/de/polygonal/ds/List.hx" interface="1">
+	<class path="de.polygonal.ds.List" params="T" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/List.hx" interface="1">
 		<extends path="de.polygonal.ds.Collection"><c path="de.polygonal.ds.List.T"/></extends>
 		<get public="1" set="method">
 			<f a="index">
@@ -2883,7 +2974,7 @@
 		</getRange>
 		<haxe_doc>An ordered list of elements</haxe_doc>
 	</class>
-	<class path="de.polygonal.ds.ArrayList" params="T" file="/usr/share/haxe/lib/polygonal-ds/2,0,0/src/de/polygonal/ds/ArrayList.hx">
+	<class path="de.polygonal.ds.ArrayList" params="T" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/ArrayList.hx">
 		<implements path="de.polygonal.ds.List"><c path="de.polygonal.ds.ArrayList.T"/></implements>
 		<key public="1" set="null">
 			<x path="Int"/>
@@ -3373,7 +3464,7 @@
 		]]]></haxe_doc>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<class path="de.polygonal.ds.Itr" params="T" file="/usr/share/haxe/lib/polygonal-ds/2,0,0/src/de/polygonal/ds/Itr.hx" interface="1">
+	<class path="de.polygonal.ds.Itr" params="T" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/Itr.hx" interface="1">
 		<hasNext public="1" set="method">
 			<f a=""><x path="Bool"/></f>
 			<haxe_doc>Returns true if this iteration has more elements.
@@ -3419,7 +3510,7 @@
 	
 	Same as typedef Iterator<T> but with an extra `this.reset()` and `this.remove()` method.]]></haxe_doc>
 	</class>
-	<class path="de.polygonal.ds.ArrayListIterator" params="T" file="/usr/share/haxe/lib/polygonal-ds/2,0,0/src/de/polygonal/ds/ArrayList.hx" module="de.polygonal.ds.ArrayList">
+	<class path="de.polygonal.ds.ArrayListIterator" params="T" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/ArrayList.hx" module="de.polygonal.ds.ArrayList">
 		<implements path="de.polygonal.ds.Itr"><c path="de.polygonal.ds.ArrayListIterator.T"/></implements>
 		<mObject><c path="de.polygonal.ds.ArrayList"><c path="de.polygonal.ds.ArrayListIterator.T"/></c></mObject>
 		<mData><t path="de.polygonal.ds.NativeArray"><c path="de.polygonal.ds.ArrayListIterator.T"/></t></mData>
@@ -3440,7 +3531,7 @@
 			<m n=":dox"><e>hide</e></m>
 		</meta>
 	</class>
-	<class path="de.polygonal.ds.BitVector" params="" file="/usr/share/haxe/lib/polygonal-ds/2,0,0/src/de/polygonal/ds/BitVector.hx">
+	<class path="de.polygonal.ds.BitVector" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/BitVector.hx">
 		<implements path="de.polygonal.ds.Hashable"/>
 		<key public="1" set="null">
 			<x path="Int"/>
@@ -3571,11 +3662,11 @@
 		The bit-vector is resized to the size of `bytes`.
 		@param bigEndian the input byte order (default is little endian)</haxe_doc>
 		</ofBytes>
-		<toString public="1" set="method" line="347">
+		<toString public="1" set="method" line="346">
 			<f a=""><c path="String"/></f>
 			<haxe_doc>Prints out all elements.</haxe_doc>
 		</toString>
-		<clone public="1" set="method" line="373">
+		<clone public="1" set="method" line="372">
 			<f a=""><c path="de.polygonal.ds.BitVector"/></f>
 			<haxe_doc>Creates a copy of this bit vector.</haxe_doc>
 		</clone>
@@ -3603,7 +3694,7 @@
 		]]]></haxe_doc>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<class path="de.polygonal.ds.Cloneable" params="T" file="/usr/share/haxe/lib/polygonal-ds/2,0,0/src/de/polygonal/ds/Cloneable.hx" interface="1">
+	<class path="de.polygonal.ds.Cloneable" params="T" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/Cloneable.hx" interface="1">
 		<clone public="1" set="method">
 			<f a=""><c path="de.polygonal.ds.Cloneable.T"/></f>
 			<haxe_doc>Returns a copy of this object.</haxe_doc>
@@ -3619,7 +3710,7 @@
 		}]]></haxe_doc>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<class path="de.polygonal.ds.Comparable" params="T" file="/usr/share/haxe/lib/polygonal-ds/2,0,0/src/de/polygonal/ds/Comparable.hx" interface="1">
+	<class path="de.polygonal.ds.Comparable" params="T" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/Comparable.hx" interface="1">
 		<compare public="1" set="method">
 			<f a="other">
 				<c path="de.polygonal.ds.Comparable.T"/>
@@ -3641,20 +3732,20 @@
 		}]]></haxe_doc>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<class path="de.polygonal.ds.HashKey" params="" file="/usr/share/haxe/lib/polygonal-ds/2,0,0/src/de/polygonal/ds/HashKey.hx">
-		<_counter line="28" static="1"><x path="Int"/></_counter>
-		<next public="1" get="inline" set="null" line="33" static="1">
+	<class path="de.polygonal.ds.HashKey" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/HashKey.hx">
+		<_counter static="1"><t path="Null"><x path="Int"/></t></_counter>
+		<next public="1" set="method" line="38" static="1">
 			<f a=""><x path="Int"/></f>
 			<haxe_doc>Returns the next integer in a list of unique, unsigned integer keys.</haxe_doc>
 		</next>
 		<haxe_doc>Generates unique, unsigned integer keys</haxe_doc>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<typedef path="de.polygonal.ds.NativeArray" params="T" file="/usr/share/haxe/lib/polygonal-ds/2,0,0/src/de/polygonal/ds/NativeArray.hx">
+	<typedef path="de.polygonal.ds.NativeArray" params="T" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/NativeArray.hx">
 		<c path="neko.NativeArray"><c path="de.polygonal.ds.NativeArray.T"/></c>
 		<haxe_doc>Fixed size "native" array that can be faster on some targets.</haxe_doc>
 	</typedef>
-	<class path="de.polygonal.ds.tools.ArrayTools" params="" file="/usr/share/haxe/lib/polygonal-ds/2,0,0/src/de/polygonal/ds/tools/ArrayTools.hx">
+	<class path="de.polygonal.ds.tools.ArrayTools" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/ArrayTools.hx">
 		<alloc public="1" params="T" get="inline" set="null" line="35" static="1">
 			<f a="len">
 				<x path="Int"/>
@@ -3824,7 +3915,26 @@
 			</f>
 			<haxe_doc>Splits the input array `a` storing `n` elements into smaller chunks, each containing `k` elements.</haxe_doc>
 		</split>
-		<_quickSort set="method" line="439" static="1"><f a="a:first:n:cmp">
+		<pairwise public="1" params="T" get="inline" set="null" line="448" static="1">
+			<f a="input:visit">
+				<c path="Array"><c path="pairwise.T"/></c>
+				<f a="::">
+					<x path="Int"/>
+					<c path="pairwise.T"/>
+					<c path="pairwise.T"/>
+					<x path="Void"/>
+				</f>
+				<x path="Void"/>
+			</f>
+			<haxe_doc>Visits all elements in `input` as a pair by calling `visit`.
+		
+		The function signature is: `visit(currentPairIndex, firstPairElement, secondPairElement)`
+		
+		Example:
+			var points = [1.1, 1.2, 2.1, 2.2]; //format: [x0, y0, x1, y1, xn, yn, ...]
+			ArrayTools.pairwise(points, function(i, x, y) trace('point x=$x, y=$y'));</haxe_doc>
+		</pairwise>
+		<_quickSort set="method" line="460" static="1"><f a="a:first:n:cmp">
 	<c path="Array"><x path="Float"/></c>
 	<x path="Int"/>
 	<x path="Int"/>
@@ -3838,48 +3948,48 @@
 		<haxe_doc>Utility class for working with Arrays.</haxe_doc>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<class path="de.polygonal.ds.tools.Assert" params="" file="/usr/share/haxe/lib/polygonal-ds/2,0,0/src/de/polygonal/ds/tools/Assert.hx"><haxe_doc>Assertion macro injecting assertion statements
+	<class path="de.polygonal.ds.tools.Assert" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/Assert.hx"><haxe_doc>Assertion macro injecting assertion statements
 	
 	An assertion specifies a condition that you expect to be true at a point in your program.
 	
 	If that condition is not true, the assertion fails, throwing an instance of the `AssertError` class.</haxe_doc></class>
-	<class path="de.polygonal.ds.tools.Bits" params="" file="/usr/share/haxe/lib/polygonal-ds/2,0,0/src/de/polygonal/ds/tools/Bits.hx">
-		<mask public="1" get="inline" set="null" line="37" static="1">
+	<class path="de.polygonal.ds.tools.Bits" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/Bits.hx">
+		<mask public="1" get="inline" set="null" line="31" static="1">
 			<f a="n">
 				<x path="Int"/>
 				<x path="Int"/>
 			</f>
 			<haxe_doc>Constructs a mask of `n` bits.</haxe_doc>
 		</mask>
-		<ones public="1" get="inline" set="null" line="47" static="1">
+		<ones public="1" get="inline" set="null" line="41" static="1">
 			<f a="x">
 				<x path="Int"/>
 				<x path="Int"/>
 			</f>
 			<haxe_doc>Counts the number of "1"-bits in `x`. For example 0b00110111 has 5 bits set.</haxe_doc>
 		</ones>
-		<ntz public="1" get="inline" set="null" line="60" static="1">
+		<ntz public="1" get="inline" set="null" line="54" static="1">
 			<f a="x">
 				<x path="Int"/>
 				<x path="Int"/>
 			</f>
 			<haxe_doc>Counts the number of trailing 0's in `x`. For example 0b10000 has 4 trailing 0's.</haxe_doc>
 		</ntz>
-		<nlz public="1" get="inline" set="null" line="96" static="1">
+		<nlz public="1" get="inline" set="null" line="90" static="1">
 			<f a="x">
 				<x path="Int"/>
 				<x path="Int"/>
 			</f>
 			<haxe_doc>Counts the number of leading 0's in `x`. For example 0b10000 has 27 leading 0's.</haxe_doc>
 		</nlz>
-		<msb public="1" get="inline" set="null" line="114" static="1">
+		<msb public="1" get="inline" set="null" line="108" static="1">
 			<f a="x">
 				<x path="Int"/>
 				<x path="Int"/>
 			</f>
 			<haxe_doc>Returns the most significant bit of `x`.</haxe_doc>
 		</msb>
-		<rol public="1" get="inline" set="null" line="127" static="1">
+		<rol public="1" get="inline" set="null" line="121" static="1">
 			<f a="x:n">
 				<x path="Int"/>
 				<x path="Int"/>
@@ -3887,7 +3997,7 @@
 			</f>
 			<haxe_doc>Bitwise rotates the integer `x` by `n` places to the left.</haxe_doc>
 		</rol>
-		<ror public="1" get="inline" set="null" line="135" static="1">
+		<ror public="1" get="inline" set="null" line="129" static="1">
 			<f a="x:n">
 				<x path="Int"/>
 				<x path="Int"/>
@@ -3895,21 +4005,21 @@
 			</f>
 			<haxe_doc>Bitwise rotates the integer `x` by `n` places to the right.</haxe_doc>
 		</ror>
-		<reverse public="1" get="inline" set="null" line="143" static="1">
+		<reverse public="1" get="inline" set="null" line="137" static="1">
 			<f a="x">
 				<x path="Int"/>
 				<x path="Int"/>
 			</f>
 			<haxe_doc>Reverses `x`; For example 0b111000 becomes 0b000111.</haxe_doc>
 		</reverse>
-		<flipWORD public="1" get="inline" set="null" line="159" static="1">
+		<flipWORD public="1" get="inline" set="null" line="153" static="1">
 			<f a="x">
 				<x path="Int"/>
 				<x path="Int"/>
 			</f>
 			<haxe_doc>Flips the bytes within the WORD `x` (2 bytes) to convert between little endian and big endian format.</haxe_doc>
 		</flipWORD>
-		<flipDWORD public="1" get="inline" set="null" line="167" static="1">
+		<flipDWORD public="1" get="inline" set="null" line="161" static="1">
 			<f a="x">
 				<x path="Int"/>
 				<x path="Int"/>
@@ -3918,7 +4028,7 @@
 		</flipDWORD>
 		<haxe_doc>Helper class for working with bits</haxe_doc>
 	</class>
-	<class path="de.polygonal.ds.tools.GrowthRate" params="" file="/usr/share/haxe/lib/polygonal-ds/2,0,0/src/de/polygonal/ds/tools/GrowthRate.hx">
+	<class path="de.polygonal.ds.tools.GrowthRate" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/GrowthRate.hx">
 		<FIXED public="1" get="inline" set="null" line="28" static="1">
 			<x path="Int"/>
 			<haxe_doc>Fixed size; throws an error if additional space is requested.</haxe_doc>
@@ -3947,7 +4057,7 @@
 		</compute>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<class path="de.polygonal.ds.tools.M" params="" file="/usr/share/haxe/lib/polygonal-ds/2,0,0/src/de/polygonal/ds/tools/M.hx" extern="1">
+	<class path="de.polygonal.ds.tools.MathTools" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/MathTools.hx" extern="1">
 		<INT32_MIN public="1" get="inline" set="null" expr="0x80000000" line="32" static="1">
 			<x path="Int"/>
 			<meta><m n=":value"><e>0x80000000</e></m></meta>
@@ -4023,7 +4133,7 @@
 		</numDigits>
 		<meta><m n=":dox"><e>hide</e></m></meta>
 	</class>
-	<class path="de.polygonal.ds.tools.NativeArrayTools" params="" file="/usr/share/haxe/lib/polygonal-ds/2,0,0/src/de/polygonal/ds/tools/NativeArrayTools.hx">
+	<class path="de.polygonal.ds.tools.NativeArrayTools" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/NativeArrayTools.hx">
 		<alloc public="1" params="T" get="inline" set="null" line="32" static="1">
 			<f a="len">
 				<x path="Int"/>
@@ -4067,14 +4177,14 @@
 			</f>
 			<haxe_doc>Copies `n` elements from `src` beginning at `first` to `dst` and returns `dst`.</haxe_doc>
 		</toArray>
-		<ofArray public="1" params="T" get="inline" set="null" line="156" static="1">
+		<ofArray public="1" params="T" get="inline" set="null" line="155" static="1">
 			<f a="src">
 				<c path="Array"><c path="ofArray.T"/></c>
 				<t path="de.polygonal.ds.NativeArray"><c path="ofArray.T"/></t>
 			</f>
 			<haxe_doc>Returns a `NativeArray` object from the values stored in `src`.</haxe_doc>
 		</ofArray>
-		<blit public="1" params="T" get="inline" set="null" line="184" static="1">
+		<blit public="1" params="T" get="inline" set="null" line="183" static="1">
 			<f a="src:srcPos:dst:dstPos:n">
 				<t path="de.polygonal.ds.NativeArray"><c path="blit.T"/></t>
 				<x path="Int"/>
@@ -4088,14 +4198,14 @@
 		
 		Copying takes place as if an intermediate buffer was used, allowing the destination and source to overlap.</haxe_doc>
 		</blit>
-		<copy public="1" params="T" get="inline" set="null" line="251" static="1">
+		<copy public="1" params="T" get="inline" set="null" line="250" static="1">
 			<f a="src">
 				<t path="de.polygonal.ds.NativeArray"><c path="copy.T"/></t>
 				<t path="de.polygonal.ds.NativeArray"><c path="copy.T"/></t>
 			</f>
 			<haxe_doc>Returns a shallow copy of `src`.</haxe_doc>
 		</copy>
-		<zero public="1" params="T" set="method" line="279" static="1">
+		<zero public="1" params="T" set="method" line="278" static="1">
 			<f a="dst:?first:?n">
 				<t path="de.polygonal.ds.NativeArray"><c path="zero.T"/></t>
 				<x path="Int"/>
@@ -4105,7 +4215,7 @@
 			<haxe_doc>Sets `n` elements in `dst` to 0 starting at index `first` and returns `dst`.
 		If `n` is 0, `n` is set to the length of `dst`.</haxe_doc>
 		</zero>
-		<init public="1" params="T" set="method" line="301" static="1">
+		<init public="1" params="T" set="method" line="300" static="1">
 			<f a="a:val:?first:?n">
 				<t path="de.polygonal.ds.NativeArray"><c path="init.T"/></t>
 				<c path="init.T"/>
@@ -4116,7 +4226,7 @@
 			<haxe_doc>Sets `n` elements in `a` to `val` starting at index `first` and returns `a`.
 		If `n` is 0, `n` is set to the length of `a`.</haxe_doc>
 		</init>
-		<nullify public="1" params="T" set="method" line="317" static="1">
+		<nullify public="1" params="T" set="method" line="316" static="1">
 			<f a="a:?first:?n">
 				<t path="de.polygonal.ds.NativeArray"><c path="nullify.T"/></t>
 				<x path="Int"/>
@@ -4126,7 +4236,7 @@
 			<haxe_doc>Nullifies `n` elements in `a` starting at index `first` and returns `a`.
 		If `n` is 0, `n` is set to the length of `a`.</haxe_doc>
 		</nullify>
-		<binarySearchCmp public="1" params="T" set="method" line="340" static="1">
+		<binarySearchCmp public="1" params="T" set="method" line="339" static="1">
 			<f a="a:val:min:max:cmp">
 				<t path="de.polygonal.ds.NativeArray"><c path="binarySearchCmp.T"/></t>
 				<c path="binarySearchCmp.T"/>
@@ -4144,7 +4254,7 @@
 		@return the array index storing `val` or the bitwise complement (~) of the index where `val` would be inserted (guaranteed to be a negative number).
 		<br/>The insertion point is only valid for `min` = 0 and `max` = `a.length` - 1.]]></haxe_doc>
 		</binarySearchCmp>
-		<binarySearchf public="1" set="method" line="368" static="1">
+		<binarySearchf public="1" set="method" line="367" static="1">
 			<f a="a:val:min:max">
 				<t path="de.polygonal.ds.NativeArray"><x path="Float"/></t>
 				<x path="Float"/>
@@ -4156,7 +4266,7 @@
 		@return the array index storing `val` or the bitwise complement (~) of the index where `val` would be inserted (guaranteed to be a negative number).
 		<br/>The insertion point is only valid for `min` = 0 and `max` = `a.length` - 1.]]></haxe_doc>
 		</binarySearchf>
-		<binarySearchi public="1" set="method" line="395" static="1">
+		<binarySearchi public="1" set="method" line="394" static="1">
 			<f a="a:val:min:max">
 				<t path="de.polygonal.ds.NativeArray"><x path="Int"/></t>
 				<x path="Int"/>
@@ -4171,7 +4281,7 @@
 		<haxe_doc>Utility class for modifying `NativeArray` objects</haxe_doc>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<class path="de.polygonal.ds.tools.Shuffle" params="" file="/usr/share/haxe/lib/polygonal-ds/2,0,0/src/de/polygonal/ds/tools/Shuffle.hx">
+	<class path="de.polygonal.ds.tools.Shuffle" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/Shuffle.hx">
 		<_f line="23" static="1"><f a=""><x path="Float"/></f></_f>
 		<setRandom public="1" set="method" line="30" static="1">
 			<f a="f">
@@ -4600,6 +4710,11 @@
 			<meta><m n=":has_untyped"/></meta>
 			<haxe_doc>See `Map.get`</haxe_doc>
 		</get>
+		<iterator public="1" set="method" line="54">
+			<f a=""><t path="Iterator"><c path="haxe.ds.IntMap.T"/></t></f>
+			<meta><m n=":has_untyped"/></meta>
+			<haxe_doc>See `Map.iterator`</haxe_doc>
+		</iterator>
 		<new public="1" set="method" line="28">
 			<f a=""><x path="Void"/></f>
 			<meta><m n=":has_untyped"/></meta>
@@ -4736,6 +4851,8 @@
 	</class>
 	<typedef path="haxe.io.BytesData" params="" file="/usr/share/haxe/std/haxe/io/BytesData.hx"><c path="neko.NativeString"/></typedef>
 	<class path="haxe.io.Input" params="" file="/usr/share/haxe/std/haxe/io/Input.hx">
+		<_float_of_bytes line="314" static="1"><unknown/></_float_of_bytes>
+		<_double_of_bytes line="315" static="1"><unknown/></_double_of_bytes>
 		<bigEndian public="1" set="accessor">
 			<x path="Bool"/>
 			<haxe_doc>Endianness (word byte order) used when reading numbers.
