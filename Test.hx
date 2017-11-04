@@ -7,7 +7,6 @@ import awe.Archetype;
 import awe.Entity;
 using awe.util.BitVectorTools;
 using awe.util.MoreStringTools;
-import awe.util.Signal;
 import de.polygonal.ds.BitVector;
 import awe.Component;
 
@@ -44,19 +43,6 @@ class Test extends TestCase {
         subBits.set(6);
         assertTrue(bits.contains(subBits));
         assertFalse(subBits.contains(bits));
-    }
-    public function testSignal() {
-        var signal = new Signal();
-        var result;
-        signal.add(function(v) result = v);
-        signal.dispatch(16);
-        assertEquals(result, 16);
-        assertEquals(signal.getListeners().size, 1);
-        signal.clear();
-        result = 0;
-        signal.dispatch(16);
-        assertEquals(result, 0);
-        assertEquals(signal.getListeners().size, 0);
     }
     public function testString() {
         assertTrue('a'.isVowel());
