@@ -27,6 +27,7 @@ class TestWorld {
         });
     }
     public function new() {    }
+    /*
     public function testWorldEntity() {
         reset();
         var entity: Entity = Archetype.build(Pos, Vel).create(world);
@@ -48,4 +49,5 @@ class TestWorld {
             Assert.isTrue(entity.has(Vel));
         }
     }
+    */
 }

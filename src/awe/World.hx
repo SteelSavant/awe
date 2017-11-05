@@ -14,6 +14,7 @@ import haxe.ds.Vector;
 using awe.util.MoreStringTools;
 import awe.ComponentList;
 import awe.Entity;
+import awe.managers.AspectSubscriptionManager;
 import awe.managers.ComponentManager;
 import awe.managers.EntityManager;
 /**
@@ -32,8 +33,10 @@ import awe.managers.EntityManager;
 	*/
 	public var entities(default, null): EntityManager;
 
-	@:allow(awe)
-	var subscriptions(default, null):ArrayList<EntitySubscription> = new ArrayList<EntitySubscription>();
+	/**
+		Subscriptions to entites.
+	*/
+	public var subscriptions(default, null): AspectSubscriptionManager;
 	/**
 	    How many entities have been created in total since the world was initialised.
 	 */
@@ -57,9 +60,11 @@ import awe.managers.EntityManager;
 		for(componentList in components)
 			if(componentList != null)
 				componentList.initialize(this);
+		subscriptions = new AspectSubscriptionManager();
 		this.components = new ComponentManager(components);
 		this.systems = systems;
 		this.components.initialize(this);
+		subscriptions.initialize(this);
 		entities = new EntityManager();
 		entities.initialize(this);
 		for(system in systems)

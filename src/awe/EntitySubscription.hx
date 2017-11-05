@@ -1,19 +1,22 @@
 package awe;
 
+import awe.Entity;
+import de.polygonal.ds.NativeArray;
+
 /**
     Subscribes to entities being inserted and removed.
  */
 interface SubscriptionListener {
     /**
         Called when entities are inserted that match the aspect.
-        @param entities The newly inserted entities.
+        @param entities The newly inserted entities' ids.
      */
-    function inserted(entities: Array<Entity>): Void;
+    function inserted(entities: Array<EntityId>): Void;
     /**
         Called when entities are removed that match the aspect.
-        @param entities The removed entities.
+        @param entities The removed entities' ids.
      */
-    function removed(entities: Array<Entity>): Void;
+    function removed(entities: Array<EntityId>): Void;
 }
 /**
     Keeps a list of entities that meet the given `aspect`, and runs listeners
@@ -27,7 +30,7 @@ class EntitySubscription {
     /**
         The entities matching the `aspect`.
      */
-    public var entities(default, null): Array<Entity> = [];
+    public var entities(default, null): Array<EntityId> = [];
     /**
         The world this subscription lies in.
      */
@@ -58,22 +61,22 @@ class EntitySubscription {
      */
     public function initialize(world: World) {
         this.world = world;
-        world.subscriptions.add(this);
+        world.subscriptions._subscriptions.add(this);
     }
     @:allow(awe)
-    function insertedSingle(entity: Entity)
-        if(aspect.matches(entity.componentBits))
-            entities.push(entity);
+    function insertedSingle(id: EntityId)
+        if(aspect.matches(world.components.getComponentBits(id)))
+            entities.push(id);
     @:allow(awe)
-    function removedSingle(entity: Entity)
-        if(aspect.matches(entity.componentBits))
-            entities.remove(entity);
+    function removedSingle(id: EntityId)
+        if(aspect.matches(world.components.getComponentBits(id)))
+            entities.remove(id);
     @:allow(awe)
-    function inserted(entities: Array<Entity>)
+    function inserted(entities: Array<EntityId>)
         for(entity in entities)
             insertedSingle(entity);
     @:allow(awe)
-    function removed(entities: Array<Entity>)
+    function removed(entities: Array<EntityId>)
         for(entity in entities)
             removedSingle(entity);
 }

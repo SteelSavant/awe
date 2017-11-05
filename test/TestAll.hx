@@ -6,6 +6,7 @@ import utest.ui.Report;
 class TestAll {
     static function main() {
         var runner = new Runner();
+        runner.addCase(new TestAspect());
         runner.addCase(new TestComponent());
         runner.addCase(new TestUtil());
         runner.addCase(new TestWorld());

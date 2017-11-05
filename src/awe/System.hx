@@ -1,6 +1,7 @@
 package awe;
 
 import awe.Aspect;
+import awe.Entity;
 import de.polygonal.ds.ArrayList;
 #if macro
 import haxe.macro.Context;
@@ -113,12 +114,12 @@ class EntitySystem extends System implements EntitySubscription.SubscriptionList
 	    Called every time `process` is ran for each entity matching `Aspect`
 	    @param entity The `Entity` to be processed.
 	 */
-	public function processEntity(entity: Entity): Void {}
+	public function processEntity(id: EntityId): Void {}
 	public override function processSystem(): Void
-		for(entity in subscription.entities)
-			processEntity(entity);
-    public function inserted(entities: Array<Entity>): Void {}
-    public function removed(entities: Array<Entity>): Void {}
+		for(id in subscription.entities)
+			processEntity(id);
+    public function inserted(entities: Array<EntityId>): Void {}
+    public function removed(entities: Array<EntityId>): Void {}
 	public static macro function build():Array<Field> {
 		var fields = Context.getBuildFields();
 		var initializeField = null;
