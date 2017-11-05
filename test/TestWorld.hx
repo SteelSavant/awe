@@ -29,28 +29,23 @@ class TestWorld {
     public function new() {    }
     public function testWorldEntity() {
         reset();
-        Assert.equals(world.numEntities, 0);
         var entity: Entity = Archetype.build(Pos, Vel).create(world);
-        Assert.isTrue(entity.has(world, Pos));
-        Assert.isTrue(entity.has(world, Vel));
-        Assert.isTrue(entity.getComposition(world) != null);
-        Assert.equals(world.numEntities, 1);
+        Assert.isTrue(entity.has(Pos));
+        Assert.isTrue(entity.has(Vel));
+        Assert.isTrue(entity.componentBits != null);
         world.getComponentList(Pos).remove(entity);
-        Assert.isFalse(entity.has(world, Pos));
-        Assert.isTrue(entity.has(world, Vel));
-        entity.delete(world);
-        Assert.equals(entity.getComposition(world), null);
-        Assert.equals(world.numEntities, 0);
+        Assert.isFalse(entity.has(Pos));
+        Assert.isTrue(entity.has(Vel));
+        entity.deleteFromWorld();
+        Assert.equals(entity.componentBits, null);
     }
     public function testWorldEntities() {
         reset();
-        Assert.equals(world.numEntities, 0);
         var entityArch = Archetype.build(Pos, Vel);
         for(i in 0...14) {
             var entity: Entity = entityArch.create(world);
-            Assert.isTrue(entity.has(world, Pos));
-            Assert.isTrue(entity.has(world, Vel));
+            Assert.isTrue(entity.has(Pos));
+            Assert.isTrue(entity.has(Vel));
         }
-        Assert.equals(world.numEntities, 14);
     }
 }

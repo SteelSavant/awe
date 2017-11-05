@@ -7,6 +7,7 @@ import awe.System;
 import awe.Aspect;
 import js.html.CanvasRenderingContext2D;
 import js.html.CanvasElement;
+import js.Browser;
 
 @auto
 class Collide implements Component {}
@@ -206,7 +207,7 @@ class InputSystem extends EntitySystem {
 
 class Pong {
 	static function main() {
-		js.Browser.window.onload = function(_) {
+		Browser.window.onload = function(_) {
 			var world = World.build({
 				components: [Bounce, Collide, Side, Speed, Position, Velocity, Size, Input, Draw],
 				systems: [
@@ -221,20 +222,25 @@ class Pong {
 			});
 			var playerArch = Archetype.build(Size, Speed, Input, Position, Velocity, Draw);
 			var player = playerArch.create(world);
-			player.get(world, Draw).color = "red";
-			player.get(world, Velocity).set(0, 0);
-			var size: Size = player.get(world, Size);
+			player.get(Draw).color = "red";
+			player.get(Velocity).set(0, 0);
+			var size: Size = player.get(Size);
 			size.set(3, 50);
-			var pos:Position = player.get(world, Position);
+			var pos:Position = player.get(Position);
 			pos.set(65, 55);
-			player.get(world, Speed).speed = 1000;
+			player.get(Speed).speed = 1000;
 			var ballArch = Archetype.build(Size, Position, Velocity, Draw, Bounce);
 			var ball = ballArch.create(world);
-			ball.get(world, Draw).color = "blue";
-			ball.get(world, Size).set(30, 30);
-			ball.get(world, Position).set(300, 300);
-			ball.get(world, Velocity).set(100, 100);
-			world.delayLoop(0.05);
+			ball.get(Draw).color = "blue";
+			ball.get(Size).set(30, 30);
+			ball.get(Position).set(300, 300);
+			ball.get(Velocity).set(100, 100);
+			var last = haxe.Timer.stamp();
+			function render(now: Float) {
+				world.delta = now - last;
+				last = now;
+				world.process();
+			}
 		};
 	}
 }

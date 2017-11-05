@@ -13,7 +13,8 @@ import de.polygonal.ds.BitVector;
 import haxe.ds.Vector;
 using awe.util.MoreStringTools;
 import awe.ComponentList;
-
+import awe.Entity;
+import awe.managers.EntityManager;
 /**
     The central object on which components, systems, etc. are added.
     
@@ -24,27 +25,14 @@ import awe.ComponentList;
 	var components(default, null): Map<ComponentType, IComponentList<Dynamic>>;
 	@:allow(awe)
 	var systems(default, null): Vector<System>;
-	@:allow(awe)
-	var _entities(default, null): ArrayList<Entity>;
 
 	/**
-		The active entities contained in the World.
+		The entities contained in the World.
 	*/
-	public var entities(get, never): Iterable<Entity>;
-
-	inline function get_entities(): Iterable<Entity>
-		return _entities;
-
-	/**
-		The number of active entities in the world.
-	*/
-	public var numEntities(get, never): Int;
-
-	inline function get_numEntities(): Int
-		return _entities.size;
+	public var entities(default, null): EntityManager;
 
 	@:allow(awe)
-	var compositions(default, null): Map<Entity, BitVector>;
+	var compositions(default, null): Map<EntityId, BitVector>;
 	@:allow(awe)
 	var subscriptions(default, null):ArrayList<EntitySubscription> = new ArrayList<EntitySubscription>();
 	/**
@@ -69,15 +57,14 @@ import awe.ComponentList;
 	public function new(components, systems) {
 		this.components = components;
 		this.systems = systems;
-		_entities = new ArrayList();
+		entities = new EntityManager();
+		entities.initialize(this);
 		compositions = new Map();
-		entityCount = 0;
 		for(system in systems)
 			system.initialize(this);
-		for(componentList in components) {
+		for(componentList in components)
 			if(componentList != null)
 				componentList.initialize(this);
-		}
 	}
 	/**
 	    Get the component list corresponding to the component `cl`.

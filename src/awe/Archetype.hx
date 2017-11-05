@@ -35,7 +35,7 @@ class Archetype {
 		@return The entity created.
 	*/
 	public function create(world: World): Entity {
-		var entity:Entity = new Entity(world);
+		var entity:Entity = world.entities.createEntityInstance();
 		
 		for(def in defaults) {
 			var inst = def();
@@ -47,8 +47,7 @@ class Archetype {
 				throw 'Component list for $def is null, did you add it to the World in World.create?';
 			list.add(entity, inst);
 		}
-		world.compositions[entity] = cid;
-		entity.insertIntoSubscriptions(world);
+		world.compositions[entity.id] = cid;
 		return entity;
 	}
 	/**

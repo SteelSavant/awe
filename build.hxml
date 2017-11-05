@@ -1,0 +1,5 @@
+-main Pong
+-cp examples/pong
+-cp src
+-lib polygonal-ds
+-js examples/pong/build/pong.js

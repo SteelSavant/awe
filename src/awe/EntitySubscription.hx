@@ -62,11 +62,11 @@ class EntitySubscription {
     }
     @:allow(awe)
     function insertedSingle(entity: Entity)
-        if(aspect.matches(entity.getComposition(world)))
+        if(aspect.matches(entity.componentBits))
             entities.push(entity);
     @:allow(awe)
     function removedSingle(entity: Entity)
-        if(aspect.matches(entity.getComposition(world)))
+        if(aspect.matches(entity.componentBits))
             entities.remove(entity);
     @:allow(awe)
     function inserted(entities: Array<Entity>)

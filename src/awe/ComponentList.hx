@@ -86,7 +86,7 @@ class ComponentList<T: Component> implements IComponentList<T> {
 	public function remove(entity: Entity): Void {
 		var value = data.get(entity.id);
 		data.set(entity.id, null);
-		entity.getComposition(world).clear(value.getType().getPure());
+		entity.componentBits.clear(value.getType().getPure());
 	}
 
 	public inline function iterator(): ComponentListIterator<T>
@@ -206,7 +206,7 @@ class PackedComponentList<T: Component> implements IComponentList<T> {
 		_length = Std.int(Math.max(length, entity.id + 1));
 	}
 	public function remove(entity: Entity): Void {
-		var comp = entity.getComposition(world);
+		var comp = entity.componentBits;
 		var value: Null<T> = get(entity);
 		if(comp == null || value == null)
 			return;
