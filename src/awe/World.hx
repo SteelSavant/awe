@@ -14,6 +14,7 @@ import haxe.ds.Vector;
 using awe.util.MoreStringTools;
 import awe.ComponentList;
 import awe.Entity;
+import awe.managers.ComponentManager;
 import awe.managers.EntityManager;
 /**
     The central object on which components, systems, etc. are added.
@@ -22,7 +23,7 @@ import awe.managers.EntityManager;
  */
 @:final class World {
 	@:allow(awe)
-	var components(default, null): Map<ComponentType, IComponentList<Dynamic>>;
+	var components(default, null): ComponentManager;
 	@:allow(awe)
 	var systems(default, null): Vector<System>;
 
@@ -31,8 +32,6 @@ import awe.managers.EntityManager;
 	*/
 	public var entities(default, null): EntityManager;
 
-	@:allow(awe)
-	var compositions(default, null): Map<EntityId, BitVector>;
 	@:allow(awe)
 	var subscriptions(default, null):ArrayList<EntitySubscription> = new ArrayList<EntitySubscription>();
 	/**
@@ -54,26 +53,19 @@ import awe.managers.EntityManager;
 		@param components The component lists for every kind of component.
 		@param systems The systems that are processed.
 	**/
-	public function new(components, systems) {
-		this.components = components;
-		this.systems = systems;
-		entities = new EntityManager();
-		entities.initialize(this);
-		compositions = new Map();
-		for(system in systems)
-			system.initialize(this);
+	public function new(components: ComponentListMap, systems: Vector<System>) {
 		for(componentList in components)
 			if(componentList != null)
 				componentList.initialize(this);
+		this.components = new ComponentManager(components);
+		this.systems = systems;
+		this.components.initialize(this);
+		entities = new EntityManager();
+		entities.initialize(this);
+		for(system in systems)
+			system.initialize(this);
 	}
 	/**
-	    Get the component list corresponding to the component `cl`.
-	    @param cl The component class to retrieve the component list for.
-	    @return The component list.
-	 */
-	public function getComponentList<T: Component>(cl: Class<T>): Null<ComponentList.IComponentList<T>> {
-		return cast components.get(Type.createEmptyInstance(cl).getType().getPure());
-	}
 	/**
 	    Get the system that is an instance of `cl`.
 	    @param cl The system class to retrieve the instance of.

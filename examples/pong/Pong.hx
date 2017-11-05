@@ -83,6 +83,8 @@ class BounceSystem extends EntitySystem {
 		super(Aspect.build(Bounce & Position & Size & Velocity));
 	}
 	public override function processEntity(entity: Entity): Void {
+
+		var entity = entity.id;
 		var pos: Position = positions.get(entity);
 		var size: Size = sizes.get(entity);
 		var vel: Velocity = velocities.get(entity);
@@ -104,6 +106,8 @@ class MovementSystem extends EntitySystem {
 		super(Aspect.build(Position & Velocity));
 	}
 	public override function processEntity(entity: Entity): Void {
+
+var entity = entity.id;
 		var pos: Position = positions.get(entity);
 		var vel: Velocity = velocities.get(entity);
 		pos.x += vel.x * world.delta;
@@ -119,6 +123,7 @@ class CollisionSystem extends EntitySystem {
 		super(Aspect.build(Collide & Position & Size & Velocity));
 	}
 	public override function processEntity(entity: Entity): Void {
+		var entity = entity.id;
 		var pos: Position = positions.get(entity);
 		var size: Size = sizes.get(entity);
 		var vel: Velocity = velocities.get(entity);
@@ -126,7 +131,7 @@ class CollisionSystem extends EntitySystem {
 		var nextX = pos.x + vel.x * delta;
 		var nextY = pos.y + vel.y * delta;
 		for(other in subscription.entities) {
-			if(other == entity) continue;
+			if(other.id == entity) continue;
 			var opos: Position = positions.get(entity);
 			var osize: Size = sizes.get(entity);
 			var ovel: Velocity = velocities.get(entity);
@@ -158,6 +163,8 @@ class DrawSystem extends EntitySystem {
 		super.processSystem();
 	}
 	public override function processEntity(entity: Entity): Void {
+
+		var entity = entity.id;
 		var pos: Position = positions.get(entity);
 		var size: Size = sizes.get(entity);
 		var draw: Draw = draws.get(entity);
@@ -195,6 +202,7 @@ class InputSystem extends EntitySystem {
 	}
 
 	public override function processEntity(entity: Entity): Void {
+		var entity = entity.id;
 		var speed = speeds.get(entity);
 		var velocity = velocities.get(entity);
 		velocity.y = speed.speed * world.delta * (switch input {

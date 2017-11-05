@@ -30,43 +30,6 @@ class Archetype {
 		this.defaults = defaults;
 	}
 	/**
-		Create a single `Entity`, using this `Archetype` as a template.
-		@param world The world to create the entities in.
-		@return The entity created.
-	*/
-	public function create(world: World): Entity {
-		var entity:Entity = world.entities.createEntityInstance();
-		
-		for(def in defaults) {
-			var inst = def();
-			if(inst == null)
-				continue;
-			var ty = inst.getType();
-			var list = world.components.get(ty.getPure());
-			if(list == null)
-				throw 'Component list for $def is null, did you add it to the World in World.create?';
-			list.add(entity, inst);
-		}
-		world.compositions[entity.id] = cid;
-		return entity;
-	}
-	/**
-		Create multiple entities at once, using this `Archetype` as a template.
-		@param world The world to create the entities in.
-		@param count How many entities will be created.
-		@return The list of entities created.
-	*/
-	public function createSome(world: World, count: Int): ArrayList<Entity> {
-		#if debug
-		if(count < 0)
-			throw 'Entity count ($count) should be bigger than zero!';
-		#end
-		var list = new ArrayList<Entity>(count);
-		for(i in 0...count)
-			list.add(create(world));
-		return list;
-	}
-	/**
 		Create an `Archetype` from a list of component classes it will be made with.
 		
 		This requires the components classes to have a zero-argument constructor.

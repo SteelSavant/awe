@@ -33,7 +33,7 @@ class Entity {
 	public var componentBits(get, never): BitVector;
 
 	inline function get_componentBits(): BitVector
-		return world.compositions.get(id);
+		return world.components.getComponentBits(id);
 
 	@:allow(awe)
 	function new(world: World, id: EntityId) {
@@ -45,7 +45,7 @@ class Entity {
 	*/
 	public function deleteFromWorld(): Void {
 		world.entities.free(id);
-		world.compositions.remove(id);
+		world.components.componentBits.remove(id);
 	}
 	#if macro
 	static function wrapGet(self: ExprOf<Entity>, ty: Type, cty: ComponentType) {

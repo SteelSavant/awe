@@ -14,6 +14,7 @@ import haxe.io.Bytes;
 import haxe.Serializer;
 import haxe.Unserializer;
 import de.polygonal.ds.ArrayList;
+import awe.Entity;
 
 /**
 	Represents a list of components.
@@ -31,20 +32,20 @@ interface IComponentList<T: Component> {
 	public function initialize(world: World): Void;
 	/**
 		Retrieve the component corresponding associated to the ID.
-		@param id The `Entity` to retrieve the component for.
+		@param id The id of the entity to retrieve the component for.
 		@return The component.
 	**/
-	public function get(id: Entity): Null<T>;
+	public function get(id: EntityId): Null<T>;
 	/**
 		Add the component to this list with the given ID.
-		@param id The `Entity` to add a component to.
+		@param id The id of the tnity to add a component to.
 	**/
-	public function add(id: Entity, value: T): Void;
+	public function add(id: EntityId, value: T): Void;
 	/**
 		Remove the component corresponding to the ID given.
 		@param id The `Entity` to remove from this list.
 	**/
-	public function remove(id: Entity): Void;
+	public function remove(id: EntityId): Void;
 	/**
 		Iterate through the items in this list.
 		@return The iterator for this list.
@@ -77,16 +78,16 @@ class ComponentList<T: Component> implements IComponentList<T> {
 	public inline function initialize(world: World)
 		this.world = world;
 
-	public inline function get(entity: Entity): Null<T>
-		return data.get(entity.id);
+	public inline function get(id: EntityId): Null<T>
+		return data.get(id);
 
-	public inline function add(entity: Entity, value: T): Void
-		data.set(entity.id, value);
+	public inline function add(id: EntityId, value: T): Void
+		data.set(id, value);
 
-	public function remove(entity: Entity): Void {
-		var value = data.get(entity.id);
-		data.set(entity.id, null);
-		entity.componentBits.clear(value.getType().getPure());
+	public function remove(id: EntityId): Void {
+		var value: Null<T> = data.get(id);
+		data.set(id, null);
+		world.components.getComponentBits(id).clear(value.getType().getPure());
 	}
 
 	public inline function iterator(): ComponentListIterator<T>
@@ -117,7 +118,7 @@ class ComponentList<T: Component> implements IComponentList<T> {
 #if generic
 @:generic
 #end
-class ComponentListItem<T: Component> {
+private class ComponentListItem<T: Component> {
 	public var index(default, null): Entity;
 	public var component(default, null): T;
 
@@ -129,7 +130,7 @@ class ComponentListItem<T: Component> {
 #if generic
 @:generic
 #end
-class ComponentListIterator<T: Component> {
+private class ComponentListIterator<T: Component> {
 	var list: IComponentList<T>;
 	var index: Int = 0;
 	public function new(list: IComponentList<T>) {
@@ -184,34 +185,34 @@ class PackedComponentList<T: Component> implements IComponentList<T> {
 		return macro new awe.ComponentList.PackedComponentList<Dynamic>(cast $v{cty}, 32, $v{size});
 	}
 
-	public function get(entity: Entity): Null<T> {
-		buffer.__offset = entity.id * size;
-		return entity.id >= length ? null : cast buffer;
+	public function get(id: EntityId): Null<T> {
+		buffer.__offset = id * size;
+		return id >= length ? null : cast buffer;
 	}
 
-	public function add(entity: Entity, value: T): Void {
+	public function add(id: EntityId, value: T): Void {
 		var value:PackedComponent = cast value;
-		if(entity.id * size >= bytes.length) {
+		if(id * size >= bytes.length) {
 			var nbytes = Bytes.alloc(bytes.length * 2);
 			nbytes.blit(0, bytes, 0, bytes.length);
 			bytes = nbytes;
 		}
 		if(value == null)
-			bytes.fill(entity.id * size, size, 0);
+			bytes.fill(id * size, size, 0);
 		else {
-			bytes.blit(entity.id * size, bytes, 0, size);
+			bytes.blit(id * size, bytes, 0, size);
 			value.__bytes = bytes;
-			value.__offset = entity.id * size;
+			value.__offset = id * size;
 		}
-		_length = Std.int(Math.max(length, entity.id + 1));
+		_length = Std.int(Math.max(length, id + 1));
 	}
-	public function remove(entity: Entity): Void {
-		var comp = entity.componentBits;
-		var value: Null<T> = get(entity);
+	public function remove(id: EntityId): Void {
+		var comp = world.components.getComponentBits(id);
+		var value: Null<T> = get(id);
 		if(comp == null || value == null)
 			return;
 		comp.clear(ctype);
-		bytes.fill(entity.id * size, size, 0);
+		bytes.fill(id * size, size, 0);
 	}
 
 	#if serialize

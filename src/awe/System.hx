@@ -142,7 +142,7 @@ class EntitySystem extends System implements EntitySubscription.SubscriptionList
 							Context.fatalError('awe: Unrecognised component list ${type.toString()}', field.pos);
 					}
 					var cty = ComponentType.get(component.toType());
-					initializeExprs.push(macro $i{field.name} = cast world.components[$v{cty.getPure()}]);
+					initializeExprs.push(macro $i{field.name} = cast world.components.lists[$v{cty.getPure()}]);
 				} else {
 					var type = Context.parse(type.toString(), Context.currentPos());
 					initializeExprs.push(macro $i{field.name} = cast world.getSystem($type));

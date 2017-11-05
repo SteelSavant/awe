@@ -52,7 +52,7 @@ class EntityManager extends System {
 			recycled.clear(id);
 			return entities.get(id);
 		};
-		world.compositions.set(entity.id, new BitVector(32));
+		world.components.componentBits.set(entity.id, new BitVector(32));
 		return entity;
 	}
 	/**
