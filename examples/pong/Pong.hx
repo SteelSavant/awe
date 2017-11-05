@@ -82,9 +82,7 @@ class BounceSystem extends EntitySystem {
 	public override function new() {
 		super(Aspect.build(Bounce & Position & Size & Velocity));
 	}
-	public override function processEntity(entity: Entity): Void {
-
-		var entity = entity.id;
+	public override function processEntity(entity: EntityId): Void {
 		var pos: Position = positions.get(entity);
 		var size: Size = sizes.get(entity);
 		var vel: Velocity = velocities.get(entity);
@@ -105,9 +103,7 @@ class MovementSystem extends EntitySystem {
 	public override function new() {
 		super(Aspect.build(Position & Velocity));
 	}
-	public override function processEntity(entity: Entity): Void {
-
-var entity = entity.id;
+	public override function processEntity(entity: EntityId): Void {
 		var pos: Position = positions.get(entity);
 		var vel: Velocity = velocities.get(entity);
 		pos.x += vel.x * world.delta;

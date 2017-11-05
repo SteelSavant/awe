@@ -139,7 +139,23 @@ class Aspect implements IAspect {
 		@param components The `BitVector` of components to check against.
 		@return If the `components` set fulfills this aspect.
 	*/
-	public function matches(components: BitVector): Bool {
-		return (components.contains(allSet) || oneSet.intersects(components)) && !noneSet.intersects(components);
+	public function matches(componentBits: BitVector): Bool {
+		// Check if the entity possesses ALL of the components defined in the aspect.
+		if(allSet.ones() > 0 && !componentBits.contains(allSet))
+			return false;
+
+		// If we are STILL interested,
+		// Check if the entity possesses ANY of the exclusion components,
+		// if it does then the system is not interested.
+		if (noneSet.ones() > 0 && noneSet.intersects(componentBits))
+			return false;
+
+		// If we are STILL interested,
+		// Check if the entity possesses ANY of the components in the oneSet.
+		// If so, the system is interested.
+		if (oneSet.ones() > 0 && !oneSet.intersects(componentBits))
+			return false;
+
+		return true;
 	}
 }

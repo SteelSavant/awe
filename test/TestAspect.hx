@@ -45,6 +45,6 @@ class TestAspect {
 		bits.set(new Comp1().getType());
 		Assert.isTrue(aspect.matches(bits));
 		bits.set(new Comp2().getType());
-		Assert.isFalse(aspect.matches(bits));
+		Assert.isTrue(aspect.matches(bits));
 	}
 }
