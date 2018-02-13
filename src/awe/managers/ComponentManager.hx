@@ -8,17 +8,22 @@ import awe.System;
 import de.polygonal.ds.BitVector;
 
 typedef ComponentListMap = Map<ComponentType, IComponentList<Dynamic>>;
+
+typedef ComponentClassMap = Map<ComponentType, Class<Component>>;
 class ComponentManager extends System {
 	@:allow(awe)
 	var componentBits(default, null): Map<EntityId, BitVector>;
 	@:allow(awe)
+	var componentClasses(default, null): ComponentClassMap;
+	@:allow(awe)
 	var lists: ComponentListMap;
 	
 	@:allow(awe)
-	function new(lists: ComponentListMap) {
+	function new(lists: ComponentListMap, classes: ComponentClassMap) {
 		super();
 		componentBits = new Map();
 		this.lists = lists;
+		this.componentClasses = classes;
 	}
 	/**
 		Get an entity's component bits.
@@ -42,6 +47,15 @@ class ComponentManager extends System {
 		return list;
 	}
 
+	/**
+		Create a component of given type by its type.
+		@param owner entity id
+		@param componentType component type
+		@return Newly created packed, pooled or basic component.
+	 */
+	public inline function createType(owner: EntityId, componentType: ComponentType): Component {
+		return create(owner, componentClasses[componentType]);
+	}
 	/**
 		Create a component of given type by class.
 		@param owner entity id

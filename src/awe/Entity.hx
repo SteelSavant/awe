@@ -46,6 +46,7 @@ class Entity {
 	public function deleteFromWorld(): Void {
 		world.entities.free(id);
 		world.components.componentBits.remove(id);
+		world = null;
 	}
 	#if macro
 	static function wrapGet(self: ExprOf<Entity>, ty: Type, cty: ComponentType) {

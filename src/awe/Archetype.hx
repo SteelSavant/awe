@@ -18,6 +18,7 @@ import de.polygonal.ds.BitVector;
 */
 class Archetype {
 	var defaults: Array<Void -> Component>;
+	@:allow(awe)
 	var cid: BitVector;
 	/**
 	 	Create a new `Archetype` instance based on its composition and component

@@ -56,12 +56,12 @@ import awe.managers.EntityManager;
 		@param components The component lists for every kind of component.
 		@param systems The systems that are processed.
 	**/
-	public function new(components: ComponentListMap, systems: Vector<System>) {
-		for(componentList in components)
+	public function new(componentLists: ComponentListMap, componentMaps: ComponentClassMap, systems: Vector<System>) {
+		for(componentList in componentLists)
 			if(componentList != null)
 				componentList.initialize(this);
 		subscriptions = new AspectSubscriptionManager();
-		this.components = new ComponentManager(components);
+		this.components = new ComponentManager(componentLists, componentMaps);
 		this.systems = systems;
 		this.components.initialize(this);
 		subscriptions.initialize(this);
@@ -71,6 +71,22 @@ import awe.managers.EntityManager;
 			system.initialize(this);
 	}
 	/**
+		Create an entity, with no components.
+	**/
+	public function createEntity(): Entity {
+		return entities.createEntityInstance();
+	}
+	/**
+		Create an entity, with no components.
+	**/
+	public function createEntityFromArchetype(archetype: Archetype): Entity {
+		var entity = createEntity();
+		components.componentBits[entity.id] = archetype.cid;
+		for(i in 0...archetype.cid.numBits)
+			if(archetype.cid.has(i))
+				components.createType(entity.id, i);
+		return entity;
+	}
 	/**
 	    Get the system that is an instance of `cl`.
 	    @param cl The system class to retrieve the instance of.
@@ -93,7 +109,10 @@ import awe.managers.EntityManager;
 		if(expectedCountExpr == null)
 			expectedCountExpr = macro $v{32};
 		var expectedCount: Int = expectedCountExpr.getValue();
-		var components = [for(component in setup.assertField("components").getArray()) {
+
+		var componentClasses: Array<Expr> = [];
+		var componentLists: Array<Expr> = [];
+		for(component in setup.assertField("components").getArray()) {
 			var ty = component.resolveTypeLiteral();
 			var complex = ty.toComplexType();
 			var cty = ComponentType.get(ty);
@@ -103,12 +122,13 @@ import awe.managers.EntityManager;
 				macro cast awe.ComponentList.PackedComponentList.build($component);
 			else
 				macro cast new awe.ComponentList<$complex>($v{expectedCount});
-			macro $v{cty.getPure()} => $list;
-		}];
+			componentLists.push(macro $v{cty.getPure()} => $list);
+			componentClasses.push(macro $v{cty.getPure()} => $component);
+		}
 		var systems = setup.assertField("systems").getArray();
-		var components = { expr: ExprDef.EArrayDecl(components), pos: setup.pos };
 		var block = [
-			(macro var components:Map<awe.ComponentType, awe.ComponentList.IComponentList<Dynamic>> = $components),
+			(macro var componentLists:awe.managers.ComponentManager.ComponentListMap = $a{componentLists}),
+			(macro var componentClasses:awe.managers.ComponentManager.ComponentClassMap = $a{componentClasses}),
 			(macro var systems = new haxe.ds.Vector<awe.System>($v{systems.length})),
 			(macro var csystem:awe.System = null),
 		];
@@ -121,7 +141,7 @@ import awe.managers.EntityManager;
 			var parts = component.toString().split(".");
 			var name = parts[parts.length - 1].toLowerCase().pluralize();
 		}
-		block.push(macro new World(components, systems));
+		block.push(macro new World(componentLists, componentClasses, systems));
 		return macro $b{block};
 	}
 	/**

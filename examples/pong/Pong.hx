@@ -221,7 +221,7 @@ class Pong {
 				expectedEntityCount: 3
 			});
 			var playerArch = Archetype.build(Size, Speed, Input, Position, Velocity, Draw);
-			var player = playerArch.create(world);
+			var player = world.createEntityFromArchetype(playerArch);
 			player.get(Draw).color = "red";
 			player.get(Velocity).set(0, 0);
 			var size: Size = player.get(Size);
@@ -230,7 +230,7 @@ class Pong {
 			pos.set(65, 55);
 			player.get(Speed).speed = 1000;
 			var ballArch = Archetype.build(Size, Position, Velocity, Draw, Bounce);
-			var ball = ballArch.create(world);
+			var ball = world.createEntityFromArchetype(ballArch);
 			ball.get(Draw).color = "blue";
 			ball.get(Size).set(30, 30);
 			ball.get(Position).set(300, 300);
