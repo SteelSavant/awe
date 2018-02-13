@@ -10,6 +10,6 @@
 	"classPath": "src",
 	"dependencies": {
 		"polygonal-ds": "2.0.1",
-		"utest": "1.7.0"
+		"utest": "1.8.0"
 	}
 }

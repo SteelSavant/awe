@@ -1,2 +1,4 @@
 -cp test
 -main TestAll
+-lib awe
+--interp
