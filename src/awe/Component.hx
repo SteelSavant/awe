@@ -5,7 +5,9 @@ import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
 using haxe.macro.ComplexTypeTools;
+using haxe.macro.ExprTools;
 using haxe.macro.TypeTools;
+using awe.util.MacroTools;
 #end
 
 typedef MType = haxe.macro.Type;
