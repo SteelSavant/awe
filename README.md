@@ -41,15 +41,15 @@ compose it.
 
 ``` haxe
 var playerArchetype = Archetype.build(Input, Position, Velocity, Acceleration, Gravity);
-var player = playerArchetype.build(world);
+var player = world.createEntityFromArchetype(playerArchetype);
 ```
 
 Types of component
 ------------------
-### implements PooledComponent
-This is a component that is pooled automatically.
+### @Packed
+This is a component that can be represented by bytes, thus doesn't have any fields whose type is not primitve.
 ### @Empty
-This is a component that is used for marking components and has no fields.
+This is a component has no fields, so does not need to be be stored or retrieved, just checked for.
 ### Regular
 This is just a regular component.
 
@@ -58,3 +58,5 @@ Compiler flags
 These can be passed to haxe by adding '-D flag' to your 'build.hxml' or equivalent.
 ### debug
 This prints extra information during compilation.
+### nopack
+This forces Awe's macro system to not pack components.
