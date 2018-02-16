@@ -5,6 +5,7 @@ import awe.World;
 import awe.Entity;
 import awe.System;
 import awe.Aspect;
+import awe.GameLoopType;
 import js.html.CanvasRenderingContext2D;
 import js.html.CanvasElement;
 import js.Browser;
@@ -239,7 +240,7 @@ class Pong {
 			function render(now: Float) {
 				world.delta = now - last;
 				last = now;
-				world.process();
+				world.process(GameLoopType.Update);
 			}
 		};
 	}

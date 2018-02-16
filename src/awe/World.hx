@@ -2,10 +2,8 @@ package awe;
 
 import haxe.macro.Expr;
 
-import haxe.io.Bytes;
 import de.polygonal.ds.ArrayList;
 import de.polygonal.ds.BitVector;
-import haxe.ds.Vector;
 using awe.util.MoreStringTools;
 import awe.ComponentList;
 import awe.Entity;
@@ -21,7 +19,7 @@ import awe.managers.EntityManager;
 	@:allow(awe)
 	var components(default, null): ComponentManager;
 	@:allow(awe)
-	var systems(default, null): Vector<System>;
+	var systemLoops(default, null): Map<GameLoopType, ArrayList<System>>;
 
 	/**
 		The entities contained in the World.
@@ -51,19 +49,24 @@ import awe.managers.EntityManager;
 		@param components The component lists for every kind of component.
 		@param systems The systems that are processed.
 	**/
-	public function new(componentLists: ComponentListMap, componentMaps: ComponentClassMap, systems: Vector<System>) {
+	public function new(componentLists: ComponentListMap, componentMaps: ComponentClassMap, systems: Array<System>) {
 		for(componentList in componentLists)
 			if(componentList != null)
 				componentList.initialize(this);
 		subscriptions = new AspectSubscriptionManager();
 		this.components = new ComponentManager(componentLists, componentMaps);
-		this.systems = systems;
 		this.components.initialize(this);
 		subscriptions.initialize(this);
 		entities = new EntityManager();
 		entities.initialize(this);
-		for(system in systems)
+		systemLoops = [
+			GameLoopType.Update => new ArrayList(),
+			GameLoopType.Render => new ArrayList(),
+		];
+		for(system in systems) {
 			system.initialize(this);
+			systemLoops[system.kind].add(system);
+		}
 	}
 	/**
 		Create an entity, with no components.
@@ -88,9 +91,10 @@ import awe.managers.EntityManager;
 	    @return The system.
 	 */
 	public function getSystem<T: System>(cl: Class<T>): Null<T> {
-		for(system in systems)
-			if(Std.is(system, cl))
-				return cast system;
+		for(systems in systemLoops)
+			for(system in systems)
+				if(Std.is(system, cl))
+					return cast system;
 		return null;
 	}
 	/**
@@ -102,22 +106,24 @@ import awe.managers.EntityManager;
 		return awe.build.AutoWorld.build(setup);
 	}
 	/**
-		Process all active systems.
+		Process relevant active systems.
 	 */
-	public inline function process()
-		for(system in systems)
+	public inline function process(kind: GameLoopType)
+		for(system in systemLoops[kind])
 			system.process();
 
 	/**
 		Free resources used by this world.
 	**/
 	public function dispose(): Void {
-		for(system in systems)
-			system.dispose();
+		for(systems in systemLoops)
+			for(system in systems)
+				system.dispose();
 	}
 }
+
 typedef WorldConfiguration = {
 	?expectedEntityCount: Int,
 	?components: Array<Class<Component>>,
-	?systems: Array<System>
+	?systems: Map<GameLoopType, System>
 }

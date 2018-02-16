@@ -37,16 +37,13 @@ class AutoWorld {
 			componentClasses.push(macro $v{cty.getPure()} => $component);
 		}
 		var systems = setup.assertField("systems").getArray();
+		for(i in 0...systems.length)
+			systems[i] = macro cast(${systems[i]}, awe.System);
 		var block = [
 			(macro var componentLists:awe.managers.ComponentManager.ComponentListMap = $a{componentLists}),
 			(macro var componentClasses:awe.managers.ComponentManager.ComponentClassMap = $a{componentClasses}),
-			(macro var systems = new haxe.ds.Vector<awe.System>($v{systems.length})),
-			(macro var csystem:awe.System = null),
+			(macro var systems: Array<awe.System> = $a{systems}),
 		];
-		for(i in 0...systems.length) {
-			var system = systems[i];
-			block.push(macro systems[$v{i}] = (csystem = $system));
-		}
 		for(component in setup.assertField("components").getArray()) {
 			var cty = ComponentType.get(component.resolveTypeLiteral());
 			var parts = component.toString().split(".");

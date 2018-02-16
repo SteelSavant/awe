@@ -22,11 +22,18 @@ class System {
 	    If this system is enabled or not.
 	 */
 	public var enabled: Bool;
+
+	/**
+		The type of game loop this will be grouped under in `World`.
+	**/
+
+	public var kind: GameLoopType;
 	/**
 	    Create an enabled system with no world.
 	 */
-	public function new() {
+	public function new(kind: GameLoopType = GameLoopType.Update) {
 		enabled = true;
+		this.kind = kind;
 		world = null;
 	}
 	/**
@@ -96,8 +103,8 @@ class EntitySystem extends System implements EntitySubscription.SubscriptionList
 	    Make a new EntitySystem that tracks entities matching an aspect.
 	    @param aspect The aspect tracked entities must match.
 	 */
-	public function new(aspect: Aspect) {
-		super();
+	public function new(aspect: Aspect, kind: GameLoopType = GameLoopType.Update) {
+		super(kind);
 		this.aspect = aspect;
 		subscription = new EntitySubscription(aspect);
 	}

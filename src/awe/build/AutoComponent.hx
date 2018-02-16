@@ -42,8 +42,9 @@ class AutoComponent {
 
 	public static function defaultValue(ty: ComplexType): Expr {
 		switch(ty) {
-			case macro: Int: return macro 0;
-			default: throw 'Cannot make default value for ${ty.toString()}';
+			case macro: Int, macro: Float: return macro 0;
+			case macro: Bool: return macro false;
+			default: return macro null;
 		}
 	}
 
