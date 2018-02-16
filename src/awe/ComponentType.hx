@@ -42,7 +42,7 @@ abstract ComponentType(Int) from Int to Int {
 	}
 
 
-	public static inline var PACKED_FLAG = 1 << 31;
+	public static inline var POOLED_FLAG = 1 << 31;
 	public static inline var EMPTY_FLAG = 1 << 30;
 	/**
 		Returns true if this component is marked as empty.
@@ -52,18 +52,18 @@ abstract ComponentType(Int) from Int to Int {
 		return this & EMPTY_FLAG != 0;
 
 	/**
-		Returns true if this component is marked as packed.
-		@return If this component is marked packed.
+		Returns true if this component is marked as pooled.
+		@return If this component is marked pooled.
 	*/
-	public inline function isPacked():Bool
-		return this & PACKED_FLAG != 0;
+	public inline function isPooled():Bool
+		return this & POOLED_FLAG != 0;
 
 	/**
 		Returns the component type free of markers.
 		@return The pure component type.
 	*/
 	public inline function getPure():ComponentType
-		return this & ~PACKED_FLAG & ~EMPTY_FLAG;
+		return this & ~POOLED_FLAG & ~EMPTY_FLAG;
 
 	@:op(A == B) static inline function eq(a: ComponentType, b: ComponentType): Bool {
 		var a: Int = a.getPure();

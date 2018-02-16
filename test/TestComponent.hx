@@ -3,8 +3,8 @@ import utest.Assert;
 import awe.Component;
 
 
-@Packed
-class Packed implements Component {
+@Pooled
+class Pooled implements PooledComponent {
     public var a: Int;
     public var b: Float;
     public var c: Bool;
@@ -19,8 +19,8 @@ class TestComponent {
 	public function new() {
 
 	}
-    public function testPackedComponent() {
-        var a = new Packed();
+    public function testPooledComponent() {
+        var a = new Pooled();
         a.a = 5;
         Assert.equals(a.a, 5);
         a.b = 120;
@@ -30,11 +30,11 @@ class TestComponent {
     }
 
     public function testComponentBits() {
-        var a = new Packed();
-        Assert.isTrue(a.getType().isPacked());
+        var a = new Pooled();
+        Assert.isTrue(a.getType().isPooled());
         Assert.isFalse(a.getType().isEmpty());
         var b = new Empty();
-        Assert.isFalse(b.getType().isPacked());
+        Assert.isFalse(b.getType().isPooled());
         Assert.isTrue(b.getType().isEmpty());
     }
 }

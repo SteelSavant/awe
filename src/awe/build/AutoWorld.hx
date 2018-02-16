@@ -29,10 +29,10 @@ class AutoWorld {
 			var cty = ComponentType.get(ty);
 			var list = if(cty.isEmpty())
 				macro null;
-			else if(cty.isPacked())
-				macro cast awe.ComponentList.PackedComponentList.build($component);
+			else if(cty.isPooled())
+				macro cast new awe.ComponentList.PooledComponentList<$complex>($component, $v{expectedCount});
 			else
-				macro cast new awe.ComponentList<$complex>($v{expectedCount});
+				macro cast new awe.ComponentList<$complex>($component, $v{expectedCount});
 			componentLists.push(macro $v{cty.getPure()} => $list);
 			componentClasses.push(macro $v{cty.getPure()} => $component);
 		}

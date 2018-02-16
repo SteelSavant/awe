@@ -1,19 +1,11 @@
 package awe;
 
-#if macro
-import haxe.macro.Context;
-import haxe.macro.Compiler;
-import haxe.macro.Expr;
-using haxe.macro.ComplexTypeTools;
-using haxe.macro.ExprTools;
-using haxe.macro.TypeTools;
-using awe.util.MacroTools;
-#end
+import de.polygonal.ds.tools.ObjectPool;
+import de.polygonal.ds.ArrayList;
 import haxe.ds.Vector;
 import haxe.io.Bytes;
 import haxe.Serializer;
 import haxe.Unserializer;
-import de.polygonal.ds.ArrayList;
 import awe.Entity;
 
 /**
@@ -37,6 +29,10 @@ interface IComponentList<T: Component> {
 	**/
 	public function get(id: EntityId): Null<T>;
 	/**
+		Create this component in this entity.
+	**/
+	public function create(id: EntityId, notifySubscriptions: Bool = true): T;
+	/**
 		Add the component to this list with the given ID.
 		@param id The id of the tnity to add a component to.
 		@param notifySubscriptions Whether world entity subscriptions should be notified of this addition.
@@ -46,8 +42,9 @@ interface IComponentList<T: Component> {
 		Remove the component corresponding to the ID given.
 		@param id The `Entity` to remove from this list.
 		@param notifySubscriptions Whether world entity subscriptions should be notified of this addition.
+		@return The component removed.
 	**/
-	public function remove(id: EntityId, notifySubscriptions: Bool = true): Void;
+	public function remove(id: EntityId, notifySubscriptions: Bool = true): T;
 	/**
 		Iterate through the items in this list.
 		@return The iterator for this list.
@@ -68,20 +65,47 @@ interface IComponentList<T: Component> {
 	public function unserialize(value: String): Void;
 	#end
 }
+class PooledComponentList<T: Component> extends ComponentList<T> {
+	var pool: ObjectPool<T>;
+	public override function initialize(world: World) {
+		super.initialize(world);
+		pool = new ObjectPool<T>(function() return Type.createEmptyInstance(cl));
+	}
+	public override function create(id: EntityId, notifySubscriptions: Bool = true): T {
+		var value = pool.get();
+		add(id, value, notifySubscriptions);
+		return value;
+	}
+	public override function remove(id: EntityId, notifySubscriptions: Bool = true): T {
+		var value = super.remove(id, notifySubscriptions);
+		pool.put(value);
+		return value;
+	}
+}
 class ComponentList<T: Component> implements IComponentList<T> {
 	var data: ArrayList<T>;
+	var cl: Class<T>;
 	var world: World;
 	public var length(get, never): Int;
 	inline function get_length(): Int
 		return data.size;
-	public inline function new(capacity: Int = 8)
-		data = new ArrayList(capacity);
 
-	public inline function initialize(world: World)
+	public function new(cl: Class<T>, capacity: Int = 8) {
+		this.cl = cl;
+		data = new ArrayList(capacity);
+	}
+
+	public function initialize(world: World)
 		this.world = world;
 
 	public inline function get(id: EntityId): Null<T>
 		return data.get(id);
+	
+	public function create(id: EntityId, notifySubscriptions: Bool = true): T {
+		var value = Type.createEmptyInstance(cl);
+		add(id, value, notifySubscriptions);
+		return value;
+	}
 
 	public function add(id: EntityId, value: T, notifySubscriptions: Bool = true): Void {
 		data.set(id, value);
@@ -89,7 +113,7 @@ class ComponentList<T: Component> implements IComponentList<T> {
 			world.subscriptions.changed(id);
 	}
 
-	public function remove(id: EntityId, notifySubscriptions: Bool = true): Void {
+	public function remove(id: EntityId, notifySubscriptions: Bool = true): T {
 		var value: Null<T> = data.get(id);
 		if(value == null)
 			throw 'Cannot remove null component of #$id';
@@ -101,6 +125,7 @@ class ComponentList<T: Component> implements IComponentList<T> {
 		bits.clear(cty);
 		if(notifySubscriptions)
 			world.subscriptions.changed(id);
+		return value;
 	}
 
 	public inline function iterator(): ComponentListIterator<T>
@@ -157,91 +182,4 @@ private class ComponentListIterator<T: Component> {
 			index++;
 		return new ComponentListItem<T>(cast (index + 1, Entity), list.get(cast index++));
 	}
-}
-
-#if generic
-@:generic
-#end
-class PackedComponentList<T: Component> implements IComponentList<T> {
-	var _length: Int;
-	var buffer: PackedComponent;
-	var bytes: Bytes;
-	var size: Int;
-	var world: World;
-	var ctype: ComponentType;
-
-
-	public var length(get, never): Int;
-	inline function get_length(): Int
-		return _length;
-
-	public function new(ctype: ComponentType, capacity: Int = 4, size: Int = 0) {
-		buffer = cast {};
-		_length = 0;
-		this.size = size;
-		this.ctype = ctype.getPure();
-		bytes = Bytes.alloc(capacity * size);
-		buffer.__bytes = bytes;
-		buffer.__offset = 0;
-	}
-
-
-	public inline function initialize(world: World)
-		this.world = world;
-
-	public static macro function build<T: Component>(of: ExprOf<Class<T>>): ExprOf<PackedComponentList<T>> {
-		var ty = of.resolveTypeLiteral();
-		var cty = ComponentType.get(ty);
-		if(!cty.isPacked())
-			Context.error("Component type is not packed", of.pos);
-		var size = of.resolveTypeLiteral().toComplexType().sizeOf();
-		return macro new awe.ComponentList.PackedComponentList<Dynamic>(cast $v{cty}, 32, $v{size});
-	}
-
-	public function get(id: EntityId): Null<T> {
-		buffer.__offset = id * size;
-		return id >= length ? null : cast buffer;
-	}
-
-	public function add(id: EntityId, value: T, notifySubscriptions: Bool = true): Void {
-		var value:PackedComponent = cast value;
-		if(id * size >= bytes.length) {
-			var nbytes = Bytes.alloc(bytes.length * 2);
-			nbytes.blit(0, bytes, 0, bytes.length);
-			bytes = nbytes;
-		}
-		if(value == null)
-			bytes.fill(id * size, size, 0);
-		else {
-			bytes.blit(id * size, bytes, 0, size);
-			value.__bytes = bytes;
-			value.__offset = id * size;
-		}
-		_length = Std.int(Math.max(length, id + 1));
-		if(notifySubscriptions)
-			world.subscriptions.changed(id);
-	}
-	public function remove(id: EntityId, notifySubscriptions: Bool = true): Void {
-		var comp = world.components.getComponentBits(id);
-		var value: Null<T> = get(id);
-		if(comp == null || value == null)
-			return;
-		comp.clear(ctype);
-		bytes.fill(id * size, size, 0);
-		if(notifySubscriptions)
-			world.subscriptions.changed(id);
-	}
-
-	#if serialize
-	public inline function serialize()
-		return "p" + Serializer.run(this.bytes.sub(0, length << 4));
-
-	public function unserialize(value: String) {
-		bytes = Unserializer.run(value.substr(1));
-		_length = bytes.length >> 4;
-	}
-	#end
-
-	public inline function iterator()
-		return new ComponentListIterator<T>(this);
 }

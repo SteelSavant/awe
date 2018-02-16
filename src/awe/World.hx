@@ -78,7 +78,7 @@ import awe.managers.EntityManager;
 		components.componentBits[entity.id] = archetype.cid.clone();
 		for(i in 0...archetype.cid.numBits)
 			if(archetype.cid.has(i))
-				components.createType(entity.id, i);
+				components.createType(entity.id, i, false);
 		subscriptions.changed(entity.id);
 		return entity;
 	}

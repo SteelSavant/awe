@@ -7,14 +7,18 @@ import awe.Entity;
 import awe.System;
 import de.polygonal.ds.BitVector;
 
+import haxe.macro.Expr;
+
 typedef ComponentListMap = Map<ComponentType, IComponentList<Dynamic>>;
 
 typedef ComponentClassMap = Map<ComponentType, Class<Component>>;
+typedef ComponentTypeMap = Map<String, ComponentType>;
 class ComponentManager extends System {
 	@:allow(awe)
 	var componentBits(default, null): Map<EntityId, BitVector>;
 	@:allow(awe)
 	var componentClasses(default, null): ComponentClassMap;
+	var componentTypes(default, null): ComponentTypeMap;
 	@:allow(awe)
 	var lists: ComponentListMap;
 	
@@ -24,6 +28,9 @@ class ComponentManager extends System {
 		componentBits = new Map();
 		this.lists = lists;
 		this.componentClasses = classes;
+		this.componentTypes = new Map();
+		for(ty in classes.keys())
+			componentTypes[Type.getClassName(classes[ty])] = ty;
 	}
 	/**
 		Get an entity's component bits.
@@ -53,19 +60,15 @@ class ComponentManager extends System {
 		@param componentType component type
 		@return Newly created packed, pooled or basic component.
 	 */
-	public inline function createType(owner: EntityId, componentType: ComponentType): Component {
-		return create(owner, componentClasses[componentType]);
-	}
+	public inline function createType(owner: EntityId, componentType: ComponentType, notifySubscriptions: Bool = true): Component
+		return create(owner, componentClasses[componentType], notifySubscriptions);
+	
 	/**
 		Create a component of given type by class.
 		@param owner entity id
 		@param componentClass class of component to instance.
 		@return Newly created packed, pooled or basic component.
 	 */
-	public function create<T: Component>(owner: EntityId, componentClass: Class<T>): T {
-		var value: T = Type.createEmptyInstance(componentClass);
-		lists.get(value.getType()).add(owner, value);
-		world.subscriptions.changed(owner);
-		return value;
-	}
+	public inline function create<T: Component>(owner: EntityId, componentClass: Class<T>, notifySubscriptions: Bool = true): T
+		return lists[componentTypes[Type.getClassName(componentClass)]].create(owner, notifySubscriptions);
 }
