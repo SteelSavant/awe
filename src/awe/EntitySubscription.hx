@@ -74,5 +74,4 @@ class EntitySubscription {
         for(listener in listeners)
             listener.removed(id);
     }
-
 }

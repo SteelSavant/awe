@@ -2,19 +2,17 @@ package awe;
 
 import awe.Aspect;
 import awe.Entity;
-import de.polygonal.ds.ArrayList;
-#if macro
-import haxe.macro.Context;
-import haxe.macro.Expr;
-import haxe.macro.Type;
-using haxe.macro.ExprTools;
-using haxe.macro.ComplexTypeTools;
-using haxe.macro.TypeTools;
-using StringTools;
-#end
 /**
-    Performs operations related to entites.
+    An individual unit of processing in a world.
+    
+    Extending this lets you use the '@auto' metadata in front of fields
+    that are a `IComponentList<...>` or a `System` to automatically
+    fetch this component list or system from the world in the `initialize`
+    method.
  */
+#if !macro
+@:autoBuild(awe.build.AutoSystem.build())
+#end
 class System {
 	/**
 	    The world containing this system.
@@ -42,8 +40,11 @@ class System {
 		Initializes this system in the `World`.
 	@param world The `World` to initialize this in.
 	 */
-	public function initialize(world: World): Void
+	public function initialize(world: World): Void {
+		if(this.world != null)
+			throw "System has already been initialized!";
 		this.world = world;
+	}
 
 	/**
 	 	Process this system by running `begin`, `processSystem`, then `end`.
@@ -56,7 +57,7 @@ class System {
 		}
 	}
 	/**
-		Called as the middle step of processing.
+		Called as the middle step of processing, every time `World.process` is ran.
 	*/
 	public function processSystem(): Void {}
 
@@ -71,18 +72,16 @@ class System {
 	/**
 		Free resources used by this system, and prepare for deletion.
 	*/
-	public function dispose(): Void {}
+	public function dispose(): Void
+		world = null;
 }
 
 /**
     Performs operations on entities matching a given `Archetype`.
-    
-    Extending this lets you use the '@auto' metadata in front of fields
-    that are a `IComponentList<...>` or a `System` to automatically
-    fetch this component list or system from the world in the `initialize`
-    method.
  */
-@:autoBuild(awe.EntitySystem.build())
+#if !macro
+@:autoBuild(awe.build.AutoSystem.build())
+#end
 class EntitySystem extends System implements EntitySubscription.SubscriptionListener {
 	/**
 	    The aspect an entity must match to be considered by the system.
@@ -90,7 +89,7 @@ class EntitySystem extends System implements EntitySubscription.SubscriptionList
 	public var aspect(default, null): Aspect;
 	/**
 	    The entity subscription, used to keep track of entities matching the
-	    `aspect`.
+	    `aspect`, and to listen for events related to this.
 	 */
 	public var subscription(default, null): EntitySubscription;
 	/**
@@ -121,59 +120,4 @@ class EntitySystem extends System implements EntitySubscription.SubscriptionList
 			processEntity(id);
     public function inserted(entity: EntityId): Void {}
     public function removed(entity: EntityId): Void {}
-	public static macro function build():Array<Field> {
-		var fields = Context.getBuildFields();
-		var initializeField = null;
-		var initializeExprs = [];
-		for(field in fields)
-			if(field.name == "initialize") {
-				initializeField = field;
-			} else if(field.meta != null && field.meta.filter(function(m) return m.name == "auto").length > 0) {
-				var type = switch(field.kind) {
-					case FieldType.FVar(ty, _): ty;
-					default: {
-						Context.fatalError("Class member must be field", field.pos);
-						return [];
-					}
-				}
-				if(type.toString().indexOf("ComponentList") != -1) {
-					var component = switch(type) {
-						case ComplexType.TPath({params: [TypeParam.TPType(ty)]}):
-							ty;
-						default: 
-							Context.fatalError('awe: Unrecognised component list ${type.toString()}', field.pos);
-					}
-					var cty = ComponentType.get(component.toType());
-					initializeExprs.push(macro $i{field.name} = cast world.components.lists[$v{cty.getPure()}]);
-				} else {
-					var type = Context.parse(type.toString(), Context.currentPos());
-					initializeExprs.push(macro $i{field.name} = cast world.getSystem($type));
-				}
-			}
-		if(initializeField == null) {
-			initializeField = {
-				access: [Access.APublic, Access.AOverride],
-				name: "initialize",
-				kind: FieldType.FFun({
-					args: [{
-						name: "world",
-						type: macro: awe.World
-					}],
-					ret: macro: Void,
-					expr: macro super.initialize(world)
-				}),
-				pos: Context.currentPos()
-			}
-			fields.push(initializeField);
-		}
-		switch(initializeField.kind) {
-			case FieldType.FFun(func): {
-				if(func.expr != null)
-					initializeExprs.push(func.expr);
-				func.expr = macro $b{initializeExprs};
-			}
-			default: 
-		}
-		return fields;
-	}
 }
