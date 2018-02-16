@@ -41,7 +41,7 @@ compose it.
 
 ``` haxe
 var playerArchetype = Archetype.build(Input, Position, Velocity, Acceleration, Gravity);
-var player = playerArchetype.build(world);
+var player = world.createEntityFromArchetype(playerArchetype);
 ```
 
 Types of component
@@ -49,7 +49,7 @@ Types of component
 ### @Packed
 This is a component that can be represented by bytes, thus doesn't have any fields whose type is not primitve.
 ### @Empty
-This is a component that is used for marking components and has no fields.
+This is a component has no fields, so does not need to be be stored or retrieved, just checked for.
 ### Regular
 This is just a regular component.
 
