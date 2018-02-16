@@ -62,7 +62,6 @@ class EntityManager extends System {
 			return entities.get(id);
 		};
 		world.components.componentBits.set(entity.id, new BitVector(32));
-		trace('Created entity ${entity.id}');
 		return entity;
 	}
 	/**

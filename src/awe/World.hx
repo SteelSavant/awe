@@ -68,11 +68,10 @@ import awe.managers.EntityManager;
 	/**
 		Create an entity, with no components.
 	**/
-	public function createEntity(): Entity {
+	public inline function createEntity(): Entity
 		return entities.createEntityInstance();
-	}
 	/**
-		Create an entity, with no components.
+		Create an entity, with components based on an Entity archetype.
 	**/
 	public function createEntityFromArchetype(archetype: Archetype): Entity {
 		var entity = createEntity();
@@ -80,6 +79,7 @@ import awe.managers.EntityManager;
 		for(i in 0...archetype.cid.numBits)
 			if(archetype.cid.has(i))
 				components.createType(entity.id, i);
+		subscriptions.changed(entity.id);
 		return entity;
 	}
 	/**

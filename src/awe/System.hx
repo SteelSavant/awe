@@ -109,6 +109,7 @@ class EntitySystem extends System implements EntitySubscription.SubscriptionList
 	public override function initialize(world: World) {
 		super.initialize(world);
 		subscription.initialize(world);
+		subscription.addListener(this);
 	}
 	/**
 	    Called every time `process` is ran for each entity matching `Aspect`
@@ -118,8 +119,8 @@ class EntitySystem extends System implements EntitySubscription.SubscriptionList
 	public override function processSystem(): Void
 		for(id in subscription.entities)
 			processEntity(id);
-    public function inserted(entities: Array<EntityId>): Void {}
-    public function removed(entities: Array<EntityId>): Void {}
+    public function inserted(entity: EntityId): Void {}
+    public function removed(entity: EntityId): Void {}
 	public static macro function build():Array<Field> {
 		var fields = Context.getBuildFields();
 		var initializeField = null;

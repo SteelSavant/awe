@@ -106,7 +106,7 @@ class Entity {
 		var ty = MacroTools.resolveTypeLiteral(cl);
 		var cty = ComponentType.get(ty);
 		var list = wrapGet(macro $self, ty, cty);
-		return macro $list.remove($self.id);
+		return macro $list.remove($self.id, true);
 	}
 	#end
 	/**

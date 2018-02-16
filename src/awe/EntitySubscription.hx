@@ -1,7 +1,6 @@
 package awe;
 
 import awe.Entity;
-import de.polygonal.ds.NativeArray;
 
 /**
     Subscribes to entities being inserted and removed.
@@ -11,12 +10,12 @@ interface SubscriptionListener {
         Called when entities are inserted that match the aspect.
         @param entities The newly inserted entities' ids.
      */
-    function inserted(entities: Array<EntityId>): Void;
+    function inserted(entities: EntityId): Void;
     /**
         Called when entities are removed that match the aspect.
         @param entities The removed entities' ids.
      */
-    function removed(entities: Array<EntityId>): Void;
+    function removed(entities: EntityId): Void;
 }
 /**
     Keeps a list of entities that meet the given `aspect`, and runs listeners
@@ -64,19 +63,16 @@ class EntitySubscription {
         world.subscriptions._subscriptions.add(this);
     }
     @:allow(awe)
-    function insertedSingle(id: EntityId)
-        if(aspect.matches(world.components.getComponentBits(id)))
-            entities.push(id);
+    function inserted(id: EntityId) {
+        entities.push(id);
+        for(listener in listeners)
+            listener.inserted(id);
+    }
     @:allow(awe)
-    function removedSingle(id: EntityId)
-        if(aspect.matches(world.components.getComponentBits(id)))
-            entities.remove(id);
-    @:allow(awe)
-    function inserted(entities: Array<EntityId>)
-        for(entity in entities)
-            insertedSingle(entity);
-    @:allow(awe)
-    function removed(entities: Array<EntityId>)
-        for(entity in entities)
-            removedSingle(entity);
+    function removed(id: EntityId) {
+        entities.remove(id);
+        for(listener in listeners)
+            listener.removed(id);
+    }
+
 }

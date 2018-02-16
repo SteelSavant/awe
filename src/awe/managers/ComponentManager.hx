@@ -63,9 +63,9 @@ class ComponentManager extends System {
 		@return Newly created packed, pooled or basic component.
 	 */
 	public function create<T: Component>(owner: EntityId, componentClass: Class<T>): T {
-		trace('Added ${Type.getClassName(componentClass)} to $owner');
 		var value: T = Type.createEmptyInstance(componentClass);
 		lists.get(value.getType()).add(owner, value);
+		world.subscriptions.changed(owner);
 		return value;
 	}
 }

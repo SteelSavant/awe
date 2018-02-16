@@ -39,13 +39,15 @@ interface IComponentList<T: Component> {
 	/**
 		Add the component to this list with the given ID.
 		@param id The id of the tnity to add a component to.
+		@param notifySubscriptions Whether world entity subscriptions should be notified of this addition.
 	**/
-	public function add(id: EntityId, value: T): Void;
+	public function add(id: EntityId, value: T, notifySubscriptions: Bool = true): Void;
 	/**
 		Remove the component corresponding to the ID given.
 		@param id The `Entity` to remove from this list.
+		@param notifySubscriptions Whether world entity subscriptions should be notified of this addition.
 	**/
-	public function remove(id: EntityId): Void;
+	public function remove(id: EntityId, notifySubscriptions: Bool = true): Void;
 	/**
 		Iterate through the items in this list.
 		@return The iterator for this list.
@@ -81,10 +83,13 @@ class ComponentList<T: Component> implements IComponentList<T> {
 	public inline function get(id: EntityId): Null<T>
 		return data.get(id);
 
-	public inline function add(id: EntityId, value: T): Void
+	public function add(id: EntityId, value: T, notifySubscriptions: Bool = true): Void {
 		data.set(id, value);
+		if(notifySubscriptions)
+			world.subscriptions.changed(id);
+	}
 
-	public function remove(id: EntityId): Void {
+	public function remove(id: EntityId, notifySubscriptions: Bool = true): Void {
 		var value: Null<T> = data.get(id);
 		if(value == null)
 			throw 'Cannot remove null component of #$id';
@@ -94,6 +99,8 @@ class ComponentList<T: Component> implements IComponentList<T> {
 		if(!bits.has(cty))
 			throw 'Entity #$id does not have component';
 		bits.clear(cty);
+		if(notifySubscriptions)
+			world.subscriptions.changed(id);
 	}
 
 	public inline function iterator(): ComponentListIterator<T>
@@ -196,7 +203,7 @@ class PackedComponentList<T: Component> implements IComponentList<T> {
 		return id >= length ? null : cast buffer;
 	}
 
-	public function add(id: EntityId, value: T): Void {
+	public function add(id: EntityId, value: T, notifySubscriptions: Bool = true): Void {
 		var value:PackedComponent = cast value;
 		if(id * size >= bytes.length) {
 			var nbytes = Bytes.alloc(bytes.length * 2);
@@ -211,14 +218,18 @@ class PackedComponentList<T: Component> implements IComponentList<T> {
 			value.__offset = id * size;
 		}
 		_length = Std.int(Math.max(length, id + 1));
+		if(notifySubscriptions)
+			world.subscriptions.changed(id);
 	}
-	public function remove(id: EntityId): Void {
+	public function remove(id: EntityId, notifySubscriptions: Bool = true): Void {
 		var comp = world.components.getComponentBits(id);
 		var value: Null<T> = get(id);
 		if(comp == null || value == null)
 			return;
 		comp.clear(ctype);
 		bytes.fill(id * size, size, 0);
+		if(notifySubscriptions)
+			world.subscriptions.changed(id);
 	}
 
 	#if serialize

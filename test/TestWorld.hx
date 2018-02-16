@@ -1,9 +1,13 @@
 import utest.Assert;
 
+import awe.Aspect;
+import awe.Archetype;
 import awe.World;
 import awe.Component;
+import awe.ComponentList;
 import awe.Archetype;
 import awe.Entity;
+import awe.System;
 
 
 class Pos implements Component {
@@ -17,11 +21,19 @@ class Vel implements Component {
     public function new() {}
 }
 
+class Movement extends EntitySystem {
+    public function new() {
+        super(Aspect.build(Pos & Vel));
+    }
+}
+
 class TestWorld {
     var world: World;
     function reset() {
         world = World.build({
-            systems: [],
+            systems: [
+                new Movement()
+            ],
             components: [Pos, Vel],
             expectedEntityCount: 16
         });
@@ -58,11 +70,13 @@ class TestWorld {
         var entityArch = Archetype.build(Pos, Vel);
         for(i in 0...14) {
             var entity: Entity = world.createEntityFromArchetype(entityArch);
-            trace(entity.componentBits.toString());
             Assert.isTrue(entity.has(Pos));
             Assert.isTrue(entity.has(Vel));
+            var movement = world.getSystem(Movement);
+            Assert.notEquals(-1, movement.subscription.entities.indexOf(entity.id));
             entity.remove(Vel);
             Assert.isFalse(entity.has(Vel));
+            Assert.equals(-1, movement.subscription.entities.indexOf(entity.id));
         }
     }
 }

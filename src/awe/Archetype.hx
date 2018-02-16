@@ -3,6 +3,8 @@ package awe;
 import haxe.macro.Expr;
 
 import de.polygonal.ds.BitVector;
+import awe.ComponentType;
+
 /**
 	Blueprints for fast construction of `Entity`s.
 
@@ -14,11 +16,17 @@ class Archetype {
 	var cid: BitVector;
 	/**
 	 	Create a new `Archetype` instance based on its composition bits.
-		@param cid The composition.
+		@param cid The composition. A set of bits corresponding to components.
 	*/
 	public inline function new(cid: BitVector) {
 		this.cid = cid;
 	}
+	/**
+		Register a component type from this archetype.
+		@param type The component type to set.
+	*/
+	public inline function add(type: ComponentType)
+		cid.set(type.getPure());
 	/**
 		Create an `Archetype` from a list of component classes it will be made with.
 		
