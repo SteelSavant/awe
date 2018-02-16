@@ -37,12 +37,8 @@ class AutoArchetype {
 				};
 				if(Context.defined("debug"))
 					trace('Archetype type ${typeExpr.toString()}: Empty ${compType.isEmpty()}');
-				if(compType.isEmpty())
-					macro function() return null;
-				else
-					macro function() return Type.createEmptyInstance($typeExpr);
 			}
 		];
-		return macro new Archetype(${cid.wrapBits()}, ${{expr: ExprDef.EArrayDecl(types), pos: Context.currentPos()}});
+		return macro new Archetype(${cid.wrapBits()});
 	}
 }

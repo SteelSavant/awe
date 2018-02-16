@@ -76,7 +76,7 @@ import awe.managers.EntityManager;
 	**/
 	public function createEntityFromArchetype(archetype: Archetype): Entity {
 		var entity = createEntity();
-		components.componentBits[entity.id] = archetype.cid;
+		components.componentBits[entity.id] = archetype.cid.clone();
 		for(i in 0...archetype.cid.numBits)
 			if(archetype.cid.has(i))
 				components.createType(entity.id, i);
