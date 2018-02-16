@@ -1764,42 +1764,28 @@
 			</f>
 			<haxe_doc>Create an `Archetype` from a list of component classes it will be made with.
 		
-		This requires the components classes to have a zero-argument constructor.
 		@param types The component classes.
 		@return The created `Archetype` instance.</haxe_doc>
 		</build>
-		<defaults><c path="Array"><f a=""><c path="awe.Component"/></f></c></defaults>
-		<cid><c path="de.polygonal.ds.BitVector"/></cid>
-		<create public="1" set="method" line="37">
-			<f a="world">
-				<c path="awe.World"/>
-				<x path="awe.Entity"/>
-			</f>
-			<haxe_doc>Create a single `Entity`, using this `Archetype` as a template.
-		@param world The world to create the entities in.
-		@return The entity created.</haxe_doc>
-		</create>
-		<createSome public="1" set="method" line="60">
-			<f a="world:count">
-				<c path="awe.World"/>
-				<x path="Int"/>
-				<c path="de.polygonal.ds.ArrayList"><x path="awe.Entity"/></c>
-			</f>
-			<haxe_doc>Create multiple entities at once, using this `Archetype` as a template.
-		@param world The world to create the entities in.
-		@param count How many entities will be created.
-		@return The list of entities created.</haxe_doc>
-		</createSome>
-		<new public="1" set="method" line="28">
-			<f a="cid:defaults">
-				<c path="de.polygonal.ds.BitVector"/>
-				<c path="Array"><f a=""><c path="awe.Component"/></f></c>
+		<cid>
+			<c path="de.polygonal.ds.BitVector"/>
+			<meta><m n=":allow"><e>awe</e></m></meta>
+		</cid>
+		<add public="1" get="inline" set="null" line="28">
+			<f a="type">
+				<x path="awe.ComponentType"/>
 				<x path="Void"/>
 			</f>
-			<haxe_doc>Create a new `Archetype` instance based on its composition and component
-		defaults.
-		@param cid The composition.
-		@param defaults A list of functions that create components.</haxe_doc>
+			<haxe_doc>Register a component type from this archetype.
+		@param type The component type to set.</haxe_doc>
+		</add>
+		<new public="1" get="inline" set="null" line="21">
+			<f a="cid">
+				<c path="de.polygonal.ds.BitVector"/>
+				<x path="Void"/>
+			</f>
+			<haxe_doc>Create a new `Archetype` instance based on its composition bits.
+		@param cid The composition. A set of bits corresponding to components.</haxe_doc>
 		</new>
 		<haxe_doc>Blueprints for fast construction of `Entity`s.
 
@@ -1820,17 +1806,17 @@
 	</class>
 	<class path="awe.AnyAspect" params="" file="src/awe/Aspect.hx" module="awe.Aspect">
 		<implements path="awe.IAspect"/>
-		<matches public="1" get="inline" set="null" line="31"><f a="components">
+		<matches public="1" get="inline" set="null" line="23"><f a="components">
 	<c path="de.polygonal.ds.BitVector"/>
 	<x path="Bool"/>
 </f></matches>
-		<new public="1" get="inline" set="null" line="30"><f a=""><x path="Void"/></f></new>
+		<new public="1" get="inline" set="null" line="22"><f a=""><x path="Void"/></f></new>
 		<haxe_doc>Matches any combo of components.</haxe_doc>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
 	<class path="awe.Aspect" params="" file="src/awe/Aspect.hx">
 		<implements path="awe.IAspect"/>
-		<any public="1" get="inline" set="null" line="84" static="1">
+		<any public="1" get="inline" set="null" line="76" static="1">
 			<f a=""><c path="awe.AnyAspect"/></f>
 			<haxe_doc>Matches any combo of components.
 		@return The aspect.</haxe_doc>
@@ -1842,13 +1828,13 @@
 		<allSet set="null"><c path="de.polygonal.ds.BitVector"/></allSet>
 		<oneSet set="null"><c path="de.polygonal.ds.BitVector"/></oneSet>
 		<noneSet set="null"><c path="de.polygonal.ds.BitVector"/></noneSet>
-		<toString public="1" set="method" line="135">
+		<toString public="1" set="method" line="85">
 			<f a=""><c path="String"/></f>
 			<haxe_doc>Make a string representation of this aspect.
 		@return The string representation.</haxe_doc>
 		</toString>
-		<matches public="1" set="method" line="142">
-			<f a="components">
+		<matches public="1" set="method" line="92">
+			<f a="componentBits">
 				<c path="de.polygonal.ds.BitVector"/>
 				<x path="Bool"/>
 			</f>
@@ -1856,7 +1842,7 @@
 		@param components The `BitVector` of components to check against.
 		@return If the `components` set fulfills this aspect.</haxe_doc>
 		</matches>
-		<new public="1" set="method" line="75">
+		<new public="1" set="method" line="67">
 			<f a="allSet:oneSet:noneSet">
 				<c path="de.polygonal.ds.BitVector"/>
 				<c path="de.polygonal.ds.BitVector"/>
@@ -1898,7 +1884,6 @@
 	})
 	```]]></haxe_doc>
 	</class>
-	<typedef path="awe.MType" params="" file="src/awe/Component.hx" module="awe.Component"><e path="haxe.macro.Type"/></typedef>
 	<class path="awe.Component" params="" file="src/awe/Component.hx" interface="1">
 		<getType public="1" set="method">
 			<f a=""><x path="awe.ComponentType"/></f>
@@ -1909,11 +1894,10 @@
 		<haxe_doc>Raw data to be attached to an `Entity`. Should contain absolutely no logic
 	and should be serializable. This will be automatically pooled or packed.</haxe_doc>
 		<meta>
-			<m n=":autoBuild"><e>awe.Component.AutoComponent.from()</e></m>
+			<m n=":autoBuild"><e>awe.build.AutoComponent.from()</e></m>
 			<m n=":keepSub"/>
 		</meta>
 	</class>
-	<class path="awe.AutoComponent" params="" file="src/awe/Component.hx" module="awe.Component"/>
 	<class path="awe.IComponentList" params="T" file="src/awe/ComponentList.hx" module="awe.ComponentList" interface="1">
 		<get_length public="1" set="method">
 			<f a=""><x path="Int"/></f>
@@ -1934,32 +1918,38 @@
 		</initialize>
 		<get public="1" set="method">
 			<f a="id">
-				<x path="awe.Entity"/>
+				<t path="awe.EntityId"/>
 				<t path="Null"><c path="awe.IComponentList.T"/></t>
 			</f>
 			<haxe_doc>Retrieve the component corresponding associated to the ID.
-		@param id The `Entity` to retrieve the component for.
+		@param id The id of the entity to retrieve the component for.
 		@return The component.</haxe_doc>
 		</get>
 		<add public="1" set="method">
-			<f a="id:value">
-				<x path="awe.Entity"/>
+			<f a="id:value:?notifySubscriptions" v="::true">
+				<t path="awe.EntityId"/>
 				<c path="awe.IComponentList.T"/>
+				<x path="Bool"/>
 				<x path="Void"/>
 			</f>
+			<meta><m n=":value"><e>{ notifySubscriptions : true }</e></m></meta>
 			<haxe_doc>Add the component to this list with the given ID.
-		@param id The `Entity` to add a component to.</haxe_doc>
+		@param id The id of the tnity to add a component to.
+		@param notifySubscriptions Whether world entity subscriptions should be notified of this addition.</haxe_doc>
 		</add>
 		<remove public="1" set="method">
-			<f a="id">
-				<x path="awe.Entity"/>
+			<f a="id:?notifySubscriptions" v=":true">
+				<t path="awe.EntityId"/>
+				<x path="Bool"/>
 				<x path="Void"/>
 			</f>
+			<meta><m n=":value"><e>{ notifySubscriptions : true }</e></m></meta>
 			<haxe_doc>Remove the component corresponding to the ID given.
-		@param id The `Entity` to remove from this list.</haxe_doc>
+		@param id The `Entity` to remove from this list.
+		@param notifySubscriptions Whether world entity subscriptions should be notified of this addition.</haxe_doc>
 		</remove>
 		<iterator public="1" set="method">
-			<f a=""><t path="Iterator"><c path="awe.ComponentListItem"><c path="awe.IComponentList.T"/></c></t></f>
+			<f a=""><t path="Iterator"><c path="awe._ComponentList.ComponentListItem"><c path="awe.IComponentList.T"/></c></t></f>
 			<haxe_doc>Iterate through the items in this list.
 		@return The iterator for this list.</haxe_doc>
 		</iterator>
@@ -1970,26 +1960,34 @@
 		<data><c path="de.polygonal.ds.ArrayList"><c path="awe.ComponentList.T"/></c></data>
 		<world><c path="awe.World"/></world>
 		<length public="1" get="accessor" set="null"><x path="Int"/></length>
-		<get_length get="inline" set="null" line="72"><f a=""><x path="Int"/></f></get_length>
-		<initialize public="1" get="inline" set="null" line="77"><f a="world">
+		<get_length get="inline" set="null" line="75"><f a=""><x path="Int"/></f></get_length>
+		<initialize public="1" get="inline" set="null" line="80"><f a="world">
 	<c path="awe.World"/>
 	<x path="Void"/>
 </f></initialize>
-		<get public="1" get="inline" set="null" line="80"><f a="entity">
-	<x path="awe.Entity"/>
+		<get public="1" get="inline" set="null" line="83"><f a="id">
+	<t path="awe.EntityId"/>
 	<t path="Null"><c path="awe.ComponentList.T"/></t>
 </f></get>
-		<add public="1" get="inline" set="null" line="83"><f a="entity:value">
-	<x path="awe.Entity"/>
-	<c path="awe.ComponentList.T"/>
-	<x path="Void"/>
-</f></add>
-		<remove public="1" set="method" line="86"><f a="entity">
-	<x path="awe.Entity"/>
-	<x path="Void"/>
-</f></remove>
-		<iterator public="1" get="inline" set="null" line="92"><f a=""><c path="awe.ComponentListIterator"><c path="awe.ComponentList.T"/></c></f></iterator>
-		<new public="1" get="inline" set="null" line="74">
+		<add public="1" set="method" line="86">
+			<f a="id:value:?notifySubscriptions" v="::true">
+				<t path="awe.EntityId"/>
+				<c path="awe.ComponentList.T"/>
+				<x path="Bool"/>
+				<x path="Void"/>
+			</f>
+			<meta><m n=":value"><e>{ notifySubscriptions : true }</e></m></meta>
+		</add>
+		<remove public="1" set="method" line="92">
+			<f a="id:?notifySubscriptions" v=":true">
+				<t path="awe.EntityId"/>
+				<x path="Bool"/>
+				<x path="Void"/>
+			</f>
+			<meta><m n=":value"><e>{ notifySubscriptions : true }</e></m></meta>
+		</remove>
+		<iterator public="1" get="inline" set="null" line="106"><f a=""><c path="awe._ComponentList.ComponentListIterator"><c path="awe.ComponentList.T"/></c></f></iterator>
+		<new public="1" get="inline" set="null" line="77">
 			<f a="?capacity" v="8">
 				<x path="Int"/>
 				<x path="Void"/>
@@ -1997,26 +1995,26 @@
 			<meta><m n=":value"><e>{ capacity : 8 }</e></m></meta>
 		</new>
 	</class>
-	<class path="awe.ComponentListItem" params="T" file="src/awe/ComponentList.hx" module="awe.ComponentList">
-		<index public="1" set="null"><x path="awe.Entity"/></index>
-		<component public="1" set="null"><c path="awe.ComponentListItem.T"/></component>
-		<new public="1" set="method" line="124"><f a="index:component">
-	<x path="awe.Entity"/>
-	<c path="awe.ComponentListItem.T"/>
+	<class path="awe._ComponentList.ComponentListItem" params="T" file="src/awe/ComponentList.hx" private="1" module="awe.ComponentList">
+		<index public="1" set="null"><c path="awe.Entity"/></index>
+		<component public="1" set="null"><c path="awe._ComponentList.ComponentListItem.T"/></component>
+		<new public="1" set="method" line="138"><f a="index:component">
+	<c path="awe.Entity"/>
+	<c path="awe._ComponentList.ComponentListItem.T"/>
 	<x path="Void"/>
 </f></new>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<class path="awe.ComponentListIterator" params="T" file="src/awe/ComponentList.hx" module="awe.ComponentList">
-		<list><c path="awe.IComponentList"><c path="awe.ComponentListIterator.T"/></c></list>
+	<class path="awe._ComponentList.ComponentListIterator" params="T" file="src/awe/ComponentList.hx" private="1" module="awe.ComponentList">
+		<list><c path="awe.IComponentList"><c path="awe._ComponentList.ComponentListIterator.T"/></c></list>
 		<index expr="0">
 			<x path="Int"/>
 			<meta><m n=":value"><e>0</e></m></meta>
 		</index>
-		<hasNext public="1" get="inline" set="null" line="138"><f a=""><x path="Bool"/></f></hasNext>
-		<next public="1" set="method" line="141"><f a=""><c path="awe.ComponentListItem"><c path="awe.ComponentListIterator.T"/></c></f></next>
-		<new public="1" set="method" line="135"><f a="list">
-	<c path="awe.IComponentList"><c path="awe.ComponentListIterator.T"/></c>
+		<hasNext public="1" get="inline" set="null" line="152"><f a=""><x path="Bool"/></f></hasNext>
+		<next public="1" set="method" line="155"><f a=""><c path="awe._ComponentList.ComponentListItem"><c path="awe._ComponentList.ComponentListIterator.T"/></c></f></next>
+		<new public="1" set="method" line="149"><f a="list">
+	<c path="awe.IComponentList"><c path="awe._ComponentList.ComponentListIterator.T"/></c>
 	<x path="Void"/>
 </f></new>
 		<meta><m n=":directlyUsed"/></meta>
@@ -2034,26 +2032,34 @@
 		<world><c path="awe.World"/></world>
 		<ctype><x path="awe.ComponentType"/></ctype>
 		<length public="1" get="accessor" set="null"><x path="Int"/></length>
-		<get_length get="inline" set="null" line="161"><f a=""><x path="Int"/></f></get_length>
-		<initialize public="1" get="inline" set="null" line="175"><f a="world">
+		<get_length get="inline" set="null" line="175"><f a=""><x path="Int"/></f></get_length>
+		<initialize public="1" get="inline" set="null" line="189"><f a="world">
 	<c path="awe.World"/>
 	<x path="Void"/>
 </f></initialize>
-		<get public="1" set="method" line="187"><f a="entity">
-	<x path="awe.Entity"/>
+		<get public="1" set="method" line="201"><f a="id">
+	<t path="awe.EntityId"/>
 	<t path="Null"><c path="awe.PackedComponentList.T"/></t>
 </f></get>
-		<add public="1" set="method" line="192"><f a="entity:value">
-	<x path="awe.Entity"/>
-	<c path="awe.PackedComponentList.T"/>
-	<x path="Void"/>
-</f></add>
-		<remove public="1" set="method" line="208"><f a="entity">
-	<x path="awe.Entity"/>
-	<x path="Void"/>
-</f></remove>
-		<iterator public="1" get="inline" set="null" line="227"><f a=""><c path="awe.ComponentListIterator"><c path="awe.PackedComponentList.T"/></c></f></iterator>
-		<new public="1" set="method" line="164">
+		<add public="1" set="method" line="206">
+			<f a="id:value:?notifySubscriptions" v="::true">
+				<t path="awe.EntityId"/>
+				<c path="awe.PackedComponentList.T"/>
+				<x path="Bool"/>
+				<x path="Void"/>
+			</f>
+			<meta><m n=":value"><e>{ notifySubscriptions : true }</e></m></meta>
+		</add>
+		<remove public="1" set="method" line="224">
+			<f a="id:?notifySubscriptions" v=":true">
+				<t path="awe.EntityId"/>
+				<x path="Bool"/>
+				<x path="Void"/>
+			</f>
+			<meta><m n=":value"><e>{ notifySubscriptions : true }</e></m></meta>
+		</remove>
+		<iterator public="1" get="inline" set="null" line="245"><f a=""><c path="awe._ComponentList.ComponentListIterator"><c path="awe.PackedComponentList.T"/></c></f></iterator>
+		<new public="1" set="method" line="178">
 			<f a="ctype:?capacity:?size" v=":4:0">
 				<x path="awe.ComponentType"/>
 				<x path="Int"/>
@@ -2074,15 +2080,15 @@
 	<x path="Class"><d/></x>
 	<x path="awe.ComponentType"/>
 </f></of>
-	<PACKED_FLAG public="1" get="inline" set="null" expr="1 &lt;&lt; 31" line="42" static="1">
+	<PACKED_FLAG public="1" get="inline" set="null" expr="1 &lt;&lt; 31" line="45" static="1">
 		<x path="Int"/>
 		<meta><m n=":value"><e><![CDATA[1 << 31]]></e></m></meta>
 	</PACKED_FLAG>
-	<EMPTY_FLAG public="1" get="inline" set="null" expr="1 &lt;&lt; 30" line="43" static="1">
+	<EMPTY_FLAG public="1" get="inline" set="null" expr="1 &lt;&lt; 30" line="46" static="1">
 		<x path="Int"/>
 		<meta><m n=":value"><e><![CDATA[1 << 30]]></e></m></meta>
 	</EMPTY_FLAG>
-	<isEmpty public="1" get="inline" set="null" line="48" static="1">
+	<isEmpty public="1" get="inline" set="null" line="51" static="1">
 		<f a="this">
 			<x path="Int"/>
 			<x path="Bool"/>
@@ -2091,7 +2097,7 @@
 		<haxe_doc>Returns true if this component is marked as empty.
 	  	@return If this component is marked empty.</haxe_doc>
 	</isEmpty>
-	<isPacked public="1" get="inline" set="null" line="55" static="1">
+	<isPacked public="1" get="inline" set="null" line="58" static="1">
 		<f a="this">
 			<x path="Int"/>
 			<x path="Bool"/>
@@ -2100,7 +2106,7 @@
 		<haxe_doc>Returns true if this component is marked as packed.
 		@return If this component is marked packed.</haxe_doc>
 	</isPacked>
-	<getPure public="1" get="inline" set="null" line="62" static="1">
+	<getPure public="1" get="inline" set="null" line="65" static="1">
 		<f a="this">
 			<x path="Int"/>
 			<x path="awe.ComponentType"/>
@@ -2109,7 +2115,7 @@
 		<haxe_doc>Returns the component type free of markers.
 		@return The pure component type.</haxe_doc>
 	</getPure>
-	<eq get="inline" set="null" line="65" static="1">
+	<eq get="inline" set="null" line="68" static="1">
 		<f a="a:b">
 			<x path="awe.ComponentType"/>
 			<x path="awe.ComponentType"/>
@@ -2117,7 +2123,7 @@
 		</f>
 		<meta><m n=":op"><e>A == B</e></m></meta>
 	</eq>
-	<neq get="inline" set="null" line="70" static="1">
+	<neq get="inline" set="null" line="73" static="1">
 		<f a="a:b">
 			<x path="awe.ComponentType"/>
 			<x path="awe.ComponentType"/>
@@ -2134,15 +2140,15 @@
 	<x path="Class"><d/></x>
 	<x path="awe.ComponentType"/>
 </f></of>
-		<PACKED_FLAG public="1" get="inline" set="null" expr="1 &lt;&lt; 31" line="42" static="1">
+		<PACKED_FLAG public="1" get="inline" set="null" expr="1 &lt;&lt; 31" line="45" static="1">
 			<x path="Int"/>
 			<meta><m n=":value"><e><![CDATA[1 << 31]]></e></m></meta>
 		</PACKED_FLAG>
-		<EMPTY_FLAG public="1" get="inline" set="null" expr="1 &lt;&lt; 30" line="43" static="1">
+		<EMPTY_FLAG public="1" get="inline" set="null" expr="1 &lt;&lt; 30" line="46" static="1">
 			<x path="Int"/>
 			<meta><m n=":value"><e><![CDATA[1 << 30]]></e></m></meta>
 		</EMPTY_FLAG>
-		<isEmpty public="1" get="inline" set="null" line="48" static="1">
+		<isEmpty public="1" get="inline" set="null" line="51" static="1">
 			<f a="this">
 				<x path="Int"/>
 				<x path="Bool"/>
@@ -2151,7 +2157,7 @@
 			<haxe_doc>Returns true if this component is marked as empty.
 	  	@return If this component is marked empty.</haxe_doc>
 		</isEmpty>
-		<isPacked public="1" get="inline" set="null" line="55" static="1">
+		<isPacked public="1" get="inline" set="null" line="58" static="1">
 			<f a="this">
 				<x path="Int"/>
 				<x path="Bool"/>
@@ -2160,7 +2166,7 @@
 			<haxe_doc>Returns true if this component is marked as packed.
 		@return If this component is marked packed.</haxe_doc>
 		</isPacked>
-		<getPure public="1" get="inline" set="null" line="62" static="1">
+		<getPure public="1" get="inline" set="null" line="65" static="1">
 			<f a="this">
 				<x path="Int"/>
 				<x path="awe.ComponentType"/>
@@ -2169,7 +2175,7 @@
 			<haxe_doc>Returns the component type free of markers.
 		@return The pure component type.</haxe_doc>
 		</getPure>
-		<eq get="inline" set="null" line="65" static="1">
+		<eq get="inline" set="null" line="68" static="1">
 			<f a="a:b">
 				<x path="awe.ComponentType"/>
 				<x path="awe.ComponentType"/>
@@ -2177,7 +2183,7 @@
 			</f>
 			<meta><m n=":op"><e>A == B</e></m></meta>
 		</eq>
-		<neq get="inline" set="null" line="70" static="1">
+		<neq get="inline" set="null" line="73" static="1">
 			<f a="a:b">
 				<x path="awe.ComponentType"/>
 				<x path="awe.ComponentType"/>
@@ -2187,232 +2193,85 @@
 		</neq>
 		<meta><m n=":final"/></meta>
 	</class>
-	<abstract path="awe.Entity" params="" file="src/awe/Entity.hx">
-		<from><icast><x path="Int"/></icast></from>
-		<this><x path="Int"/></this>
-		<to><icast><x path="Int"/></icast></to>
-		<haxe_doc>Reperesents a single thing in a `World`.</haxe_doc>
-		<impl><class path="awe._Entity.Entity_Impl_" params="" file="src/awe/Entity.hx" private="1" module="awe.Entity">
-	<id public="1" get="accessor" set="null" static="1">
+	<typedef path="awe.EntityId" params="" file="src/awe/Entity.hx" module="awe.Entity">
 		<x path="Int"/>
-		<meta><m n=":impl"/></meta>
-		<haxe_doc>The identifier of this entity.</haxe_doc>
-	</id>
-	<get_id get="inline" set="null" line="20" static="1">
-		<f a="this">
-			<x path="Int"/>
-			<x path="Int"/>
-		</f>
-		<meta><m n=":impl"/></meta>
-	</get_id>
-	<insertIntoSubscriptions set="method" line="23" static="1">
-		<f a="this:world">
-			<x path="Int"/>
+		<haxe_doc>Reperesents a single thing in a `World`.</haxe_doc>
+	</typedef>
+	<class path="awe.Entity" params="" file="src/awe/Entity.hx">
+		<world public="1" set="null">
 			<c path="awe.World"/>
-			<x path="Void"/>
-		</f>
-		<meta>
-			<m n=":impl"/>
-			<m n=":allow"><e>awe</e></m>
-		</meta>
-	</insertIntoSubscriptions>
-	<removeFromSubscriptions set="method" line="28" static="1">
-		<f a="this:world">
-			<x path="Int"/>
-			<c path="awe.World"/>
-			<x path="Void"/>
-		</f>
-		<meta><m n=":impl"/></meta>
-	</removeFromSubscriptions>
-	<_new public="1" set="method" line="37" static="1">
-		<f a="world">
-			<c path="awe.World"/>
-			<x path="awe.Entity"/>
-		</f>
-		<meta><m n=":impl"/></meta>
-		<haxe_doc>Construct a new, empty entity inside the world.
-		@param world The world to make the entity inside.</haxe_doc>
-	</_new>
-	<delete public="1" set="method" line="47" static="1">
-		<f a="this:world">
-			<x path="Int"/>
-			<c path="awe.World"/>
-			<x path="Void"/>
-		</f>
-		<meta><m n=":impl"/></meta>
-		<haxe_doc>Delete this entity from the world.
-		@param world The world to delete this entity from.</haxe_doc>
-	</delete>
-	<getComposition public="1" get="inline" set="null" line="57" static="1">
-		<f a="this:world">
-			<x path="Int"/>
-			<c path="awe.World"/>
-			<c path="de.polygonal.ds.BitVector"/>
-		</f>
-		<meta><m n=":impl"/></meta>
-		<haxe_doc>Finds the composition bits of this entity.
-		@param world The world that this `Entity` is contained in.
-		@return The composition bits.</haxe_doc>
-	</getComposition>
-	<add public="1" params="T" set="method" static="1">
-		<f a="self:world:value">
-			<x path="awe.Entity"/>
-			<c path="awe.World"/>
-			<c path="add.T"/>
-			<x path="Void"/>
-		</f>
-		<meta><m n=":impl"/></meta>
-	</add>
-	<has public="1" params="T" set="method" static="1">
-		<f a="self:world:cl">
-			<x path="awe.Entity"/>
-			<c path="awe.World"/>
-			<x path="Class"><c path="has.T"/></x>
-			<x path="Bool"/>
-		</f>
-		<meta><m n=":impl"/></meta>
-	</has>
-	<get public="1" params="T" set="method" static="1">
-		<f a="self:world:cl">
-			<x path="awe.Entity"/>
-			<c path="awe.World"/>
-			<x path="Class"><c path="get.T"/></x>
-			<t path="Null"><c path="get.T"/></t>
-		</f>
-		<meta><m n=":impl"/></meta>
-	</get>
-	<toString public="1" get="inline" set="null" line="116" static="1">
-		<f a="this">
-			<x path="Int"/>
-			<c path="String"/>
-		</f>
-		<meta><m n=":impl"/></meta>
-		<haxe_doc>Returns the string representation of this data.</haxe_doc>
-	</toString>
-	<meta>
-		<m n=":directlyUsed"/>
-		<m n=":final"/>
-	</meta>
-</class></impl>
-	</abstract>
-	<class path="awe._Entity.Entity_Impl_" params="" file="src/awe/Entity.hx" private="1" module="awe.Entity">
-		<id public="1" get="accessor" set="null" static="1">
-			<x path="Int"/>
-			<meta><m n=":impl"/></meta>
+			<haxe_doc>The world containing this entity.</haxe_doc>
+		</world>
+		<id public="1" set="null">
+			<t path="awe.EntityId"/>
 			<haxe_doc>The identifier of this entity.</haxe_doc>
 		</id>
-		<get_id get="inline" set="null" line="20" static="1">
-			<f a="this">
-				<x path="Int"/>
-				<x path="Int"/>
-			</f>
-			<meta><m n=":impl"/></meta>
-		</get_id>
-		<insertIntoSubscriptions set="method" line="23" static="1">
-			<f a="this:world">
-				<x path="Int"/>
-				<c path="awe.World"/>
+		<componentBits public="1" get="accessor" set="null"><c path="de.polygonal.ds.BitVector"/></componentBits>
+		<get_componentBits get="inline" set="null" line="35"><f a=""><c path="de.polygonal.ds.BitVector"/></f></get_componentBits>
+		<deleteFromWorld public="1" set="method" line="46">
+			<f a=""><x path="Void"/></f>
+			<haxe_doc>Delete this entity from the world.</haxe_doc>
+		</deleteFromWorld>
+		<add public="1" get="inline" set="null" line="57">
+			<f a="value">
+				<c path="awe.Component"/>
 				<x path="Void"/>
 			</f>
-			<meta>
-				<m n=":impl"/>
-				<m n=":allow"><e>awe</e></m>
-			</meta>
-		</insertIntoSubscriptions>
-		<removeFromSubscriptions set="method" line="28" static="1">
-			<f a="this:world">
-				<x path="Int"/>
-				<c path="awe.World"/>
-				<x path="Void"/>
-			</f>
-			<meta><m n=":impl"/></meta>
-		</removeFromSubscriptions>
-		<_new public="1" set="method" line="37" static="1">
-			<f a="world">
-				<c path="awe.World"/>
-				<x path="awe.Entity"/>
-			</f>
-			<meta><m n=":impl"/></meta>
-			<haxe_doc>Construct a new, empty entity inside the world.
-		@param world The world to make the entity inside.</haxe_doc>
-		</_new>
-		<delete public="1" set="method" line="47" static="1">
-			<f a="this:world">
-				<x path="Int"/>
-				<c path="awe.World"/>
-				<x path="Void"/>
-			</f>
-			<meta><m n=":impl"/></meta>
-			<haxe_doc>Delete this entity from the world.
-		@param world The world to delete this entity from.</haxe_doc>
-		</delete>
-		<getComposition public="1" get="inline" set="null" line="57" static="1">
-			<f a="this:world">
-				<x path="Int"/>
-				<c path="awe.World"/>
-				<c path="de.polygonal.ds.BitVector"/>
-			</f>
-			<meta><m n=":impl"/></meta>
-			<haxe_doc>Finds the composition bits of this entity.
-		@param world The world that this `Entity` is contained in.
-		@return The composition bits.</haxe_doc>
-		</getComposition>
-		<add public="1" params="T" set="method" static="1">
-			<f a="self:world:value">
-				<x path="awe.Entity"/>
-				<c path="awe.World"/>
-				<c path="add.T"/>
-				<x path="Void"/>
-			</f>
-			<meta><m n=":impl"/></meta>
+			<haxe_doc>Add the component to the `World`, and attach it to this entity.
+		@param value The component to attach to this entity.</haxe_doc>
 		</add>
-		<has public="1" params="T" set="method" static="1">
-			<f a="self:world:cl">
-				<x path="awe.Entity"/>
-				<c path="awe.World"/>
-				<x path="Class"><c path="has.T"/></x>
-				<x path="Bool"/>
+		<getByType public="1" get="inline" set="null" line="64">
+			<f a="type">
+				<x path="awe.ComponentType"/>
+				<c path="awe.Component"/>
 			</f>
-			<meta><m n=":impl"/></meta>
-		</has>
-		<get public="1" params="T" set="method" static="1">
-			<f a="self:world:cl">
-				<x path="awe.Entity"/>
-				<c path="awe.World"/>
-				<x path="Class"><c path="get.T"/></x>
-				<t path="Null"><c path="get.T"/></t>
-			</f>
-			<meta><m n=":impl"/></meta>
-		</get>
-		<toString public="1" get="inline" set="null" line="116" static="1">
-			<f a="this">
-				<x path="Int"/>
-				<c path="String"/>
-			</f>
-			<meta><m n=":impl"/></meta>
-			<haxe_doc>Returns the string representation of this data.</haxe_doc>
+			<haxe_doc>Retrieve a component by its component type.
+		@param type The component type to find.
+		@return The component.</haxe_doc>
+		</getByType>
+		<has public="1" params="T" set="method"><f a="cl">
+	<x path="Class"><c path="has.T"/></x>
+	<x path="Bool"/>
+</f></has>
+		<get public="1" params="T" set="method"><f a="cl">
+	<x path="Class"><c path="get.T"/></x>
+	<t path="Null"><c path="get.T"/></t>
+</f></get>
+		<remove public="1" params="T" set="method"><f a="cl">
+	<x path="Class"><c path="remove.T"/></x>
+	<d/>
+</f></remove>
+		<toString public="1" set="method" line="115">
+			<f a=""><c path="String"/></f>
+			<haxe_doc>Returns the string representation of this entity.</haxe_doc>
 		</toString>
-		<meta>
-			<m n=":directlyUsed"/>
-			<m n=":final"/>
-		</meta>
+		<new set="method" line="39">
+			<f a="world:id">
+				<c path="awe.World"/>
+				<t path="awe.EntityId"/>
+				<x path="Void"/>
+			</f>
+			<meta><m n=":allow"><e>awe</e></m></meta>
+		</new>
+		<haxe_doc>Reperesents a single thing in a `World`.</haxe_doc>
+		<meta><m n=":directlyUsed"/></meta>
 	</class>
 	<class path="awe.SubscriptionListener" params="" file="src/awe/EntitySubscription.hx" module="awe.EntitySubscription" interface="1">
 		<inserted public="1" set="method">
 			<f a="entities">
-				<c path="Array"><x path="awe.Entity"/></c>
+				<t path="awe.EntityId"/>
 				<x path="Void"/>
 			</f>
 			<haxe_doc>Called when entities are inserted that match the aspect.
-        @param entities The newly inserted entities.</haxe_doc>
+        @param entities The newly inserted entities' ids.</haxe_doc>
 		</inserted>
 		<removed public="1" set="method">
 			<f a="entities">
-				<c path="Array"><x path="awe.Entity"/></c>
+				<t path="awe.EntityId"/>
 				<x path="Void"/>
 			</f>
 			<haxe_doc>Called when entities are removed that match the aspect.
-        @param entities The removed entities.</haxe_doc>
+        @param entities The removed entities' ids.</haxe_doc>
 		</removed>
 		<haxe_doc>Subscribes to entities being inserted and removed.</haxe_doc>
 	</class>
@@ -2422,7 +2281,7 @@
 			<haxe_doc>The aspect to match entities against.</haxe_doc>
 		</aspect>
 		<entities public="1" set="null" expr="[]">
-			<c path="Array"><x path="awe.Entity"/></c>
+			<c path="Array"><t path="awe.EntityId"/></c>
 			<meta><m n=":value"><e>[]</e></m></meta>
 			<haxe_doc>The entities matching the `aspect`.</haxe_doc>
 		</entities>
@@ -2434,7 +2293,7 @@
 			<c path="Array"><c path="awe.SubscriptionListener"/></c>
 			<meta><m n=":value"><e>[]</e></m></meta>
 		</listeners>
-		<addListener public="1" get="inline" set="null" line="40">
+		<addListener public="1" get="inline" set="null" line="42">
 			<f a="listener">
 				<c path="awe.SubscriptionListener"/>
 				<x path="Void"/>
@@ -2442,7 +2301,7 @@
 			<haxe_doc>Notify `listener` when entities are added / removed matching `aspect`.
         @param listener The listener to notify.</haxe_doc>
 		</addListener>
-		<removeListener public="1" get="inline" set="null" line="48">
+		<removeListener public="1" get="inline" set="null" line="50">
 			<f a="listener">
 				<c path="awe.SubscriptionListener"/>
 				<x path="Void"/>
@@ -2451,7 +2310,7 @@
         `aspect`.
         @param listener The listener to notify.</haxe_doc>
 		</removeListener>
-		<initialize public="1" set="method" line="59">
+		<initialize public="1" set="method" line="61">
 			<f a="world">
 				<c path="awe.World"/>
 				<x path="Void"/>
@@ -2459,35 +2318,21 @@
 			<haxe_doc>Initialize this subscription in `world`.
         @param world The world to add this to.</haxe_doc>
 		</initialize>
-		<insertedSingle set="method" line="64">
-			<f a="entity">
-				<x path="awe.Entity"/>
-				<x path="Void"/>
-			</f>
-			<meta><m n=":allow"><e>awe</e></m></meta>
-		</insertedSingle>
-		<removedSingle set="method" line="68">
-			<f a="entity">
-				<x path="awe.Entity"/>
-				<x path="Void"/>
-			</f>
-			<meta><m n=":allow"><e>awe</e></m></meta>
-		</removedSingle>
-		<inserted set="method" line="72">
-			<f a="entities">
-				<c path="Array"><x path="awe.Entity"/></c>
+		<inserted set="method" line="66">
+			<f a="id">
+				<t path="awe.EntityId"/>
 				<x path="Void"/>
 			</f>
 			<meta><m n=":allow"><e>awe</e></m></meta>
 		</inserted>
-		<removed set="method" line="76">
-			<f a="entities">
-				<c path="Array"><x path="awe.Entity"/></c>
+		<removed set="method" line="72">
+			<f a="id">
+				<t path="awe.EntityId"/>
 				<x path="Void"/>
 			</f>
 			<meta><m n=":allow"><e>awe</e></m></meta>
 		</removed>
-		<new set="method" line="52">
+		<new set="method" line="54">
 			<f a="aspect">
 				<c path="awe.Aspect"/>
 				<x path="Void"/>
@@ -2514,12 +2359,12 @@
 			<x path="Bool"/>
 			<haxe_doc>If this system is enabled or not.</haxe_doc>
 		</enabled>
-		<checkProcessing public="1" get="inline" set="null" line="37">
+		<checkProcessing public="1" get="inline" set="null" line="38">
 			<f a=""><x path="Bool"/></f>
 			<haxe_doc>Check if this system should be processed.
 		@return If this should be processed or not.</haxe_doc>
 		</checkProcessing>
-		<initialize public="1" set="method" line="44">
+		<initialize public="1" set="method" line="45">
 			<f a="world">
 				<c path="awe.World"/>
 				<x path="Void"/>
@@ -2527,28 +2372,28 @@
 			<haxe_doc>Initializes this system in the `World`.
 	@param world The `World` to initialize this in.</haxe_doc>
 		</initialize>
-		<process public="1" set="method" line="50">
+		<process public="1" set="method" line="51">
 			<f a=""><x path="Void"/></f>
 			<meta><m n=":final"/></meta>
 			<haxe_doc>Process this system by running `begin`, `processSystem`, then `end`.</haxe_doc>
 		</process>
-		<processSystem public="1" set="method" line="60">
+		<processSystem public="1" set="method" line="61">
 			<f a=""><x path="Void"/></f>
 			<haxe_doc>Called as the middle step of processing.</haxe_doc>
 		</processSystem>
-		<begin public="1" set="method" line="65">
+		<begin public="1" set="method" line="66">
 			<f a=""><x path="Void"/></f>
 			<haxe_doc>Called before processing starts.</haxe_doc>
 		</begin>
-		<end public="1" set="method" line="69">
+		<end public="1" set="method" line="70">
 			<f a=""><x path="Void"/></f>
 			<haxe_doc>Called after processing has finished.</haxe_doc>
 		</end>
-		<dispose public="1" set="method" line="73">
+		<dispose public="1" set="method" line="74">
 			<f a=""><x path="Void"/></f>
 			<haxe_doc>Free resources used by this system, and prepare for deletion.</haxe_doc>
 		</dispose>
-		<new public="1" set="method" line="29">
+		<new public="1" set="method" line="30">
 			<f a=""><x path="Void"/></f>
 			<haxe_doc>Create an enabled system with no world.</haxe_doc>
 		</new>
@@ -2567,7 +2412,7 @@
 			<haxe_doc>The entity subscription, used to keep track of entities matching the
 	    `aspect`.</haxe_doc>
 		</subscription>
-		<initialize public="1" set="method" line="108" override="1">
+		<initialize public="1" set="method" line="109" override="1">
 			<f a="world">
 				<c path="awe.World"/>
 				<x path="Void"/>
@@ -2575,24 +2420,24 @@
 			<haxe_doc>Initializes this system, as well as the subscription, in the `World`.
 		@param world The `World` to initialize this in.</haxe_doc>
 		</initialize>
-		<processEntity public="1" set="method" line="116">
-			<f a="entity">
-				<x path="awe.Entity"/>
+		<processEntity public="1" set="method" line="118">
+			<f a="id">
+				<t path="awe.EntityId"/>
 				<x path="Void"/>
 			</f>
 			<haxe_doc>Called every time `process` is ran for each entity matching `Aspect`
 	    @param entity The `Entity` to be processed.</haxe_doc>
 		</processEntity>
-		<processSystem public="1" set="method" line="117" override="1"><f a=""><x path="Void"/></f></processSystem>
-		<inserted public="1" set="method" line="120"><f a="entities">
-	<c path="Array"><x path="awe.Entity"/></c>
+		<processSystem public="1" set="method" line="119" override="1"><f a=""><x path="Void"/></f></processSystem>
+		<inserted public="1" set="method" line="122"><f a="entity">
+	<t path="awe.EntityId"/>
 	<x path="Void"/>
 </f></inserted>
-		<removed public="1" set="method" line="121"><f a="entities">
-	<c path="Array"><x path="awe.Entity"/></c>
+		<removed public="1" set="method" line="123"><f a="entity">
+	<t path="awe.EntityId"/>
 	<x path="Void"/>
 </f></removed>
-		<new public="1" set="method" line="99">
+		<new public="1" set="method" line="100">
 			<f a="aspect">
 				<c path="awe.Aspect"/>
 				<x path="Void"/>
@@ -2619,10 +2464,7 @@
 	    @return The created world.</haxe_doc>
 		</build>
 		<components set="null">
-			<x path="Map">
-				<x path="awe.ComponentType"/>
-				<c path="awe.IComponentList"><d/></c>
-			</x>
+			<c path="awe.managers.ComponentManager"/>
 			<meta><m n=":allow"><e>awe</e></m></meta>
 		</components>
 		<systems set="null">
@@ -2630,27 +2472,17 @@
 			<meta><m n=":allow"><e>awe</e></m></meta>
 		</systems>
 		<entities public="1" set="null">
-			<c path="de.polygonal.ds.ArrayList"><x path="awe.Entity"/></c>
-			<meta><m n=":allow"><e>awe</e></m></meta>
+			<c path="awe.managers.EntityManager"/>
+			<haxe_doc>The entities contained in the World.</haxe_doc>
 		</entities>
-		<compositions set="null">
-			<x path="Map">
-				<x path="awe.Entity"/>
-				<c path="de.polygonal.ds.BitVector"/>
-			</x>
-			<meta><m n=":allow"><e>awe</e></m></meta>
-		</compositions>
-		<subscriptions set="null" expr="new ArrayList&lt;EntitySubscription&gt;()">
-			<c path="de.polygonal.ds.ArrayList"><c path="awe.EntitySubscription"/></c>
-			<meta>
-				<m n=":value"><e><![CDATA[new ArrayList<EntitySubscription>()]]></e></m>
-				<m n=":allow"><e>awe</e></m>
-			</meta>
+		<subscriptions public="1" set="null">
+			<c path="awe.managers.AspectSubscriptionManager"/>
+			<haxe_doc>Subscriptions to entites.</haxe_doc>
 		</subscriptions>
 		<entityCount set="null">
 			<x path="Int"/>
 			<meta><m n=":allow"><e>awe</e></m></meta>
-			<haxe_doc>How many entities have been created so far.</haxe_doc>
+			<haxe_doc>How many entities have been created in total since the world was initialised.</haxe_doc>
 		</entityCount>
 		<delta public="1" expr="0">
 			<x path="Float"/>
@@ -2659,16 +2491,18 @@
 	    
 	    This must be set manually so it can integrate with custom game loops.</haxe_doc>
 		</delta>
-		<getComponentList public="1" params="T" set="method" line="70">
-			<f a="cl">
-				<x path="Class"><c path="getComponentList.T"/></x>
-				<t path="Null"><c path="awe.IComponentList"><c path="getComponentList.T"/></c></t>
+		<createEntity public="1" get="inline" set="null" line="71">
+			<f a=""><c path="awe.Entity"/></f>
+			<haxe_doc>Create an entity, with no components.</haxe_doc>
+		</createEntity>
+		<createEntityFromArchetype public="1" set="method" line="76">
+			<f a="archetype">
+				<c path="awe.Archetype"/>
+				<c path="awe.Entity"/>
 			</f>
-			<haxe_doc>Get the component list corresponding to the component `cl`.
-	    @param cl The component class to retrieve the component list for.
-	    @return The component list.</haxe_doc>
-		</getComponentList>
-		<getSystem public="1" params="T" set="method" line="78">
+			<haxe_doc>Create an entity, with components based on an Entity archetype.</haxe_doc>
+		</createEntityFromArchetype>
+		<getSystem public="1" params="T" set="method" line="90">
 			<f a="cl">
 				<x path="Class"><c path="getSystem.T"/></x>
 				<t path="Null"><c path="getSystem.T"/></t>
@@ -2677,20 +2511,18 @@
 	    @param cl The system class to retrieve the instance of.
 	    @return The system.</haxe_doc>
 		</getSystem>
-		<process public="1" get="inline" set="null" line="129">
+		<process public="1" get="inline" set="null" line="107">
 			<f a=""><x path="Void"/></f>
 			<haxe_doc>Process all active systems.</haxe_doc>
 		</process>
-		<dispose public="1" set="method" line="136">
+		<dispose public="1" set="method" line="114">
 			<f a=""><x path="Void"/></f>
 			<haxe_doc>Free resources used by this world.</haxe_doc>
 		</dispose>
-		<new public="1" set="method" line="52">
-			<f a="components:systems">
-				<x path="Map">
-					<x path="awe.ComponentType"/>
-					<c path="awe.IComponentList"><d/></c>
-				</x>
+		<new public="1" set="method" line="54">
+			<f a="componentLists:componentMaps:systems">
+				<t path="awe.managers.ComponentListMap"/>
+				<t path="awe.managers.ComponentClassMap"/>
 				<x path="haxe.ds.Vector"><c path="awe.System"/></x>
 				<x path="Void"/>
 			</f>
@@ -2718,15 +2550,230 @@
 		<meta><m n=":optional"/></meta>
 	</components>
 </a></typedef>
+	<class path="awe.build.AutoArchetype" params="" file="src/awe/build/AutoArchetype.hx"><build public="1" set="method" line="23" static="1">
+	<f a="types">
+		<c path="Array"><t path="haxe.macro.ExprOf"><x path="Class"><c path="awe.Component"/></x></t></c>
+		<t path="haxe.macro.ExprOf"><c path="awe.Archetype"/></t>
+	</f>
+	<haxe_doc>Create an `Archetype` from a list of component classes it will be made with.
+		
+		@param types The component classes.
+		@return The created `Archetype` instance.</haxe_doc>
+</build></class>
+	<class path="awe.build.AutoAspect" params="" file="src/awe/build/AutoAspect.hx"><build public="1" set="method" line="16" static="1"><f a="expr">
+	<t path="haxe.macro.Expr"/>
+	<t path="haxe.macro.ExprOf"><c path="awe.Aspect"/></t>
+</f></build></class>
+	<typedef path="awe.build.MType" params="" file="src/awe/build/AutoComponent.hx" module="awe.build.AutoComponent"><e path="haxe.macro.Type"/></typedef>
+	<class path="awe.build.AutoComponent" params="" file="src/awe/build/AutoComponent.hx"><from public="1" set="method" line="16" static="1"><f a=""><c path="Array"><t path="haxe.macro.Field"/></c></f></from></class>
+	<class path="awe.build.AutoWorld" params="" file="src/awe/build/AutoWorld.hx"><build public="1" set="method" line="13" static="1"><f a="setup">
+	<t path="haxe.macro.ExprOf"><t path="awe.WorldConfiguration"/></t>
+	<t path="haxe.macro.ExprOf"><c path="awe.World"/></t>
+</f></build></class>
+	<class path="awe.managers.AspectSubscriptionManager" params="" file="src/awe/managers/AspectSubscriptionManager.hx">
+		<extends path="awe.System"/>
+		<_subscriptions>
+			<c path="de.polygonal.ds.ArrayList"><c path="awe.EntitySubscription"/></c>
+			<meta><m n=":allow"><e>awe</e></m></meta>
+		</_subscriptions>
+		<initialize public="1" set="method" line="11" override="1"><f a="world">
+	<c path="awe.World"/>
+	<x path="Void"/>
+</f></initialize>
+		<changed set="method" line="19">
+			<f a="entity">
+				<t path="awe.EntityId"/>
+				<x path="Void"/>
+			</f>
+			<meta><m n=":allow"><e>awe</e></m></meta>
+			<haxe_doc>Called when an entity is changed internally.</haxe_doc>
+		</changed>
+		<removed set="method" line="30">
+			<f a="entity">
+				<t path="awe.EntityId"/>
+				<x path="Void"/>
+			</f>
+			<meta><m n=":allow"><e>awe</e></m></meta>
+		</removed>
+		<new public="1" set="method" line="8"><f a=""><x path="Void"/></f></new>
+		<meta><m n=":directlyUsed"/></meta>
+	</class>
+	<typedef path="awe.managers.ComponentListMap" params="" file="src/awe/managers/ComponentManager.hx" module="awe.managers.ComponentManager"><x path="Map">
+	<x path="awe.ComponentType"/>
+	<c path="awe.IComponentList"><d/></c>
+</x></typedef>
+	<typedef path="awe.managers.ComponentClassMap" params="" file="src/awe/managers/ComponentManager.hx" module="awe.managers.ComponentManager"><x path="Map">
+	<x path="awe.ComponentType"/>
+	<x path="Class"><c path="awe.Component"/></x>
+</x></typedef>
+	<class path="awe.managers.ComponentManager" params="" file="src/awe/managers/ComponentManager.hx">
+		<extends path="awe.System"/>
+		<componentBits set="null">
+			<x path="Map">
+				<t path="awe.EntityId"/>
+				<c path="de.polygonal.ds.BitVector"/>
+			</x>
+			<meta><m n=":allow"><e>awe</e></m></meta>
+		</componentBits>
+		<componentClasses set="null">
+			<t path="awe.managers.ComponentClassMap"/>
+			<meta><m n=":allow"><e>awe</e></m></meta>
+		</componentClasses>
+		<lists>
+			<t path="awe.managers.ComponentListMap"/>
+			<meta><m n=":allow"><e>awe</e></m></meta>
+		</lists>
+		<getComponentBits public="1" get="inline" set="null" line="31">
+			<f a="id">
+				<t path="awe.EntityId"/>
+				<c path="de.polygonal.ds.BitVector"/>
+			</f>
+			<haxe_doc>Get an entity's component bits.</haxe_doc>
+		</getComponentBits>
+		<getComponent public="1" get="inline" set="null" line="36">
+			<f a="id:type">
+				<t path="awe.EntityId"/>
+				<x path="awe.ComponentType"/>
+				<c path="awe.Component"/>
+			</f>
+			<haxe_doc>Get a certain component from an entity.</haxe_doc>
+		</getComponent>
+		<getComponentsFor public="1" set="method" line="41">
+			<f a="id">
+				<t path="awe.EntityId"/>
+				<c path="Array"><c path="awe.Component"/></c>
+			</f>
+			<haxe_doc>Get an array of all the components attached to an entity.</haxe_doc>
+		</getComponentsFor>
+		<createType public="1" get="inline" set="null" line="56">
+			<f a="owner:componentType">
+				<t path="awe.EntityId"/>
+				<x path="awe.ComponentType"/>
+				<c path="awe.Component"/>
+			</f>
+			<haxe_doc>Create a component of given type by its type.
+		@param owner entity id
+		@param componentType component type
+		@return Newly created packed, pooled or basic component.</haxe_doc>
+		</createType>
+		<create public="1" params="T" set="method" line="65">
+			<f a="owner:componentClass">
+				<t path="awe.EntityId"/>
+				<x path="Class"><c path="create.T"/></x>
+				<c path="create.T"/>
+			</f>
+			<haxe_doc>Create a component of given type by class.
+		@param owner entity id
+		@param componentClass class of component to instance.
+		@return Newly created packed, pooled or basic component.</haxe_doc>
+		</create>
+		<new set="method" line="22">
+			<f a="lists:classes">
+				<t path="awe.managers.ComponentListMap"/>
+				<t path="awe.managers.ComponentClassMap"/>
+				<x path="Void"/>
+			</f>
+			<meta><m n=":allow"><e>awe</e></m></meta>
+		</new>
+		<meta><m n=":directlyUsed"/></meta>
+	</class>
+	<class path="awe.managers.EntityManager" params="" file="src/awe/managers/EntityManager.hx">
+		<extends path="awe.System"/>
+		<entities>
+			<c path="de.polygonal.ds.ArrayList"><c path="awe.Entity"/></c>
+			<meta><m n=":allow"><e>awe</e></m></meta>
+		</entities>
+		<recycled expr="new BitVector(32)">
+			<c path="de.polygonal.ds.BitVector"/>
+			<meta>
+				<m n=":value"><e>new BitVector(32)</e></m>
+				<m n=":allow"><e>awe</e></m>
+			</meta>
+		</recycled>
+		<limbo expr="new ArrayedDeque&lt;EntityId&gt;()">
+			<c path="de.polygonal.ds.ArrayedDeque"><t path="awe.EntityId"/></c>
+			<meta><m n=":value"><e><![CDATA[new ArrayedDeque<EntityId>()]]></e></m></meta>
+		</limbo>
+		<nextId expr="0">
+			<t path="awe.EntityId"/>
+			<meta><m n=":value"><e>0</e></m></meta>
+		</nextId>
+		<count public="1">
+			<x path="Int"/>
+			<haxe_doc>The number of entities in the world.</haxe_doc>
+		</count>
+		<get_count get="inline" set="null" line="32"><f a=""><x path="Int"/></f></get_count>
+		<reset public="1" set="method" line="37">
+			<f a=""><x path="Void"/></f>
+			<haxe_doc>Reset this manager to its original state.</haxe_doc>
+		</reset>
+		<createEntity set="method" line="47">
+			<f a="id">
+				<t path="awe.EntityId"/>
+				<c path="awe.Entity"/>
+			</f>
+			<haxe_doc>Make an entity without registering it with the world.</haxe_doc>
+		</createEntity>
+		<createEntityInstance public="1" set="method" line="56">
+			<f a=""><c path="awe.Entity"/></f>
+			<haxe_doc>Construct a new, empty entity.</haxe_doc>
+		</createEntityInstance>
+		<create public="1" get="inline" set="null" line="70">
+			<f a=""><t path="awe.EntityId"/></f>
+			<haxe_doc>Construct a new, empty entity and returns its id.</haxe_doc>
+		</create>
+		<getEntity public="1" get="inline" set="null" line="75">
+			<f a="id">
+				<t path="awe.EntityId"/>
+				<t path="Null"><c path="awe.Entity"/></t>
+			</f>
+			<haxe_doc>Obtain entity object for id.</haxe_doc>
+		</getEntity>
+		<iterator public="1" get="inline" set="null" line="78"><f a=""><t path="Iterator"><c path="awe.Entity"/></t></f></iterator>
+		<free set="method" line="82">
+			<f a="id">
+				<t path="awe.EntityId"/>
+				<x path="Void"/>
+			</f>
+			<meta><m n=":allow"><e>awe</e></m></meta>
+		</free>
+		<new public="1" set="method" line="27">
+			<f a="?initialCapacity" v="32">
+				<x path="Int"/>
+				<x path="Void"/>
+			</f>
+			<meta>
+				<m n=":value"><e>{ initialCapacity : 32 }</e></m>
+				<m n=":allow"><e>awe</e></m>
+			</meta>
+		</new>
+		<haxe_doc>Allocates, manages, and de-allocates entities.</haxe_doc>
+		<meta><m n=":directlyUsed"/></meta>
+	</class>
+	<class path="awe.managers._EntityManager.EntityIterator" params="" file="src/awe/managers/EntityManager.hx" private="1" module="awe.managers.EntityManager">
+		<index expr="0">
+			<x path="Int"/>
+			<meta><m n=":value"><e>0</e></m></meta>
+		</index>
+		<entities><c path="awe.managers.EntityManager"/></entities>
+		<skipRecycled set="method" line="98"><f a=""><x path="Void"/></f></skipRecycled>
+		<hasNext public="1" set="method" line="105"><f a=""><x path="Bool"/></f></hasNext>
+		<next public="1" get="inline" set="null" line="110"><f a=""><t path="Null"><c path="awe.Entity"/></t></f></next>
+		<new public="1" set="method" line="95"><f a="entities">
+	<c path="awe.managers.EntityManager"/>
+	<x path="Void"/>
+</f></new>
+		<meta><m n=":directlyUsed"/></meta>
+	</class>
 	<class path="awe.managers.GroupManager" params="" file="src/awe/managers/GroupManager.hx">
 		<extends path="awe.System"/>
 		<groups><x path="Map">
 	<c path="String"/>
-	<c path="de.polygonal.ds.ArrayList"><x path="awe.Entity"/></c>
+	<c path="de.polygonal.ds.ArrayList"><c path="awe.Entity"/></c>
 </x></groups>
 		<add public="1" set="method" line="22">
 			<f a="entity:group">
-				<x path="awe.Entity"/>
+				<c path="awe.Entity"/>
 				<c path="String"/>
 				<x path="Void"/>
 			</f>
@@ -2737,7 +2784,7 @@
 		<getEntities public="1" get="inline" set="null" line="32">
 			<f a="group">
 				<c path="String"/>
-				<c path="de.polygonal.ds.ArrayList"><x path="awe.Entity"/></c>
+				<c path="de.polygonal.ds.ArrayList"><c path="awe.Entity"/></c>
 			</f>
 			<haxe_doc>Get the entities contained in a given group.
 	    @param group The group to check.
@@ -2745,7 +2792,7 @@
 		</getEntities>
 		<getGroups public="1" set="method" line="40">
 			<f a="entity">
-				<x path="awe.Entity"/>
+				<c path="awe.Entity"/>
 				<c path="de.polygonal.ds.ArrayList"><c path="String"/></c>
 			</f>
 			<haxe_doc>Get all groups the entity belongs to..
@@ -2754,7 +2801,7 @@
 		</getGroups>
 		<isInGroup public="1" get="inline" set="null" line="54">
 			<f a="entity:group">
-				<x path="awe.Entity"/>
+				<c path="awe.Entity"/>
 				<c path="String"/>
 				<x path="Bool"/>
 			</f>
@@ -2765,7 +2812,7 @@
 		</isInGroup>
 		<remove public="1" get="inline" set="null" line="62">
 			<f a="entity:group">
-				<x path="awe.Entity"/>
+				<c path="awe.Entity"/>
 				<c path="String"/>
 				<x path="Void"/>
 			</f>
@@ -2816,7 +2863,7 @@
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
 	<typedef path="awe.util.Thread" params="" file="src/awe/util/Thread.hx"><t path="Null"><d/></t></typedef>
-	<class path="de.polygonal.Printf" params="" file="/home/tom/.haxe_lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx">
+	<class path="de.polygonal.Printf" params="" file="/home/tom/.haxelibs/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx">
 		<dataTypeMap static="1"><c path="haxe.ds.IntMap"><e path="de.polygonal._Printf.FormatDataType"/></c></dataTypeMap>
 		<formatIntFuncHash static="1"><c path="haxe.ds.IntMap"><f a=":">
 	<x path="Int"/>
@@ -2971,13 +3018,13 @@
  * <p>See <a href="https://github.com/polygonal/printf" target="_blank">https://github.com/polygonal/printf</a>.</p>]]></haxe_doc>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<typedef path="de.polygonal._Printf.FormatArgs" params="" file="/home/tom/.haxe_lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf"><a>
+	<typedef path="de.polygonal._Printf.FormatArgs" params="" file="/home/tom/.haxelibs/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf"><a>
 	<width><t path="Null"><x path="Int"/></t></width>
 	<precision><t path="Null"><x path="Int"/></t></precision>
 	<pos><x path="Int"/></pos>
 	<flags><x path="haxe.EnumFlags"><e path="de.polygonal._Printf.FormatFlags"/></x></flags>
 </a></typedef>
-	<enum path="de.polygonal._Printf.FormatFlags" params="" file="/home/tom/.haxe_lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
+	<enum path="de.polygonal._Printf.FormatFlags" params="" file="/home/tom/.haxelibs/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
 		<Minus/>
 		<Plus/>
 		<Space/>
@@ -2989,7 +3036,7 @@
 		<UpperCase/>
 		<meta><m n=":flatEnum"/></meta>
 	</enum>
-	<enum path="de.polygonal._Printf.FormatToken" params="" file="/home/tom/.haxe_lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
+	<enum path="de.polygonal._Printf.FormatToken" params="" file="/home/tom/.haxelibs/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
 		<BareString a="str"><c path="String"/></BareString>
 		<Tag a="type:args">
 			<e path="de.polygonal._Printf.FormatDataType"/>
@@ -3002,7 +3049,7 @@
 		</Unknown>
 		<meta><m n=":directlyUsed"/></meta>
 	</enum>
-	<enum path="de.polygonal._Printf.FormatDataType" params="" file="/home/tom/.haxe_lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
+	<enum path="de.polygonal._Printf.FormatDataType" params="" file="/home/tom/.haxelibs/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
 		<FmtInteger a="integerType"><e path="de.polygonal._Printf.IntegerType"/></FmtInteger>
 		<FmtFloat a="floatType"><e path="de.polygonal._Printf.FloatType"/></FmtFloat>
 		<FmtString/>
@@ -3010,7 +3057,7 @@
 		<FmtNothing/>
 		<meta><m n=":directlyUsed"/></meta>
 	</enum>
-	<enum path="de.polygonal._Printf.IntegerType" params="" file="/home/tom/.haxe_lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
+	<enum path="de.polygonal._Printf.IntegerType" params="" file="/home/tom/.haxelibs/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
 		<ICharacter/>
 		<ISignedDecimal/>
 		<IUnsignedDecimal/>
@@ -3022,7 +3069,7 @@
 			<m n=":flatEnum"/>
 		</meta>
 	</enum>
-	<enum path="de.polygonal._Printf.FloatType" params="" file="/home/tom/.haxe_lib/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
+	<enum path="de.polygonal._Printf.FloatType" params="" file="/home/tom/.haxelibs/polygonal-printf/1,0,2-beta/de/polygonal/Printf.hx" private="1" module="de.polygonal.Printf">
 		<FNormal/>
 		<FScientific/>
 		<FNatural/>
@@ -3031,7 +3078,7 @@
 			<m n=":flatEnum"/>
 		</meta>
 	</enum>
-	<class path="de.polygonal.ds.Hashable" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/Hashable.hx" interface="1">
+	<class path="de.polygonal.ds.Hashable" params="" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/Hashable.hx" interface="1">
 		<key public="1" set="null">
 			<x path="Int"/>
 			<haxe_doc>A unique, unsigned 32-bit integer key.
@@ -3040,7 +3087,7 @@
 		</key>
 		<haxe_doc>An object that can be identified by an unique integer key</haxe_doc>
 	</class>
-	<class path="de.polygonal.ds.Collection" params="T" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/Collection.hx" interface="1">
+	<class path="de.polygonal.ds.Collection" params="T" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/Collection.hx" interface="1">
 		<extends path="de.polygonal.ds.Hashable"/>
 		<get_size public="1" set="method">
 			<f a=""><x path="Int"/></f>
@@ -3156,7 +3203,7 @@
 		</clone>
 		<haxe_doc>A collection is an object that stores other objects (its elements)</haxe_doc>
 	</class>
-	<class path="de.polygonal.ds.List" params="T" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/List.hx" interface="1">
+	<class path="de.polygonal.ds.List" params="T" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/List.hx" interface="1">
 		<extends path="de.polygonal.ds.Collection"><c path="de.polygonal.ds.List.T"/></extends>
 		<get public="1" set="method">
 			<f a="index">
@@ -3216,7 +3263,7 @@
 		</getRange>
 		<haxe_doc>An ordered list of elements</haxe_doc>
 	</class>
-	<class path="de.polygonal.ds.ArrayList" params="T" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/ArrayList.hx">
+	<class path="de.polygonal.ds.ArrayList" params="T" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/ArrayList.hx">
 		<implements path="de.polygonal.ds.List"><c path="de.polygonal.ds.ArrayList.T"/></implements>
 		<key public="1" set="null" expr="HashKey.next()">
 			<x path="Int"/>
@@ -3723,7 +3770,7 @@
 		]]]></haxe_doc>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<class path="de.polygonal.ds.Itr" params="T" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/Itr.hx" interface="1">
+	<class path="de.polygonal.ds.Itr" params="T" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/Itr.hx" interface="1">
 		<hasNext public="1" set="method">
 			<f a=""><x path="Bool"/></f>
 			<haxe_doc>Returns true if this iteration has more elements.
@@ -3769,7 +3816,7 @@
 	
 	Same as typedef Iterator<T> but with an extra `this.reset()` and `this.remove()` method.]]></haxe_doc>
 	</class>
-	<class path="de.polygonal.ds.ArrayListIterator" params="T" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/ArrayList.hx" module="de.polygonal.ds.ArrayList">
+	<class path="de.polygonal.ds.ArrayListIterator" params="T" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/ArrayList.hx" module="de.polygonal.ds.ArrayList">
 		<implements path="de.polygonal.ds.Itr"><c path="de.polygonal.ds.ArrayListIterator.T"/></implements>
 		<mObject><c path="de.polygonal.ds.ArrayList"><c path="de.polygonal.ds.ArrayListIterator.T"/></c></mObject>
 		<mData><t path="de.polygonal.ds.NativeArray"><c path="de.polygonal.ds.ArrayListIterator.T"/></t></mData>
@@ -3790,7 +3837,342 @@
 			<m n=":dox"><e>hide</e></m>
 		</meta>
 	</class>
-	<class path="de.polygonal.ds.BitVector" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/BitVector.hx">
+	<class path="de.polygonal.ds.Deque" params="T" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/Deque.hx" interface="1">
+		<extends path="de.polygonal.ds.Collection"><c path="de.polygonal.ds.Deque.T"/></extends>
+		<front public="1" set="method">
+			<f a=""><c path="de.polygonal.ds.Deque.T"/></f>
+			<haxe_doc>Returns the first element of the deque (index 0).</haxe_doc>
+		</front>
+		<pushFront public="1" set="method">
+			<f a="val">
+				<c path="de.polygonal.ds.Deque.T"/>
+				<x path="Void"/>
+			</f>
+			<haxe_doc>Inserts `val` at the front of the deque.</haxe_doc>
+		</pushFront>
+		<popFront public="1" set="method">
+			<f a=""><c path="de.polygonal.ds.Deque.T"/></f>
+			<haxe_doc>Removes and returns the element at the beginning of the deque.</haxe_doc>
+		</popFront>
+		<back public="1" set="method">
+			<f a=""><c path="de.polygonal.ds.Deque.T"/></f>
+			<haxe_doc>Returns the last element of the deque (index `Collection.size` - 1).</haxe_doc>
+		</back>
+		<pushBack public="1" set="method">
+			<f a="val">
+				<c path="de.polygonal.ds.Deque.T"/>
+				<x path="Void"/>
+			</f>
+			<haxe_doc>Inserts `val` at the back of the deque.</haxe_doc>
+		</pushBack>
+		<popBack public="1" set="method">
+			<f a=""><c path="de.polygonal.ds.Deque.T"/></f>
+			<haxe_doc>Deletes the element at the end of the deque.</haxe_doc>
+		</popBack>
+		<haxe_doc>A double-ended queue that supports fast element insertion and removal at both ends</haxe_doc>
+	</class>
+	<class path="de.polygonal.ds.ArrayedDeque" params="T" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/ArrayedDeque.hx">
+		<implements path="de.polygonal.ds.Deque"><c path="de.polygonal.ds.ArrayedDeque.T"/></implements>
+		<key public="1" set="null" expr="HashKey.next()">
+			<x path="Int"/>
+			<meta><m n=":value"><e>HashKey.next()</e></m></meta>
+			<haxe_doc>A unique identifier for this object.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.</haxe_doc>
+		</key>
+		<reuseIterator public="1" expr="false">
+			<x path="Bool"/>
+			<meta><m n=":value"><e>false</e></m></meta>
+			<haxe_doc>If true, reuses the iterator object instead of allocating a new one when calling `this.iterator()`.
+		
+		The default is false.
+		
+		_If this value is true, nested iterations will fail as only one iteration is allowed at a time._</haxe_doc>
+		</reuseIterator>
+		<mBlockSize><x path="Int"/></mBlockSize>
+		<mBlockSizeMinusOne><x path="Int"/></mBlockSizeMinusOne>
+		<mBlockSizeShift><x path="Int"/></mBlockSizeShift>
+		<mHead expr="0">
+			<x path="Int"/>
+			<meta><m n=":value"><e>0</e></m></meta>
+		</mHead>
+		<mTail expr="1">
+			<x path="Int"/>
+			<meta><m n=":value"><e>1</e></m></meta>
+		</mTail>
+		<mTailBlockIndex expr="0">
+			<x path="Int"/>
+			<meta><m n=":value"><e>0</e></m></meta>
+		</mTailBlockIndex>
+		<mBlocks><t path="de.polygonal.ds.NativeArray"><t path="de.polygonal.ds.NativeArray"><c path="de.polygonal.ds.ArrayedDeque.T"/></t></t></mBlocks>
+		<mNumBlocks expr="0">
+			<x path="Int"/>
+			<meta><m n=":value"><e>0</e></m></meta>
+		</mNumBlocks>
+		<mMaxBlocks expr="16">
+			<x path="Int"/>
+			<meta><m n=":value"><e>16</e></m></meta>
+		</mMaxBlocks>
+		<mHeadBlock><t path="de.polygonal.ds.NativeArray"><c path="de.polygonal.ds.ArrayedDeque.T"/></t></mHeadBlock>
+		<mTailBlock><t path="de.polygonal.ds.NativeArray"><c path="de.polygonal.ds.ArrayedDeque.T"/></t></mTailBlock>
+		<mHeadBlockNext expr="null">
+			<t path="de.polygonal.ds.NativeArray"><c path="de.polygonal.ds.ArrayedDeque.T"/></t>
+			<meta><m n=":value"><e>null</e></m></meta>
+		</mHeadBlockNext>
+		<mTailBlockPrev expr="null">
+			<t path="de.polygonal.ds.NativeArray"><c path="de.polygonal.ds.ArrayedDeque.T"/></t>
+			<meta><m n=":value"><e>null</e></m></meta>
+		</mTailBlockPrev>
+		<mBlockPool><t path="de.polygonal.ds.NativeArray"><t path="de.polygonal.ds.NativeArray"><c path="de.polygonal.ds.ArrayedDeque.T"/></t></t></mBlockPool>
+		<mPoolSize expr="0">
+			<x path="Int"/>
+			<meta><m n=":value"><e>0</e></m></meta>
+		</mPoolSize>
+		<mPoolCapacity><x path="Int"/></mPoolCapacity>
+		<mIterator expr="null">
+			<c path="de.polygonal.ds.ArrayedDequeIterator"><c path="de.polygonal.ds.ArrayedDeque.T"/></c>
+			<meta><m n=":value"><e>null</e></m></meta>
+		</mIterator>
+		<front public="1" get="inline" set="null" line="122">
+			<f a=""><c path="de.polygonal.ds.ArrayedDeque.T"/></f>
+			<haxe_doc>Returns the first element of this deque (index 0).</haxe_doc>
+		</front>
+		<pushFront public="1" get="inline" set="null" line="132">
+			<f a="val">
+				<c path="de.polygonal.ds.ArrayedDeque.T"/>
+				<x path="Void"/>
+			</f>
+			<haxe_doc>Inserts `val` at the front of this deque.</haxe_doc>
+		</pushFront>
+		<popFront public="1" get="inline" set="null" line="141">
+			<f a=""><c path="de.polygonal.ds.ArrayedDeque.T"/></f>
+			<haxe_doc>Removes and returns the element at the beginning of this deque.</haxe_doc>
+		</popFront>
+		<back public="1" get="inline" set="null" line="157">
+			<f a=""><c path="de.polygonal.ds.ArrayedDeque.T"/></f>
+			<haxe_doc>Returns the last element of the deque (index `this.size` - 1).</haxe_doc>
+		</back>
+		<pushBack public="1" get="inline" set="null" line="167">
+			<f a="val">
+				<c path="de.polygonal.ds.ArrayedDeque.T"/>
+				<x path="Void"/>
+			</f>
+			<haxe_doc>Inserts `val` at the back of the deque.</haxe_doc>
+		</pushBack>
+		<popBack public="1" set="method" line="177">
+			<f a=""><c path="de.polygonal.ds.ArrayedDeque.T"/></f>
+			<haxe_doc>Deletes the element at the end of the deque.</haxe_doc>
+		</popBack>
+		<getFront public="1" set="method" line="195">
+			<f a="i">
+				<x path="Int"/>
+				<c path="de.polygonal.ds.ArrayedDeque.T"/>
+			</f>
+			<haxe_doc>Returns the element at index `i` relative to the front of this deque.
+		
+		The front element is at index [0], the back element is at index [`this.size` - 1].</haxe_doc>
+		</getFront>
+		<indexOfFront public="1" set="method" line="209">
+			<f a="val">
+				<c path="de.polygonal.ds.ArrayedDeque.T"/>
+				<x path="Int"/>
+			</f>
+			<haxe_doc>Returns the index of the first occurence of `val` or -1 if `val` does not exist.
+		
+		The front element is at index [0], the back element is at index [`this.size` - 1].</haxe_doc>
+		</indexOfFront>
+		<getBack public="1" set="method" line="226">
+			<f a="i">
+				<x path="Int"/>
+				<c path="de.polygonal.ds.ArrayedDeque.T"/>
+			</f>
+			<haxe_doc>Returns the element at index `i` relative to the back of this deque.
+		
+		The back element is at index [0], the front element is at index [`this.size` - 1].</haxe_doc>
+		</getBack>
+		<indexOfBack public="1" set="method" line="240">
+			<f a="val">
+				<c path="de.polygonal.ds.ArrayedDeque.T"/>
+				<x path="Int"/>
+			</f>
+			<haxe_doc>Returns the index of the first occurence of `val` or -1 if `val` does not exist.
+		
+		The back element is at index [0], the front element is at index [`this.size` - 1].</haxe_doc>
+		</indexOfBack>
+		<pack public="1" set="method" line="257">
+			<f a=""><c path="de.polygonal.ds.ArrayedDeque"><c path="de.polygonal.ds.ArrayedDeque.T"/></c></f>
+			<haxe_doc>Removes all superfluous blocks and overwrites elements stored in empty locations with null.
+		
+		An application can use this operation to free up memory by unlocking resources for the garbage collector.</haxe_doc>
+		</pack>
+		<forEach public="1" set="method" line="276">
+			<f a="f">
+				<f a=":">
+					<c path="de.polygonal.ds.ArrayedDeque.T"/>
+					<x path="Int"/>
+					<c path="de.polygonal.ds.ArrayedDeque.T"/>
+				</f>
+				<c path="de.polygonal.ds.ArrayedDeque"><c path="de.polygonal.ds.ArrayedDeque.T"/></c>
+			</f>
+			<haxe_doc>Calls `f` on all elements.
+		
+		The function signature is: `f(input, index):output`
+		
+		- input: current element
+		- index: position relative to the front(=0)
+		- output: element to be stored at given index</haxe_doc>
+		</forEach>
+		<iter public="1" set="method" line="300">
+			<f a="f">
+				<f a="">
+					<c path="de.polygonal.ds.ArrayedDeque.T"/>
+					<x path="Void"/>
+				</f>
+				<c path="de.polygonal.ds.ArrayedDeque"><c path="de.polygonal.ds.ArrayedDeque.T"/></c>
+			</f>
+			<haxe_doc>Calls 'f` on all elements in order.</haxe_doc>
+		</iter>
+		<toString public="1" set="method" line="325">
+			<f a=""><c path="String"/></f>
+			<haxe_doc>Prints out all elements.</haxe_doc>
+		</toString>
+		<size public="1" get="accessor" set="null">
+			<x path="Int"/>
+			<haxe_doc>The total number of elements.</haxe_doc>
+		</size>
+		<get_size set="method" line="402"><f a=""><x path="Int"/></f></get_size>
+		<free public="1" set="method" line="413">
+			<f a=""><x path="Void"/></f>
+			<meta><m n=":access"><e>de.polygonal.ds.BlockList</e></m></meta>
+			<haxe_doc>Destroys this object by explicitly nullifying all elements for GC'ing used resources.
+		
+		Improves GC efficiency/performance (optional).</haxe_doc>
+		</free>
+		<contains public="1" set="method" line="433">
+			<f a="val">
+				<c path="de.polygonal.ds.ArrayedDeque.T"/>
+				<x path="Bool"/>
+			</f>
+			<haxe_doc>Returns true if this deque contains `val`.</haxe_doc>
+		</contains>
+		<remove public="1" set="method" line="470">
+			<f a="val">
+				<c path="de.polygonal.ds.ArrayedDeque.T"/>
+				<x path="Bool"/>
+			</f>
+			<haxe_doc>Removes and nullifies all occurrences of `val`.
+		@return true if at least one occurrence of `val` was removed.</haxe_doc>
+		</remove>
+		<clear public="1" set="method" line="675">
+			<f a="?gc" v="false">
+				<x path="Bool"/>
+				<x path="Void"/>
+			</f>
+			<meta><m n=":value"><e>{ gc : false }</e></m></meta>
+			<haxe_doc>Removes all elements.
+		
+		@param gc if true, elements are nullified upon removal so the garbage collector can reclaim used memory.</haxe_doc>
+		</clear>
+		<iterator public="1" set="method" line="710">
+			<f a=""><c path="de.polygonal.ds.Itr"><c path="de.polygonal.ds.ArrayedDeque.T"/></c></f>
+			<haxe_doc>Returns a new *ArrayedDequeIterator* object to iterate over all elements contained in this deque.
+		
+		Preserves the natural order of a deque.
+		
+		@see http://haxe.org/ref/iterators</haxe_doc>
+		</iterator>
+		<isEmpty public="1" get="inline" set="null" line="727">
+			<f a=""><x path="Bool"/></f>
+			<haxe_doc>Returns true only if `this.size` is 0.</haxe_doc>
+		</isEmpty>
+		<toArray public="1" set="method" line="738">
+			<f a=""><c path="Array"><c path="de.polygonal.ds.ArrayedDeque.T"/></c></f>
+			<haxe_doc>Returns an array containing all elements in this deque in the natural order.</haxe_doc>
+		</toArray>
+		<clone public="1" set="method" line="774">
+			<f a="?byRef:?copier" v="true:null">
+				<x path="Bool"/>
+				<f a="">
+					<c path="de.polygonal.ds.ArrayedDeque.T"/>
+					<c path="de.polygonal.ds.ArrayedDeque.T"/>
+				</f>
+				<c path="de.polygonal.ds.Collection"><c path="de.polygonal.ds.ArrayedDeque.T"/></c>
+			</f>
+			<meta><m n=":value"><e>{ copier : null, byRef : true }</e></m></meta>
+			<haxe_doc><![CDATA[Creates and returns a shallow copy (structure only - default) or deep copy (structure & elements) of this deque.
+		
+		If `byRef` is true, primitive elements are copied by value whereas objects are copied by reference.
+		
+		If `byRef` is false, the `copier` function is used for copying elements. If omitted, `clone()` is called on each element assuming all elements implement `Cloneable`.]]></haxe_doc>
+		</clone>
+		<shiftBlock set="method" line="867"><f a=""><x path="Void"/></f></shiftBlock>
+		<unshiftBlock set="method" line="889"><f a=""><x path="Void"/></f></unshiftBlock>
+		<popBlock set="method" line="911"><f a=""><x path="Void"/></f></popBlock>
+		<pushBlock set="method" line="929"><f a=""><x path="Void"/></f></pushBlock>
+		<getBlock set="method" line="949"><f a=""><t path="de.polygonal.ds.NativeArray"><c path="de.polygonal.ds.ArrayedDeque.T"/></t></f></getBlock>
+		<putBlock set="method" line="957"><f a="x">
+	<t path="de.polygonal.ds.NativeArray"><c path="de.polygonal.ds.ArrayedDeque.T"/></t>
+	<x path="Void"/>
+</f></putBlock>
+		<new public="1" set="method" line="98">
+			<f a="?blockSize:?blockPoolCapacity:?source" v="64:4:">
+				<x path="Int"/>
+				<x path="Int"/>
+				<c path="Array"><c path="de.polygonal.ds.ArrayedDeque.T"/></c>
+				<x path="Void"/>
+			</f>
+			<meta><m n=":value"><e>{ blockPoolCapacity : 4, blockSize : 64 }</e></m></meta>
+			<haxe_doc>@param blockSize a block represents a contiguous piece of memory; whenever the deque runs out of space an additional block with a capacity of `blockSize` elements is allocated and added to the list of existing blocks.
+		The parameter affects the performance-memory trade-off: a large `blockSize` improves performances but wastes memory if the utilization is low; a small `blockSize` uses memory more efficiently but is slower due to frequent allocation of blocks.
+		The default value is 64; the minimum value is 4.
+		_`blockSize` has to be a power of two._
+		@param blockPoolCapacity the total number of blocks to reuse when blocks are removed or relocated (from front to back or vice-versa). This improves performances but uses more memory.
+		The default value is 4; a value of 0 disables block pooling.
+		@param source copies all values from `source` in the range [0, `source.length` - 1] to this collection.</haxe_doc>
+		</new>
+		<haxe_doc><![CDATA[A deque is a "double-ended queue"
+	
+	This is a linear list for which all insertions and deletions (and usually all accesses) are made at ends of the list.
+	
+	Example:
+		var o = new de.polygonal.ds.ArrayedDeque<Int>();
+		for (i in 0...4) o.pushFront(i);
+		trace(o); //outputs:
+		
+		[ ArrayedDeque size=4
+		  front
+		  0 -> 3
+		  1 -> 2
+		  2 -> 1
+		  3 -> 0
+		]]]></haxe_doc>
+		<meta><m n=":directlyUsed"/></meta>
+	</class>
+	<class path="de.polygonal.ds.ArrayedDequeIterator" params="T" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/ArrayedDeque.hx" module="de.polygonal.ds.ArrayedDeque">
+		<implements path="de.polygonal.ds.Itr"><c path="de.polygonal.ds.ArrayedDequeIterator.T"/></implements>
+		<mObject><c path="de.polygonal.ds.ArrayedDeque"><c path="de.polygonal.ds.ArrayedDequeIterator.T"/></c></mObject>
+		<mBlocks><t path="de.polygonal.ds.NativeArray"><t path="de.polygonal.ds.NativeArray"><c path="de.polygonal.ds.ArrayedDequeIterator.T"/></t></t></mBlocks>
+		<mBlock><t path="de.polygonal.ds.NativeArray"><c path="de.polygonal.ds.ArrayedDequeIterator.T"/></t></mBlock>
+		<mI><x path="Int"/></mI>
+		<mS><x path="Int"/></mS>
+		<mB><x path="Int"/></mB>
+		<mBlockSize><x path="Int"/></mBlockSize>
+		<free public="1" set="method" line="985"><f a=""><x path="Void"/></f></free>
+		<reset public="1" set="method" line="992"><f a=""><c path="de.polygonal.ds.Itr"><c path="de.polygonal.ds.ArrayedDequeIterator.T"/></c></f></reset>
+		<hasNext public="1" get="inline" set="null" line="1004"><f a=""><x path="Bool"/></f></hasNext>
+		<next public="1" get="inline" set="null" line="1009"><f a=""><c path="de.polygonal.ds.ArrayedDequeIterator.T"/></f></next>
+		<remove public="1" set="method" line="1021"><f a=""><x path="Void"/></f></remove>
+		<new public="1" set="method" line="979"><f a="x">
+	<c path="de.polygonal.ds.ArrayedDeque"><c path="de.polygonal.ds.ArrayedDequeIterator.T"/></c>
+	<x path="Void"/>
+</f></new>
+		<meta>
+			<m n=":directlyUsed"/>
+			<m n=":access"><e>de.polygonal.ds.ArrayedDeque</e></m>
+			<m n=":dox"><e>hide</e></m>
+		</meta>
+	</class>
+	<class path="de.polygonal.ds.BitVector" params="" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/BitVector.hx">
 		<implements path="de.polygonal.ds.Hashable"/>
 		<key public="1" set="null" expr="HashKey.next()">
 			<x path="Int"/>
@@ -3958,7 +4340,7 @@
 		]]]></haxe_doc>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<class path="de.polygonal.ds.Cloneable" params="T" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/Cloneable.hx" interface="1">
+	<class path="de.polygonal.ds.Cloneable" params="T" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/Cloneable.hx" interface="1">
 		<clone public="1" set="method">
 			<f a=""><c path="de.polygonal.ds.Cloneable.T"/></f>
 			<haxe_doc>Returns a copy of this object.</haxe_doc>
@@ -3974,7 +4356,7 @@
 		}]]></haxe_doc>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<class path="de.polygonal.ds.Comparable" params="T" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/Comparable.hx" interface="1">
+	<class path="de.polygonal.ds.Comparable" params="T" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/Comparable.hx" interface="1">
 		<compare public="1" set="method">
 			<f a="other">
 				<c path="de.polygonal.ds.Comparable.T"/>
@@ -3996,7 +4378,7 @@
 		}]]></haxe_doc>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<class path="de.polygonal.ds.HashKey" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/HashKey.hx">
+	<class path="de.polygonal.ds.HashKey" params="" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/HashKey.hx">
 		<_counter static="1"><x path="Int"/></_counter>
 		<next public="1" set="method" line="38" static="1">
 			<f a=""><x path="Int"/></f>
@@ -4005,11 +4387,11 @@
 		<haxe_doc>Generates unique, unsigned integer keys</haxe_doc>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<typedef path="de.polygonal.ds.NativeArray" params="T" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/NativeArray.hx">
+	<typedef path="de.polygonal.ds.NativeArray" params="T" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/NativeArray.hx">
 		<c path="Array"><c path="de.polygonal.ds.NativeArray.T"/></c>
 		<haxe_doc>Fixed size "native" array that can be faster on some targets.</haxe_doc>
 	</typedef>
-	<class path="de.polygonal.ds.tools.ArrayTools" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/ArrayTools.hx">
+	<class path="de.polygonal.ds.tools.ArrayTools" params="" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/ArrayTools.hx">
 		<alloc public="1" params="T" get="inline" set="null" line="35" static="1">
 			<f a="len">
 				<x path="Int"/>
@@ -4215,7 +4597,7 @@
 		<haxe_doc>Utility class for working with Arrays.</haxe_doc>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<class path="de.polygonal.ds.tools.Assert" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/Assert.hx">
+	<class path="de.polygonal.ds.tools.Assert" params="" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/Assert.hx">
 		<assert public="1" set="method" static="1"><f a="predicate:?info">
 	<d/>
 	<d/>
@@ -4227,7 +4609,7 @@
 	
 	If that condition is not true, the assertion fails, throwing an instance of the `AssertError` class.</haxe_doc>
 	</class>
-	<class path="de.polygonal.ds.tools.Bits" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/Bits.hx">
+	<class path="de.polygonal.ds.tools.Bits" params="" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/Bits.hx">
 		<mask public="1" get="inline" set="null" line="31" static="1">
 			<f a="n">
 				<x path="Int"/>
@@ -4302,7 +4684,7 @@
 		</flipDWORD>
 		<haxe_doc>Helper class for working with bits</haxe_doc>
 	</class>
-	<class path="de.polygonal.ds.tools.GrowthRate" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/GrowthRate.hx">
+	<class path="de.polygonal.ds.tools.GrowthRate" params="" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/GrowthRate.hx">
 		<FIXED public="1" get="inline" set="null" expr="0" line="28" static="1">
 			<x path="Int"/>
 			<meta><m n=":value"><e>0</e></m></meta>
@@ -4335,7 +4717,7 @@
 		</compute>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<class path="de.polygonal.ds.tools.MathTools" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/MathTools.hx" extern="1">
+	<class path="de.polygonal.ds.tools.MathTools" params="" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/MathTools.hx" extern="1">
 		<INT32_MIN public="1" get="inline" set="null" expr="0x80000000" line="32" static="1">
 			<x path="Int"/>
 			<meta><m n=":value"><e>0x80000000</e></m></meta>
@@ -4411,7 +4793,7 @@
 		</numDigits>
 		<meta><m n=":dox"><e>hide</e></m></meta>
 	</class>
-	<class path="de.polygonal.ds.tools.NativeArrayTools" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/NativeArrayTools.hx">
+	<class path="de.polygonal.ds.tools.NativeArrayTools" params="" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/NativeArrayTools.hx">
 		<alloc public="1" params="T" get="inline" set="null" line="32" static="1">
 			<f a="len">
 				<x path="Int"/>
@@ -4560,7 +4942,7 @@
 		<haxe_doc>Utility class for modifying `NativeArray` objects</haxe_doc>
 		<meta><m n=":directlyUsed"/></meta>
 	</class>
-	<class path="de.polygonal.ds.tools.Shuffle" params="" file="/home/tom/.haxe_lib/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/Shuffle.hx">
+	<class path="de.polygonal.ds.tools.Shuffle" params="" file="/home/tom/.haxelibs/polygonal-ds/2,0,1/src/de/polygonal/ds/tools/Shuffle.hx">
 		<_f expr="function() return Math.random()" line="23" static="1">
 			<f a=""><x path="Float"/></f>
 			<meta><m n=":value"><e>function() return Math.random()</e></m></meta>
