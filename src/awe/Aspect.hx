@@ -1,8 +1,5 @@
 package awe;
 import haxe.macro.Expr;
-#if macro
-import awe.Component.AutoComponent;
-#end
 using haxe.macro.ExprTools;
 using haxe.macro.TypeTools;
 using haxe.macro.ComplexTypeTools;

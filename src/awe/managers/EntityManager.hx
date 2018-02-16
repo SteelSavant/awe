@@ -18,12 +18,19 @@ class EntityManager extends System {
 	var limbo: ArrayedDeque<EntityId> = new ArrayedDeque<EntityId>();
 	var nextId: EntityId = 0;
 
+	/**
+		The number of entities in the world.
+	**/
+	public var count: Int;
+
 	@:allow(awe)
 	public function new(initialCapacity: Int = 32) {
 		super();
 		entities = new ArrayList<Entity>(initialCapacity);
+		count = 0;
 	}
-
+	inline function get_count(): Int
+		return entities.size;
 	/**
 		Reset this manager to its original state.
 	*/
@@ -32,6 +39,7 @@ class EntityManager extends System {
 		recycled.clearAll();
 		entities.clear();
 		nextId = 0;
+		count = 0;
 	}
 	/**
 		Make an entity without registering it with the world.
@@ -39,6 +47,7 @@ class EntityManager extends System {
 	function createEntity(id: EntityId): Entity {
 		var e = new Entity(world, id);
 		entities.set(id, e);
+		count++;
 		return e;
 	} 
 	/**
@@ -71,8 +80,11 @@ class EntityManager extends System {
 
 	@:allow(awe)
 	function free(id: EntityId): Void {
+		if(entities.get(id) == null)
+			return;
 		limbo.pushBack(id);
 		recycled.set(id);
+		count--;
 	}
 }
 
