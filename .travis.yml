@@ -16,6 +16,7 @@ matrix:
     - haxe: development
     
 install:
+  - haxelib dev awe .
   - haxelib install polygonal-ds
   - haxelib install utest
 
