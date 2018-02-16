@@ -13,6 +13,9 @@ import haxe.macro.Expr;
 abstract ComponentType(Int) from Int to Int {
 	public static macro function getComponentCount(): ExprOf<Int>
 		return macro $v{count};
+	#if (!macro && (doc || display))
+	public static var count: Int;
+	#end
 	#if macro
 	public static var count:Int = 0;
 	public static var basicTypes(default, never) = new Map<String, ComponentType>();

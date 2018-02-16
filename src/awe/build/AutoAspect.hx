@@ -11,6 +11,12 @@ import awe.ComponentType;
 import de.polygonal.ds.BitVector;
 using awe.util.MacroTools;
 
+#if !macro
+class AutoAspect {
+	public static function build(expr: Expr): ExprOf<Aspect>
+		return null;
+}
+#else
 class AutoAspect {
 	public static function build(expr: Expr): ExprOf<Aspect> {
 		var all = new BitVector(ComponentType.count);
@@ -55,3 +61,4 @@ class AutoAspect {
 		return macro new Aspect(${all.wrapBits()}, ${one.wrapBits()}, ${none.wrapBits()});
 	}
 }
+#end

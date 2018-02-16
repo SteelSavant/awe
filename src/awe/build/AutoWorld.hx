@@ -8,6 +8,12 @@ using awe.util.MacroTools;
 using awe.util.MoreStringTools;
 import haxe.macro.Expr;
 
+#if !macro
+class AutoWorld {
+	public static function build(setup: ExprOf<World.WorldConfiguration>): ExprOf<World>
+		return null;
+}
+#else
 class AutoWorld {
 	public static function build(setup: ExprOf<World.WorldConfiguration>): ExprOf<World> {
 		var expectedCountExpr = setup.getField("expectedEntityCount");
@@ -50,3 +56,4 @@ class AutoWorld {
 		return macro $b{block};
 	}
 }
+#end

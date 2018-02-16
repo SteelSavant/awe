@@ -1,5 +1,6 @@
 package awe.build;
 
+
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
@@ -10,6 +11,11 @@ using awe.util.MacroTools;
 
 typedef MType = haxe.macro.Type;
 
+#if(!macro)
+class AutoComponent {
+	public static function from(): Array<Field> return null;
+}
+#else
 class AutoComponent {
 	static function exprPath(t: ComplexType): ExprOf<Class<Dynamic>> {
 		return switch(t) {
@@ -268,3 +274,4 @@ class AutoComponent {
 		return fields;
 	}
 }
+#end

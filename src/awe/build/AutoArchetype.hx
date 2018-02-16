@@ -11,6 +11,7 @@ import awe.ComponentType;
 
 import de.polygonal.ds.BitVector;
 
+#if !macro
 class AutoArchetype {
 
 	/**
@@ -19,6 +20,10 @@ class AutoArchetype {
 		@param types The component classes.
 		@return The created `Archetype` instance.
 	*/
+	public static function build(types: Array<ExprOf<Class<Component>>>): ExprOf<Archetype> return null;
+}
+#else
+class AutoArchetype {
 	public static function build(types: Array<ExprOf<Class<Component>>>): ExprOf<Archetype> {
 		var cid = new BitVector(ComponentType.count);
 		var types = [for(typeExpr in types) {
@@ -42,3 +47,4 @@ class AutoArchetype {
 		return macro new Archetype(${cid.wrapBits()});
 	}
 }
+#end
