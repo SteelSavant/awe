@@ -86,8 +86,14 @@ class ComponentList<T: Component> implements IComponentList<T> {
 
 	public function remove(id: EntityId): Void {
 		var value: Null<T> = data.get(id);
+		if(value == null)
+			throw 'Cannot remove null component of #$id';
 		data.set(id, null);
-		world.components.getComponentBits(id).clear(value.getType().getPure());
+		var bits = world.components.getComponentBits(id);
+		var cty = value.getType().getPure();
+		if(!bits.has(cty))
+			throw 'Entity #$id does not have component';
+		bits.clear(cty);
 	}
 
 	public inline function iterator(): ComponentListIterator<T>

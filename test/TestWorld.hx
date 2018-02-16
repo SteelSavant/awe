@@ -27,6 +27,14 @@ class TestWorld {
         });
     }
     public function new() {    }
+
+    public function testComponentTypes() {
+        var pos = awe.ComponentType.of(Pos);
+        var vel = awe.ComponentType.of(Vel);
+
+        Assert.isFalse(pos.isEmpty());
+        Assert.isFalse(vel.isEmpty());
+    }
     
     public function testWorldEntity() {
         reset();
@@ -42,14 +50,19 @@ class TestWorld {
         entity.deleteFromWorld();
         Assert.equals(entity.world, null);
         Assert.equals(world.entities.count, 0);
+        entity.deleteFromWorld();
+        Assert.equals(world.entities.count, 0);
     }
-    public function testWorldEntities() {
+    public function testWorldArchetype() {
         reset();
         var entityArch = Archetype.build(Pos, Vel);
         for(i in 0...14) {
             var entity: Entity = world.createEntityFromArchetype(entityArch);
+            trace(entity.componentBits.toString());
             Assert.isTrue(entity.has(Pos));
             Assert.isTrue(entity.has(Vel));
+            entity.remove(Vel);
+            Assert.isFalse(entity.has(Vel));
         }
     }
 }

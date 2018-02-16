@@ -35,7 +35,7 @@ abstract ComponentType(Int) from Int to Int {
 	#end
 
 	public static macro function of(ty: ExprOf<Class<Dynamic>>): ExprOf<ComponentType> {
-		return macro cast($v{get(ty.resolveTypeLiteral())}, ComponentType);
+		return macro cast($v{get(ty.resolveTypeLiteral())}, awe.ComponentType);
 	}
 
 

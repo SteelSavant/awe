@@ -44,6 +44,8 @@ class Entity {
 		Delete this entity from the world.
 	*/
 	public function deleteFromWorld(): Void {
+		if(world == null)
+			return;
 		world.entities.free(id);
 		world.components.componentBits.remove(id);
 		world = null;
