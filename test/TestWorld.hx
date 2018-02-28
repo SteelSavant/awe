@@ -50,12 +50,14 @@ class TestWorld {
         Assert.isFalse(vel.isPooled());
     }
     public function testWorldComponentPools() {
-        var pos = new Pos();
+        reset();
+        var entity: Entity = world.createEntityFromArchetype(Archetype.build(Pos, Vel));
+        var pos = entity.get(Pos);
         pos.x = 10;
         pos.y = 10;
-        pos.reset();
-        Assert.equals(pos.x, -1);
-        Assert.equals(pos.y, -1);
+
+        entity.remove(Pos);
+        Assert.isNull(entity.get(Pos));
     }
     
     public function testWorldEntity() {
