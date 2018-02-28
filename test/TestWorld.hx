@@ -10,9 +10,9 @@ import awe.Entity;
 import awe.System;
 
 
-class Pos implements Component {
-    public var x: Float;
-    public var y: Float;
+class Pos implements PooledComponent {
+    public var x: Float = -1;
+    public var y: Float = -1;
     public function new() {}
 }
 class Vel implements Component {
@@ -45,13 +45,24 @@ class TestWorld {
         var vel = awe.ComponentType.of(Vel);
 
         Assert.isFalse(pos.isEmpty());
+        Assert.isTrue(pos.isPooled());
         Assert.isFalse(vel.isEmpty());
+        Assert.isFalse(vel.isPooled());
+    }
+    public function testWorldComponentPools() {
+        var pos = new Pos();
+        pos.x = 10;
+        pos.y = 10;
+        pos.reset();
+        Assert.equals(pos.x, -1);
+        Assert.equals(pos.y, -1);
     }
     
     public function testWorldEntity() {
         reset();
         Assert.equals(world.entities.count, 0);
         var entity: Entity = world.createEntityFromArchetype(Archetype.build(Pos, Vel));
+        Assert.isTrue(entity != null);
         Assert.equals(world.entities.count, 1);
         Assert.isTrue(entity.has(Pos));
         Assert.isTrue(entity.has(Vel));
@@ -61,8 +72,6 @@ class TestWorld {
         Assert.isTrue(entity.has(Vel));
         entity.deleteFromWorld();
         Assert.equals(entity.world, null);
-        Assert.equals(world.entities.count, 0);
-        entity.deleteFromWorld();
         Assert.equals(world.entities.count, 0);
     }
     public function testWorldArchetype() {
