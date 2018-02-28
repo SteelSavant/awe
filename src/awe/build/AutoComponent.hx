@@ -52,12 +52,15 @@ class AutoComponent {
 	public static function buildReset(vars: Array<Field>): Expr {
 		var block = [];
 		for(v in vars) {
-			switch(v.kind) {
+			var val = switch(v.kind) {
 				case FieldType.FVar(ty, null):
-					return defaultValue(ty);
+					defaultValue(ty);
+				case FieldType.FVar(ty, val):
+					val;
 				default:
-					throw 'Cannot build field';
-			}
+					throw 'Cannot build field: ${v.name}';
+			};
+			block.push(macro $i{v.name} = $val);
 		}
 		return macro $b{block};
 	}

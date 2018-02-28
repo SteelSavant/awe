@@ -2,6 +2,7 @@ package awe;
 
 import awe.Aspect;
 import awe.Entity;
+import awe.EntitySubscription;
 /**
     An individual unit of processing in a world.
     
@@ -89,7 +90,7 @@ class System {
 #if !macro
 @:autoBuild(awe.build.AutoSystem.build())
 #end
-class EntitySystem extends System implements EntitySubscription.SubscriptionListener {
+class EntitySystem extends System implements SubscriptionListener {
 	/**
 	    The aspect an entity must match to be considered by the system.
 	 */
