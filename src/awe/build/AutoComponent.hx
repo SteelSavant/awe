@@ -86,9 +86,11 @@ class AutoComponent {
 			advancedComponentType |= ComponentType.POOLED_FLAG;
 		else if(shouldEmpty)
 			advancedComponentType |= ComponentType.EMPTY_FLAG;
+
 		ComponentType.advancedTypes[componentType] = advancedComponentType;
 		var hasReset = fields.exists(function(f) return f.name == "reset");
-		var hasGetType = fields.exists(function(f) return f.name == "getType");
+		var hasType = fields.exists(function(f) return f.name == "type");
+
 		if(shouldPool && !hasReset)
 			fields.push({
 				name: "reset",
@@ -100,7 +102,7 @@ class AutoComponent {
 					args: []
 				})
 			});
-		if(!hasGetType)
+		if(!hasType)
 			fields.push({
 				name: "getType",
 				pos: Context.currentPos(),

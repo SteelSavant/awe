@@ -1,13 +1,5 @@
 package awe;
 
-import haxe.macro.Context;
-import haxe.macro.Type;
-using haxe.macro.ComplexTypeTools;
-using haxe.macro.ExprTools;
-using haxe.macro.TypeTools;
-import haxe.macro.Expr;
-
-using awe.util.MacroTools;
 import awe.managers.EntityManager;
 
 import de.polygonal.ds.BitVector;
@@ -63,55 +55,32 @@ class Entity {
 	**/
 	public inline function getByType(type: ComponentType): Component
 		return world.components.getComponent(id, type.getPure());
-	#if macro
-	static function wrapGet(self: ExprOf<Entity>, ty: Type, cty: ComponentType) {
-		var list = macro untyped world.components.lists[$v{cty}];
-		return Context.defined("debug") ? macro {
-			var list = $list;
-			if(list == null)
-				"Component `" + $v{ty.toString()} + "` has not been registered with the World";
-			list;
-		} : list;
-	}
-	#end
-	#if doc
 	/**
 		Retrieve the component attached to this entity.
+
+		This is much slower than using `ComponentList`s directly, so try to avoid this.
 		@param kind The component type to find.
 		@return The component of the type given.
 	**/
-	public function get<T: Component>(kind: Class<T>): Null<T> return null;
+	public inline function get<T: Component>(kind: Class<T>): Null<T>
+		return world.components.getComponentListByClass(kind).get(id);
 	/**
 		Remove a component from this entity in the world..
 		@param kind The component type to remove.
 	**/
-	public function remove<T: Component>(kind: Class<T>): Void;
-	#else
-	public macro function has<T: Component>(self: ExprOf<Entity>, cl: ExprOf<Class<T>>): ExprOf<Bool> {
-		var ty = MacroTools.resolveTypeLiteral(cl);
-		var compTy = ComponentType.get(ty);
-		return macro {
-			if($self.componentBits == null)
-				throw "No component bits found, has this entity been deleted?";
-			$self.componentBits.has($v{compTy.getPure()});
-		} 
-	}
-	public macro function get<T: Component>(self: ExprOf<Entity>, cl: ExprOf<Class<T>>): ExprOf<Null<T>> {
-		var ty = MacroTools.resolveTypeLiteral(cl);
-		var cty = ComponentType.get(ty);
-		var list = wrapGet(macro $self, ty, cty);
-		return macro $list.get($self.id);
-	}
-	public macro function remove<T: Component>(self: ExprOf<Entity>, cl: ExprOf<Class<T>>): Expr {
-		var ty = MacroTools.resolveTypeLiteral(cl);
-		var cty = ComponentType.get(ty);
-		var list = wrapGet(macro $self, ty, cty);
-		return macro $list.remove($self.id, true);
-	}
-	#end
+	public inline function remove<T: Component>(kind: Class<T>): Void
+		world.components.getComponentListByClass(kind).remove(id, true);
+
+	/**
+		Check if this entity has a certain component.
+		@param kind Component type to check.
+		@return If this entity has this component.
+	**/
+	public inline function has<T: Component>(kind: Class<T>): Bool
+		return componentBits.has(world.components.getTypeForClass(kind));
 	/**
 		Returns the string representation of this entity.
 	*/
-	public function toString(): String
+	public inline function toString(): String
 		return '#$id';
 }

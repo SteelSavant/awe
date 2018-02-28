@@ -9,7 +9,7 @@ import de.polygonal.ds.BitVector;
 
 import haxe.macro.Expr;
 
-typedef ComponentListMap = Map<ComponentType, IComponentList<Dynamic>>;
+typedef ComponentListMap = Map<ComponentType, IComponentList<Component>>;
 
 typedef ComponentClassMap = Map<ComponentType, Class<Component>>;
 typedef ComponentTypeMap = Map<String, ComponentType>;
@@ -19,6 +19,7 @@ class ComponentManager extends System {
 	@:allow(awe)
 	var componentClasses(default, null): ComponentClassMap;
 	var componentTypes(default, null): ComponentTypeMap;
+
 	@:allow(awe)
 	var lists: ComponentListMap;
 	
@@ -31,6 +32,23 @@ class ComponentManager extends System {
 		this.componentTypes = new Map();
 		for(ty in classes.keys())
 			componentTypes[Type.getClassName(classes[ty])] = ty;
+	}
+	@:allow(awe)
+	inline function getComponentList(type: ComponentType): IComponentList<Component>
+		return lists[type.getPure()];
+
+	@:allow(awe)
+	function getTypeForClass<T: Component>(cl: Class<T>): ComponentType {
+		for(cty in componentClasses.keys())
+			if(componentClasses[cty] == cast cl)
+				return cty;
+		return null;
+	}
+
+	@:allow(awe)
+	function getComponentListByClass<T: Component>(cl: Class<T>): Null<IComponentList<T>> {
+		var ty = getTypeForClass(cl);
+		return ty == null ? null : cast lists[ty];
 	}
 	/**
 		Get an entity's component bits.
@@ -70,5 +88,5 @@ class ComponentManager extends System {
 		@return Newly created packed, pooled or basic component.
 	 */
 	public inline function create<T: Component>(owner: EntityId, componentClass: Class<T>, notifySubscriptions: Bool = true): T
-		return lists[componentTypes[Type.getClassName(componentClass)]].create(owner, notifySubscriptions);
+		return cast lists[componentTypes[Type.getClassName(componentClass)]].create(owner, notifySubscriptions);
 }

@@ -17,9 +17,6 @@ interface Component {
 	*/
 	public function getType(): ComponentType;
 }
-#if !macro
-@:autoBuild(awe.build.AutoComponent.from())
-#end
 @:keepSub
 interface PooledComponent extends Component {
 	/**
