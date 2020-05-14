@@ -1,14 +1,14 @@
 import utest.Assert;
-
 import awe.Component;
 import awe.Aspect;
+import polygonal.ds.BitVector;
 
-import de.polygonal.ds.BitVector;
 class Comp1 implements Component {
-    public function new() {}
+	public function new() {}
 }
+
 class Comp2 implements Component {
-    public function new() {}
+	public function new() {}
 }
 
 class TestAspect {
@@ -25,6 +25,7 @@ class TestAspect {
 		bits.set(new Comp2().getType());
 		Assert.isFalse(aspect.matches(bits));
 	}
+
 	public function testAll() {
 		var aspect = Aspect.build({
 			all: [Comp1, Comp2]
@@ -36,6 +37,7 @@ class TestAspect {
 		bits.set(new Comp2().getType());
 		Assert.isTrue(aspect.matches(bits));
 	}
+
 	public function testOne() {
 		var aspect = Aspect.build({
 			one: [Comp1, Comp2]

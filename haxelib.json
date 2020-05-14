@@ -1,16 +1,24 @@
 {
 	"name": "awe",
-	"url" : "https://github.com/TomBebb/awe/",
+	"url": "https://github.com/TomBebb/awe/",
 	"license": "BSD",
-	"tags": ["cross", "game", "utility", "entity", "ecs"],
+	"tags": [
+		"cross",
+		"game",
+		"utility",
+		"entity",
+		"ecs"
+	],
 	"description": "Awe is a powerful, fast and simple entity component system inspired by Artemis but taking advantage of Haxe macros",
 	"version": "1.0.0",
 	"releasenote": "Modularise appropriately and allow >32 components",
-
-	"contributors": ["tombebbington"],
+	"contributors": [
+		"tombebbington",
+		"steelsavant"
+	],
 	"classPath": "src",
 	"dependencies": {
-		"polygonal-ds": "2.0.1",
-		"utest": "1.8.0"
+		"polygonal-ds": "2.1.1",
+		"utest": "1.10.1"
 	}
 }
